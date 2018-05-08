@@ -136,7 +136,7 @@ class PaginationTablePage extends React.PureComponent {
   return (
     
     <PageBase title="Lista de enunciados"
-              navigation=""
+              navigation="" type= "paper2"
              >
 
         <div className="tableElm" >

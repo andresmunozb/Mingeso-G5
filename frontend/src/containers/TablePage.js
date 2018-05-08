@@ -43,7 +43,7 @@ const TablePage = () => {
 
   return (
     <PageBase title="Enunciados"
-              navigation="">
+              navigation="" type = "paper2">
 
       <div>
         <Link to="/nuevoEnunciado" >

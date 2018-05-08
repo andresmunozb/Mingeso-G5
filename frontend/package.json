@@ -1,7 +1,7 @@
 {
   "name": "react-materialize-admin-template",
   "version": "0.0.1",
-  "description": "}",
+  "description": "Admin template using React and Material-UI",
   "engines": {
     "npm": ">=3"
   },
@@ -106,6 +106,9 @@
     "template",
     "admin"
   ],
-  "repository": "https://github.com/sumn2u/react-materialize-admin-template.git",
+  "repository": {
+    "url": "https://github.com/sumn2u/react-materialize-admin-template.git",
+    "type": "git"
+  },
   "main": "index.js"
 }

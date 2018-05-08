@@ -7,10 +7,7 @@ const styles = {
     fontWeight: typography.fontWeightLight,
     color: grey600,
     paddingBottom: 15,
-    display: 'block',
-    position:'relative',
-    left:'20%'
-
+    display: 'block'
   },
   title: {
     fontSize: 24,
@@ -18,25 +15,15 @@ const styles = {
     marginBottom: 20
   },
   paper: {
-    width: 600,
-    padding: 30,
-    position:'relative',
-    left:'20%'
+    padding: 30
+    
   },
   clear: {
     clear: 'both'
   },
   forms:{
     width: 500
-  },
-  buttons: {
-    marginTop: 30,
-    float: 'right'
-  },
-  saveButton: {
-    marginLeft: 5
   }
 };
-
 
 export default styles;

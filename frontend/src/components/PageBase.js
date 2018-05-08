@@ -1,33 +1,52 @@
-import React, {PropTypes} from 'react';
+import React, { Component } from 'react';
+import {PropTypes} from 'react';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import globalStyles from '../styles';
 
-const PageBase = (props) => {
 
-    const {title, navigation} = props;
 
-    return (
-      <div>
-        <span style={globalStyles.navigation}>{navigation}</span>
+class PageBase extends Component{
+  constructor(props){
+    super(props);
+    console.log(props)
+    this.state ={
+      titulo: this.props.title,
+      navegacion: this.props.navigation,
+      type: this.props.type
+     
+    }
+  }
+  renderSwitch = (param) => {
+    switch(param) {
+      case 'foo':
+        return 'bar';
+      default:
+        return 'foo';
+    }
+  }
+  render(){
+      return(
+        <div>
+          <span style={globalStyles.navigation}>{this.state.navegacion}</span>
 
-        <Paper style={globalStyles.paper}>
-          <h3 style={globalStyles.title}>{title}</h3>
+          <Paper style={globalStyles.paper}>
+              <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
-          <Divider/>
-          {props.children}
+              <Divider/>
+              {this.props.children}
 
-          <div style={globalStyles.clear}/>
+              <div style={globalStyles.clear}/>
 
-        </Paper>
+          </Paper>
       </div>
-    );
-};
 
-PageBase.propTypes = {
-  title: PropTypes.string,
-  navigation: PropTypes.string,
-  children: PropTypes.element
-};
+
+      );
+
+  }
+}
+
+
 
 export default PageBase;
