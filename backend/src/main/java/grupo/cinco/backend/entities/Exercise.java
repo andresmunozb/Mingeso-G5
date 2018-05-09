@@ -1,9 +1,5 @@
 package grupo.cinco.backend.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 
 @Entity
@@ -23,6 +19,17 @@ public class Exercise {
 
     @Column(name = "text")
     private String text;
+
+    @Column(name = "publicated")
+    private boolean publicated;
+
+    public boolean isPublicated() {
+        return publicated;
+    }
+
+    public void setPublicated(boolean publicated) {
+        this.publicated = publicated;
+    }
 
     public int getId() {
         return id;

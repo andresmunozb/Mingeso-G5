@@ -20,7 +20,8 @@ public class ExerciseService {
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<Exercise> getAllProducts() {
+    public Iterable<Exercise> getAllExercises() {
+
         return exerciseRepository.findAll();
     }
 
@@ -32,5 +33,45 @@ public class ExerciseService {
         return exerciseRepository.save(resource);
     }
 
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.PUT)
+    @ResponseBody
+    public void update(@PathVariable("id") Integer id, @RequestBody Exercise resource)
+    {
+        Exercise exercise = exerciseRepository.findById(id).get();
+        exercise.setName(resource.getName());
+        exercise.setText(resource.getText());
+        exercise.setPublicated(resource.isPublicated());
+        exerciseRepository.save(exercise);
+    }
+
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Exercise> getPublished()
+    {
+        return exerciseRepository.findExercisesByPublicatedEquals(true);
+    }
+
+    @RequestMapping(value = "/unpublished", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Exercise> getUnpublished()
+    {
+        return exerciseRepository.findExercisesByPublicatedEquals(false);
+    }
+
+    @RequestMapping(value = "/{id}/publish",method = RequestMethod.PUT)
+    @ResponseBody
+    public void updatePublication(@PathVariable("id") Integer id,  @RequestBody Exercise resource) {
+        Exercise exercise = exerciseRepository.findById(id).get();
+        exercise.setPublicated(resource.isPublicated());
+        exerciseRepository.save(exercise);
+    }
+
+    @DeleteMapping(value = "{id}/delete")
+    @ResponseBody
+    public void delete(@PathVariable Integer id)
+    {
+        Exercise exercise = exerciseRepository.findById(id).get();
+        exerciseRepository.delete(exercise);
+    }
 
 }
