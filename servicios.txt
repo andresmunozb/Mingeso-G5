@@ -1,0 +1,17 @@
+/exercises/
+/exercises/create/{id_user}
+/exercises/{id}/edit
+/exercises/published
+/exercises/unpublished
+/exercises/{id}/publish
+/exercises{id}/delete
+
+
+/solutions/
+/solutions/create/{id_user}/{id_exercise}
+/solutions/{id}/edit
+/solutions{id}/delete
+
+
+/users/
+/users/{id}/exercises
