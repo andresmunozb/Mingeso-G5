@@ -15,11 +15,23 @@ public class User {
     @Id
     private int id;
 
-
     @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name= "id_rol", nullable = false)
     @JsonIgnore
     private Role role;
+
+    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name= "id_class", nullable = false)
+    @JsonIgnore
+    private Class clase;
+
+    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name= "id_career", nullable = false)
+    @JsonIgnore
+    private Career career;
+
+    @Column (name = "email")
+    private String email;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonIgnore
@@ -29,9 +41,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonIgnore
     private List<Solution> solutions;
-
-    @Column
-    private String email;
 
     public int getId() {
         return id;
@@ -49,6 +58,30 @@ public class User {
         this.role = role;
     }
 
+    public Class getClase() {
+        return clase;
+    }
+
+    public void setClase(Class clase) {
+        this.clase = clase;
+    }
+
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public List<Exercise> getExercises() {
         return exercises;
     }
@@ -63,13 +96,5 @@ public class User {
 
     public void setSolutions(List<Solution> solutions) {
         this.solutions = solutions;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

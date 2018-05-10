@@ -28,4 +28,22 @@ public class SolutionService {
 
         return solutionRepository.save(resource);
     }
+
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.PUT)
+    @ResponseBody
+    public void update(@PathVariable("id") Integer id, @RequestBody Solution resource)
+    {
+        Solution solution = solutionRepository.findById(id).get();
+        solution.setScript(resource.getScript());
+        solutionRepository.save(solution);
+    }
+
+
+    @DeleteMapping(value = "{id}/delete")
+    @ResponseBody
+    public void delete(@PathVariable Integer id)
+    {
+        Solution solution = solutionRepository.findById(id).get();
+        solutionRepository.delete(solution);
+    }
 }

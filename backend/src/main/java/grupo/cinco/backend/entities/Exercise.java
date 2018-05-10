@@ -14,22 +14,14 @@ public class Exercise {
     @JoinColumn(name= "id_user", nullable = false)
     private User user;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "publicated")
-    private boolean publicated;
-
-    public boolean isPublicated() {
-        return publicated;
-    }
-
-    public void setPublicated(boolean publicated) {
-        this.publicated = publicated;
-    }
+    @Column(name = "published")
+    private boolean published;
 
     public int getId() {
         return id;
@@ -47,19 +39,29 @@ public class Exercise {
         this.user = user;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getDescription() {
+        return description;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+
 }

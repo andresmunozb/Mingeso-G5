@@ -38,9 +38,9 @@ public class ExerciseService {
     public void update(@PathVariable("id") Integer id, @RequestBody Exercise resource)
     {
         Exercise exercise = exerciseRepository.findById(id).get();
-        exercise.setName(resource.getName());
-        exercise.setText(resource.getText());
-        exercise.setPublicated(resource.isPublicated());
+        exercise.setTitle(resource.getTitle());
+        exercise.setDescription(resource.getDescription());
+        exercise.setPublished(resource.isPublished());
         exerciseRepository.save(exercise);
     }
 
@@ -48,21 +48,21 @@ public class ExerciseService {
     @ResponseBody
     public Iterable<Exercise> getPublished()
     {
-        return exerciseRepository.findExercisesByPublicatedEquals(true);
+        return exerciseRepository.findExercisesByPublishedEquals(true);
     }
 
     @RequestMapping(value = "/unpublished", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Exercise> getUnpublished()
     {
-        return exerciseRepository.findExercisesByPublicatedEquals(false);
+        return exerciseRepository.findExercisesByPublishedEquals(false);
     }
 
     @RequestMapping(value = "/{id}/publish",method = RequestMethod.PUT)
     @ResponseBody
     public void updatePublication(@PathVariable("id") Integer id,  @RequestBody Exercise resource) {
         Exercise exercise = exerciseRepository.findById(id).get();
-        exercise.setPublicated(resource.isPublicated());
+        exercise.setPublished(resource.isPublished());
         exerciseRepository.save(exercise);
     }
 

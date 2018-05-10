@@ -17,6 +17,9 @@ public class Solution {
     @Column(name = "script")
     private String script;
 
+    @Column (name ="language" )
+    private String language;
+
     public int getId() {
         return id;
     }
@@ -39,5 +42,13 @@ public class Solution {
 
     public void setScript(String script) {
         this.script = script;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
