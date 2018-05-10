@@ -4,6 +4,29 @@ import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import globalStyles from '../styles';
 
+/*
+import React, { Component } from 'react';
+class PageBase extends Component{
+  constructor(props){
+    super(props);
+    console.log(props)
+    this.state ={
+     
+     
+    }
+  }
+  function = (param) => {
+   
+    }
+  
+  render(){
+      return(
+       
+      );
+
+  }
+}
+*/
 
 
 class PageBase extends Component{

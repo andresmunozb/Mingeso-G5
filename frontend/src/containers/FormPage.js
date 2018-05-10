@@ -50,18 +50,12 @@ class FormPage extends Component{
             />
 
             <SelectField
-              floatingLabelText="Unidad"
+              floatingLabelText="Estado"
               value=""
               fullWidth={true}>
-              <MenuItem key={0} primaryText="lista"/>
-              <MenuItem key={1} primaryText="Pila"/>
-              <MenuItem key={2} primaryText="Palindromo"/>
+              <MenuItem key={0} primaryText="Publicar"/>
+              <MenuItem key={1} primaryText="No publicar"/>
             </SelectField>
-
-            <DatePicker
-              hintText="Expiration Date"
-              floatingLabelText="Fecha máxima"
-              fullWidth={true}/>
 
             <TextField
               hintText="enunciado"

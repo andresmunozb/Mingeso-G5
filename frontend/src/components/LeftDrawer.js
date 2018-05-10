@@ -1,10 +1,11 @@
-import React,  { PropTypes } from 'react';
+import React,  { PropTypes,Component } from 'react';
 import Drawer from 'material-ui/Drawer';
 import {spacing, typography} from 'material-ui/styles';
 import {white, blue600} from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
 import {Link} from 'react-router';
 import Avatar from 'material-ui/Avatar';
+
 
 const LeftDrawer = (props) => {
   let { navDrawerOpen } = props;
@@ -45,7 +46,7 @@ const LeftDrawer = (props) => {
       }
     }
   };
-
+  
   return (
     <Drawer
       docked={true}
@@ -70,6 +71,7 @@ const LeftDrawer = (props) => {
     </Drawer>
   );
 };
+
 
 LeftDrawer.propTypes = {
   navDrawerOpen: PropTypes.bool,
