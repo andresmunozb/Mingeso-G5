@@ -16,12 +16,9 @@ public class TestCase {
     @Column(name = "output")
     private String output;
 
-
-    /*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_exercise", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_exercise")
     private Exercise exercise;
-
-
 
     public Exercise getExercise() {
         return exercise;
@@ -29,7 +26,7 @@ public class TestCase {
 
     public void setExercise(Exercise exercise) {
         this.exercise = exercise;
-    }*/
+    }
 
     public int getId() {
         return id;

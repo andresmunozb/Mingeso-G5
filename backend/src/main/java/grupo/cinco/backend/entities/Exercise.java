@@ -27,10 +27,10 @@ public class Exercise {
     @Column(name = "published")
     private boolean published;
 
-    /*@OneToMany(mappedBy = "exercise",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "exercise")
     @JsonIgnore
     private List<TestCase> testCases;
-    */
+
 
     @OneToMany(mappedBy = "exercise")
     @JsonIgnore
@@ -70,6 +70,14 @@ public class Exercise {
 
     public boolean isPublished() {
         return published;
+    }
+
+    public List<TestCase> getTestCases() {
+        return testCases;
+    }
+
+    public void setTestCases(List<TestCase> testCases) {
+        this.testCases = testCases;
     }
 
     public void setPublished(boolean published) {
