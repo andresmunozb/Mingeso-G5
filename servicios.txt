@@ -1,17 +1,17 @@
-/exercises/
-/exercises/create/{id_user}
-/exercises/{id}/edit
-/exercises/published
-/exercises/unpublished
-/exercises/{id}/publish
-/exercises{id}/delete
+get    ->/exercises/
+post   ->/exercises/create/{id_user}
+put    ->/exercises/{id}/edit
+get    ->/exercises/published
+get    ->/exercises/unpublished
+put    ->/exercises/{id}/publish
+delete ->/exercises{id}/delete
 
 
-/solutions/
-/solutions/create/{id_user}/{id_exercise}
-/solutions/{id}/edit
-/solutions{id}/delete
+get    ->/solutions/
+post   ->/solutions/create/{id_user}/{id_exercise}
+put    ->/solutions/{id}/edit
+delete ->/solutions{id}/delete
 
 
-/users/
-/users/{id}/exercises
+get ->/users/
+get ->/users/{id}/exercises
