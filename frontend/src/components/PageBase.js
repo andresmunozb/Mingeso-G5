@@ -44,6 +44,17 @@ class PageBase extends Component{
                 <div style={globalStyles.clear}/>
 
           </Paper>
+          }
+          {this.state.type == "paper3" &&
+          <Paper style={globalStyles.paper3}>
+               <h3 style={globalStyles.title}>{this.state.titulo}</h3>
+
+               <Divider/>
+               {this.props.children}
+
+               <div style={globalStyles.clear}/>
+
+         </Paper>
         
         
         

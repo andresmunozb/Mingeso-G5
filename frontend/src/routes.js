@@ -8,7 +8,7 @@ import FormPage from './containers/FormPage';
 import TablePage from './containers/TablePage';
 import MapPage from './containers/MapPage';
 import CodPage from './containers/CodPage';
-import PaginationTablePage from './containers/PaginationTablePage';
+import PaginationTablePageBase from './containers/PaginationTablePageBase';
 
 
 export default (
@@ -19,9 +19,9 @@ export default (
         <Route path="dashboard" component={Dashboard}/>
         <Route path="practicar" component={CodPage}/>
         <Route path="nuevoEnunciado" component={FormPage}/>
-        <Route path="listaEnunciadosProfesor" component={TablePage}/>
+        <Route path="listaEnunciadosAlumno" component={TablePage}/>
         <Route path="maps" component={MapPage}/>
-        <Route path="listaEnunciadosAlumno" component={PaginationTablePage}/>
+        <Route path="listaEnunciadosProfesor" component={PaginationTablePageBase}/>
         <Route path="*" component={NotFoundPage}/>
       </Route>
   </Route>
