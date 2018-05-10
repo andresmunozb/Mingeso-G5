@@ -23,6 +23,10 @@ const styles = {
     position:'relative',
     left:'20%'
   },
+  paper2:{
+    padding: 30
+
+  },
   clear: {
     clear: 'both'
   },
