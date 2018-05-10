@@ -10,16 +10,7 @@ import {grey400} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import PageBase from '../components/PageBase';
 import Css from '../styles'
-/*        
-Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/products/create', jsonAgregar, axiosConfig)
-.then((res) => {
-  console.log("RESPONSE RECEIVED: ", res);
-  alert('Producto agregado ' + this.state.nombreProducto);
-
-})
-.catch((err) => {
-  console.log("AXIOS ERROR: ", err);
-})*/
+import Axios from 'axios'
 
 
 
@@ -85,7 +76,6 @@ class FormPage extends Component{
 
               <RaisedButton label="Guardar"
                             style={Css.saveButton}
-                            type="submit"
                             primary={true}
                             onClick={this.agregarEnunciado.bind(this)}
                             />
@@ -127,13 +117,13 @@ class FormPage extends Component{
       }
     };             
     const jsonAgregar ={
-      name: this.state.tituloEnunciado,
-      text: this.state.descripcion,
-      publicated: this.state.publicacion
+      title: this.state.tituloEnunciado,
+      description: this.state.descripcion,
+      published: this.state.publicacion
     };
 
 
-    Axios.post('138.197.105.209:3030/app/exercises/create', jsonAgregar, axiosConfig)
+    /*Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create', jsonAgregar, axiosConfig)
         .then((res) => {
           console.log("RESPONSE RECEIVED: ", res);
           alert('Enunciado agregado ' + this.state.tituloEnunciado);
@@ -142,7 +132,7 @@ class FormPage extends Component{
         .catch((err) => {
           console.log("AXIOS ERROR: ", err);
         })
-
+        */
     }
     else{
       alert('Debes completar todos los campos');

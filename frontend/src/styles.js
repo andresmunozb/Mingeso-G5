@@ -27,6 +27,12 @@ const styles = {
     padding: 30
 
   },
+
+  paper3: {
+    width: 1100,
+    padding: 30,
+    position:'relative',
+  },
   clear: {
     clear: 'both'
   },
