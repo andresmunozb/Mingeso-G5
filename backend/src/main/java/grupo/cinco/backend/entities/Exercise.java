@@ -14,8 +14,8 @@ public class Exercise {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name= "id_user", nullable = false)
+    @ManyToOne
+    @JoinColumn(name= "id_user")
     private User user;
 
     @Column(name = "title")
@@ -27,9 +27,14 @@ public class Exercise {
     @Column(name = "published")
     private boolean published;
 
-    @OneToMany(mappedBy = "exercise",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
+    /*@OneToMany(mappedBy = "exercise",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonIgnore
     private List<TestCase> testCases;
+    */
+
+    @OneToMany(mappedBy = "exercise")
+    @JsonIgnore
+    private List<Solution> solutions;
 
     public int getId() {
         return id;
@@ -71,11 +76,11 @@ public class Exercise {
         this.published = published;
     }
 
-    public List<TestCase> getTestCases() {
-        return testCases;
+    public List<Solution> getSolutions() {
+        return solutions;
     }
 
-    public void setTestCases(List<TestCase> testCases) {
-        this.testCases = testCases;
+    public void setSolutions(List<Solution> solutions) {
+        this.solutions = solutions;
     }
 }

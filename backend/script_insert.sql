@@ -15,9 +15,5 @@ INSERT INTO `users` ( `email`,`id_rol`,`id_class`,`id_career`)VALUES
 ('leiser.mahu@usach.cl',4,1,1),
 ('barbara.sarmiento@usach.cl',4,1,1);
 
-
-
-
-
-
-
+INSERT INTO `exercises` ( `id_user`,`title`,`description`,`published`)VALUES 
+(1,'Palindromos','Description 1',false);

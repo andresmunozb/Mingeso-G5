@@ -1,5 +1,7 @@
 package grupo.cinco.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,9 +12,15 @@ public class Solution {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_user", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    @JsonIgnore
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_exercise")
+    @JsonIgnore
+    private Exercise exercise;
 
     @Column(name = "script")
     private String script;
@@ -34,6 +42,14 @@ public class Solution {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
     }
 
     public String getScript() {

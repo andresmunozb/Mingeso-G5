@@ -16,7 +16,8 @@ public class Class {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "clase", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "clase")
     @JsonIgnore
     private List<User> users;
+
 }

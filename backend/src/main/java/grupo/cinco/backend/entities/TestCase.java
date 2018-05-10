@@ -10,23 +10,18 @@ public class TestCase {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_exercise", nullable = false)
-    private Exercise exercise;
-
     @Column(name = "input")
     private String input;
 
     @Column(name = "output")
     private String output;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    /*@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_exercise", nullable = false)
+    private Exercise exercise;
+
+
 
     public Exercise getExercise() {
         return exercise;
@@ -34,6 +29,14 @@ public class TestCase {
 
     public void setExercise(Exercise exercise) {
         this.exercise = exercise;
+    }*/
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getInput() {

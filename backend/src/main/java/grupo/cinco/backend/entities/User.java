@@ -13,6 +13,7 @@ import java.util.Set;
 public class User {
 
     @Id
+    @Column(name = "id")
     private int id;
 
     @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
@@ -20,25 +21,25 @@ public class User {
     @JsonIgnore
     private Role role;
 
-    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name= "id_class", nullable = false)
+    @ManyToOne
+    @JoinColumn(name= "id_class")
     @JsonIgnore
     private Class clase;
 
     @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name= "id_career", nullable = false)
+    @JoinColumn(name= "id_career")
     @JsonIgnore
     private Career career;
 
     @Column (name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Exercise> exercises;
 
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Solution> solutions;
 

@@ -23,11 +23,11 @@ public class UserService {
     }
 
 
-    @RequestMapping(value = "/{id}/exercises",method = RequestMethod.GET)
+    /*@RequestMapping(value = "/{id}/exercises",method = RequestMethod.GET)
     @ResponseBody
     public List<Exercise> getAllExercises(@PathVariable("id") Integer id) {
         User user = userRepository.findById(id).get();
         return user.getExercises();
-    }
+    }*/
 
 }

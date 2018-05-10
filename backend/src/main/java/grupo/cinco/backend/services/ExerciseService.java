@@ -1,7 +1,9 @@
 package grupo.cinco.backend.services;
 
 import grupo.cinco.backend.entities.Exercise;
+import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
+import grupo.cinco.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,9 @@ public class ExerciseService {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Exercise> getAllExercises() {
@@ -25,11 +30,12 @@ public class ExerciseService {
         return exerciseRepository.findAll();
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/create/{id_user}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Exercise create(@RequestBody Exercise resource) {
-
+    public Exercise create(@PathVariable("id_user") Integer id_user,@RequestBody Exercise resource) {
+        User user = userRepository.findById(id_user).get();
+        resource.setUser(user);
         return exerciseRepository.save(resource);
     }
 

@@ -1,7 +1,11 @@
 package grupo.cinco.backend.services;
 
+import grupo.cinco.backend.entities.Exercise;
 import grupo.cinco.backend.entities.Solution;
+import grupo.cinco.backend.entities.User;
+import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.SolutionRepository;
+import grupo.cinco.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,17 +19,26 @@ public class SolutionService {
     @Autowired
     private SolutionRepository solutionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ExerciseRepository exerciseRepository;
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Solution> getAllProducts() {
         return solutionRepository.findAll();
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/create/{id_user}/{id_exercise}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Solution create(@RequestBody Solution resource) {
-
+    public Solution create(@PathVariable("id_user") Integer id_user,@PathVariable("id_exercise") Integer id_exercise,@RequestBody Solution resource) {
+        User user = userRepository.findById(id_user).get();
+        Exercise exercise = exerciseRepository.findById(id_exercise).get();
+        resource.setExercise(exercise);
+        resource.setUser(user);
         return solutionRepository.save(resource);
     }
 
@@ -35,6 +48,7 @@ public class SolutionService {
     {
         Solution solution = solutionRepository.findById(id).get();
         solution.setScript(resource.getScript());
+        solution.setLanguage(resource.getLanguage());
         solutionRepository.save(solution);
     }
 
