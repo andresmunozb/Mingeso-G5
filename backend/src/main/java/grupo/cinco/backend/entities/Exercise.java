@@ -1,6 +1,10 @@
 package grupo.cinco.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.aspectj.weaver.ast.Test;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "exercises")
@@ -22,6 +26,10 @@ public class Exercise {
 
     @Column(name = "published")
     private boolean published;
+
+    @OneToMany(mappedBy = "exercise",fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @JsonIgnore
+    private List<TestCase> testCases;
 
     public int getId() {
         return id;
@@ -63,5 +71,11 @@ public class Exercise {
         this.published = published;
     }
 
+    public List<TestCase> getTestCases() {
+        return testCases;
+    }
 
+    public void setTestCases(List<TestCase> testCases) {
+        this.testCases = testCases;
+    }
 }

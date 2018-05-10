@@ -41,12 +41,27 @@ CREATE TABLE `users` (
   
 	FOREIGN KEY (`id_rol`) REFERENCES `roles`(`id`),
   
-	FOREIGN KEY (`id_classe`) REFERENCES `classes`(`id`),
+	FOREIGN KEY (`id_class`) REFERENCES `classes`(`id`),
   
 	FOREIGN KEY (`id_career`) REFERENCES `careers`(`id`)
 
 );
 
+DROP TABLE IF EXISTS `exercises`;
+CREATE TABLE `exercises` (
+
+	`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  
+	`id_user` int NOT NULL,
+  
+	`title` varchar(50) DEFAULT NULL,
+
+	`description` text DEFAULT NULL,
+  
+	`published` boolean DEFAULT false,
+  
+	FOREIGN KEY (`id_user`) REFERENCES `users`(`id`)
+);
 
 DROP TABLE IF EXISTS `solutions`;
 CREATE TABLE `solutions` (
@@ -66,54 +81,21 @@ CREATE TABLE `solutions` (
 	FOREIGN KEY (`id_exercise`) REFERENCES `exercises`(`id`)
 );
 
-DROP TABLE IF EXISTS `exercises`;
-CREATE TABLE `exercises` (
 
-	`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  
-	`id_user` int NOT NULL,
-  
-	`title` varchar(50) DEFAULT NULL,
-
-	`description` text DEFAULT NULL,
-  
-	`published` boolean DEFAULT false,
-  
-	FOREIGN KEY (`id_user`) REFERENCES `users`(`id`)
-);
 DROP TABLE IF EXISTS `test_cases`;
 CREATE TABLE `test_cases` (
 
 	`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   
 	`id_exercise` int NOT NULL,
+    
+    `input` text DEFAULT NULL,
+    
+    `output` text DEFAULT NULL,
   
 	FOREIGN KEY (`id_exercise`) REFERENCES `exercises`(`id`)
 );
-DROP TABLE IF EXISTS `inputs`;
-CREATE TABLE `inputs` (
 
-	`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  
-	`id_exercise` int NOT NULL,
-  
-	`value` varchar(60) DEFAULT NULL,
-  
-	FOREIGN KEY (`id_exercise`) REFERENCES `exercise`(`id`)
-);
-
-
-DROP TABLE IF EXISTS `outputs`;
-CREATE TABLE `outputs` (
-
-	`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  
-	`id_output` int NOT NULL,
-  
-	`value` varchar(60) DEFAULT NULL,
-  
-	FOREIGN KEY (`id_output`) REFERENCES `inputs`(`id`)
-);
 
 
 
