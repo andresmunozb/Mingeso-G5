@@ -75,7 +75,7 @@ class PaginationTablePageBase extends React.PureComponent {
         publicacion: this.state.options[newIndex],
         abierto:false
       });
-      setTimeout(()=>this.setState({abierto: true}), 100);
+      setTimeout(()=>this.setState({abierto: true}), 50);
     }
     else{
       this.setState({

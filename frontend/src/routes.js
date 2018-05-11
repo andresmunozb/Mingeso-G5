@@ -10,6 +10,8 @@ import MapPage from './containers/MapPage';
 import CodPage from './containers/CodPage';
 import PaginationTablePageBase from './containers/PaginationTablePageBase';
 
+//render={()=><TestWidget num="2" someProp={100}/>
+//<Route path="nuevoEnunciado" component={FormPage}/>
 
 export default (
   <Route>

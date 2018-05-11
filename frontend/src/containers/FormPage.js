@@ -17,12 +17,15 @@ import Axios from 'axios'
 
 class FormPage extends Component{
   constructor(props){
+    console.log("estos son mis propus")
+    console.log(props)
     super(props);
     this.state ={
       tituloEnunciado:"Titulo del enunciado",
       publicacion:"Estado",
       descripcion:"Enunciado",
-      options: ["Publicar", "No publicar"]
+      options: ["Publicar", "No publicar"],
+      publish: false
      
     }
   }
@@ -92,47 +95,65 @@ class FormPage extends Component{
     });
   }
   updateState(newIndex){
+   
     this.setState({
       publicacion: this.state.options[newIndex]
     });
+
   }
+ 
   updateDescription(event){
     this.setState({
       descripcion: event.target.value
     });
   }
+  agregarEnunciado2= () =>{
+    let jsonAgregar = {
+      title:this.state.tituloEnunciado,
+      description: this.state.descripcion,
+      published: this.state.publish
+    }
+    
+    
+    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/1', jsonAgregar)
+    .then((res) => {
+      console.log("RESPONSE RECEIVED: ", res);
+      alert('Enunciado agregado ' + this.state.tituloEnunciado);
+     
 
+
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+
+    })
+
+
+  }
+ 
   agregarEnunciado(){
     console.log(this.state.descripcion)
     console.log(this.state.tituloEnunciado)
     console.log(this.state.publicacion)
-
-    if(this.state.tituloEnunciado, this.state.publicacion , this.state.descripcion){
-      alert('Enunciado agregado ');
-            
+    
+    if(this.state.tituloEnunciado, this.state.publicacion , this.state.descripcion){            
     let axiosConfig = {
       headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           "Access-Control-Allow-Origin": "@crossorigin",
       }
-    };             
-    const jsonAgregar ={
-      title: this.state.tituloEnunciado,
-      description: this.state.descripcion,
-      published: this.state.publicacion
     };
+    console.log("este es el estado de la publicacion")
+    console.log(this.state.publicacion) 
+    if(this.state.publicacion == "Publicar"){
+      this.setState({publish:true}, this.agregarEnunciado2);
+    }
+    else if (this.state.publicacion == "No publicar"){
+      this.setState({publish:false},this.agregarEnunciado2)
+    }
+    
+   
 
-
-    /*Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create', jsonAgregar, axiosConfig)
-        .then((res) => {
-          console.log("RESPONSE RECEIVED: ", res);
-          alert('Enunciado agregado ' + this.state.tituloEnunciado);
-
-        })
-        .catch((err) => {
-          console.log("AXIOS ERROR: ", err);
-        })
-        */
     }
     else{
       alert('Debes completar todos los campos');

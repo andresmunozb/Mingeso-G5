@@ -29,9 +29,11 @@ const styles = {
   },
 
   paper3: {
-    width: 1100,
+    width: 1000,
     padding: 30,
     position:'relative',
+    left:'2%'
+
   },
   clear: {
     clear: 'both'
