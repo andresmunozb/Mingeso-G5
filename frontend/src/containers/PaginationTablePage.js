@@ -5,6 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 import ContentDelete from 'material-ui/svg-icons/action/delete';
 import ContentLookUp from 'material-ui/svg-icons/action/search';
+import ContentCode from 'material-ui/svg-icons/action/code';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {pink500, grey200, grey500, white, blue500} from 'material-ui/styles/colors';
 import PageBase from '../components/PageBase';
@@ -60,6 +61,9 @@ columns: {
   info: {
     width: '10%'
   },
+  toCode: {
+    width: '10%'
+  },
   edit: {
     width: '10%'
   },
@@ -68,7 +72,7 @@ columns: {
   }
 }
 };
-class PaginationTablePage extends React.PureComponent {
+class PaginationTablePage extends Component {
    constructor(props) {
     super(props);
     console.log("Aqui deberia estar el tipo, publicado o no publicado")
@@ -83,13 +87,16 @@ class PaginationTablePage extends React.PureComponent {
       open: false,
       enunciados: [],
       selectedIssue: [],
-      view: ""
+      view: "",
+      type: this.props.type
     }
 
     this.getPagination = this.getPagination.bind(this);
     this.getPaginationReal = this.getPaginationReal.bind(this);
 
     this.issueDelete = this.issueDelete.bind(this);
+    this.editIssue = this.editIssue.bind(this);
+
     this.funcione = this.funcione.bind(this);
 
 
@@ -142,17 +149,29 @@ class PaginationTablePage extends React.PureComponent {
 
 
      }
-     else{
-             Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/unpublished')
-              .then(response => {
-                  this.setState({ enunciados: response.data },this.getPaginationReal);        
-                  console.log(response.data)
-  
+     else if (this.props.publicado == "No publicado"){
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/unpublished')
+      .then(response => {
+          this.setState({ enunciados: response.data },this.getPaginationReal);        
+          console.log(response.data)
 
-              })
-              .catch(function(error) {
-                  console.log(error)
-              })
+
+      })
+      .catch(function(error) {
+          console.log(error)
+      })
+     }
+     else{
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/')
+      .then(response => {
+          this.setState({ enunciados: response.data },this.getPaginationReal);        
+          console.log(response.data)
+
+
+      })
+      .catch(function(error) {
+          console.log(error)
+      })
      }
      /*
      let _this = this;
@@ -224,7 +243,7 @@ class PaginationTablePage extends React.PureComponent {
   }
   
  render() {
-   if (this.state.view == "Redraw") return <PaginationTablePage publicado= {this.state.publicacion}/>;
+   if (this.state.view == "Redraw") return <PaginationTablePage publicado= {this.state.publicacion} type= {this.state.type}/>;
   let {filterOffers,offers, isFirstPage, isLastPage, currentPage} = this.state;
   let currentData = {};
    let currentUsers = [];
@@ -269,9 +288,18 @@ class PaginationTablePage extends React.PureComponent {
               <TableHeaderColumn style={styles.columns.title}>Titulo enunciado</TableHeaderColumn>
           {/* <TableHeaderColumn style={styles.columns.price}>Price</TableHeaderColumn>*/}
                 <TableHeaderColumn style={styles.columns.info}>Detalles</TableHeaderColumn>
-               <TableHeaderColumn style={styles.columns.edit}>Editar</TableHeaderColumn>
+                {this.state.type == "alumn" && 
+                 <TableHeaderColumn style={styles.columns.toCode}>Realizar</TableHeaderColumn>
+
+                }
+               {(this.state.type == "prof" || this.state.type == "coord") &&
+                 <TableHeaderColumn style={styles.columns.edit}>Editar</TableHeaderColumn>
+              }
           {/*    <TableHeaderColumn style={styles.columns.edit}>Editar</TableHeaderColumn>*/}
-                 <TableHeaderColumn style={styles.columns.delete}>Borrar</TableHeaderColumn>
+              {(this.state.type == "prof" || this.state.type == "coord") &&
+                <TableHeaderColumn style={styles.columns.delete}>Borrar</TableHeaderColumn>
+               }
+                
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -291,55 +319,70 @@ class PaginationTablePage extends React.PureComponent {
                     </FloatingActionButton>
                   </Link>
                 </TableRowColumn>
-                <TableRowColumn style={styles.columns.edit}>
-                  <Link className="button" to="/nuevoEnunciado">
+                {this.state.type == "alumn" && 
+                  <TableRowColumn style={styles.columns.toCode}>
+                  <Link className="button" to="/practicar">
                     <FloatingActionButton zDepth={0}
                                           mini={true}
                                           backgroundColor={grey200}
                                           iconStyle={styles.editButton}>
-                      <ContentCreate  />
+                      <ContentCode />
                     </FloatingActionButton>
                   </Link>
                 </TableRowColumn>
-                <TableRowColumn style={styles.columns.delete}>
-                  
+                }
+                {(this.state.type == "prof" || this.state.type == "coord") &&
+                    <TableRowColumn style={styles.columns.edit}>
+                      <FloatingActionButton zDepth={0}
+                                            mini={true}
+                                            backgroundColor={grey200}
+                                            iconStyle={styles.editButton}
+                                            onClick = {this.editIssue}
+
+                                            >
+                        <ContentCreate  />
+                      </FloatingActionButton>
+                  </TableRowColumn>
+                }
+
+                 {(this.state.type == "prof" || this.state.type == "coord") &&
+                    <TableRowColumn style={styles.columns.delete}>
                     <FloatingActionButton zDepth={0}
                                           mini={true}
                                           backgroundColor={grey200}
                                           iconStyle={styles.editButton}
                                           onClick = {this.issueDelete}
                                           >
-                                         
                       <ContentDelete  />
                     </FloatingActionButton>
-                  
-                </TableRowColumn>
+                    </TableRowColumn>
+                
+                }
+              
+               
               </TableRow>
             )}
           </TableBody>
         </Table>
-        <Modal open={this.state.open} onClose={this.onCloseModal} little >
-          <h2>Eliminar enunciado</h2>
-                <p>
-                ¿Esta seguro que desea eliminar el enunciado? 
-               </p>
-                <div className="row">
-                  <RaisedButton label="Cancelar"
-                           primary={true}
-                           style={styles.bttn}
-                           onClick = {this.onCloseModal}
-                           />
-                 <RaisedButton label="Confirmar"
-                           secondary={true}
-                         style={styles.bttn}
-                         onClick = {this.issueDelete}
-                         />
-               
-               </div>
-       </Modal>
+     
         </div>
   );
  }
+    editIssue = () =>{
+      const ide = this.state.selectedIssu
+      if(ide){
+
+
+
+      }
+      else{
+        alert('Debes clickear algun elemento para editar antes');
+
+      }
+
+
+
+    }
 
     issueDelete = () =>{
       const ide = this.state.selectedIssue.id
@@ -362,7 +405,7 @@ class PaginationTablePage extends React.PureComponent {
 
       }
       else{
-        alert('Debes clickear algun elemento para editar/borrar antes');
+        alert('Debes clickear algun elemento para borrar antes');
 
       }
       
@@ -372,17 +415,6 @@ class PaginationTablePage extends React.PureComponent {
     };
 
     
-     onOpenModal = () => {
-        this.setState({ open: true });
-      
-    };
-    
-   
-
-   onCloseModal = () => {
-      this.setState({ open: false });
-    };
-   
 
    
     

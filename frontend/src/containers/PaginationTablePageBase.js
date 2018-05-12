@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -16,15 +16,18 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 
+//props.route.algo, esta en "algo" los props
 
-
-class PaginationTablePageBase extends React.PureComponent {
+class PaginationTablePageBase extends Component {
    constructor(props) {
     super(props);
+    console.log("estos son mis props de tabla paginacion");
+    console.log(props.route.type);
     this.state = {
         publicacion: "",
         options: ["Publicado", "No publicado"],
-        abierto: false
+        abierto: false,
+        type: this.props.route.type
 
     }
 
@@ -50,17 +53,34 @@ class PaginationTablePageBase extends React.PureComponent {
     <PageBase title="Lista de enunciados"
               navigation="" type= "paper3"
              >
-             <SelectField
+             {this.state.type == "prof" &&
+             <div>
+                             <SelectField
               floatingLabelText="Estado"
               onChange={(evt, newIndex) => this.updateState(newIndex)} value={this.state.publicacion} 
               fullWidth={true}>
               {this.state.options.map(function(w, index){
               return  <MenuItem key={index} label={w} value={w}>{w}</MenuItem>;
                 })}
-            </SelectField>
+             </SelectField>
+               {this.state.abierto  && <PaginationTablePage  publicado = {this.state.publicacion} type = {this.state.type}/>
+              }
+                </div>
+            
+              }
+             {this.state.type == "alumn" &&
+               <PaginationTablePage  publicado = {"Publicado"} type = {this.state.type}/>
 
-            {this.state.abierto  && <PaginationTablePage  publicado = {this.state.publicacion} />
-             }
+            
+            }
+             {this.state.type == "coord" &&
+              <PaginationTablePage  publicado = {"Ambos"} type = {this.state.type} />
+            
+            }
+
+           
+
+           
 
 
     </PageBase>

@@ -9,10 +9,14 @@ import TablePage from './containers/TablePage';
 import MapPage from './containers/MapPage';
 import CodPage from './containers/CodPage';
 import PaginationTablePageBase from './containers/PaginationTablePageBase';
+import RouteProps from 'react-route-props'
 
 //render={()=><TestWidget num="2" someProp={100}/>
 //<Route path="nuevoEnunciado" component={FormPage}/>
-
+/* render={(routeProps) => (
+  <MyComponent {...routeProps} {...props} />
+)}*/
+//<Route path="listaEnunciadosProfesor" component={PaginationTablePageBase}/>
 export default (
   <Route>
     <Route path="/login" component={LoginPage}/>
@@ -21,9 +25,10 @@ export default (
         <Route path="dashboard" component={Dashboard}/>
         <Route path="practicar" component={CodPage}/>
         <Route path="nuevoEnunciado" component={FormPage}/>
-        <Route path="listaEnunciadosAlumno" component={TablePage}/>
+        <RouteProps path='listaEnunciadosAlumno' component={PaginationTablePageBase} type={'alumn'}/>
+        <RouteProps path='listaEnunciadosProfesor' component={PaginationTablePageBase} type={'prof'}/>
+        <RouteProps path='listaEnunciadosCoordinador' component={PaginationTablePageBase} type={'coord'}/>
         <Route path="maps" component={MapPage}/>
-        <Route path="listaEnunciadosProfesor" component={PaginationTablePageBase}/>
         <Route path="*" component={NotFoundPage}/>
       </Route>
   </Route>
