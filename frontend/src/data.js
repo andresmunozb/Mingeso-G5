@@ -8,7 +8,6 @@ import {cyan600, pink600, purple600} from 'material-ui/styles/colors';
 import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
 import ExpandMore from 'material-ui/svg-icons/navigation/expand-more';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import {grey400} from 'material-ui/styles/colors';
 
 
 const data = {
@@ -16,9 +15,11 @@ const data = {
     { text: 'DashBoard', icon: <Assessment/>, link: '/dashboard' },
     { text: '¡Practica!', icon: <Web/>, link: '/practicar' },
     { text: 'Nuevo Enunciado', icon: <Web/>, link: '/nuevoEnunciado' },
-    { text: 'Lista Enunciados', icon: <GridOn/>, link: '/listaEnunciadosProfesor' },
+    { text: 'Lista Enunciados Alumn', icon: <GridOn/>, link: '/listaEnunciadosAlumno' },
   //  { text: 'Map Page', icon: <AddLocation/>, link: '/maps' },
-    { text: 'Lista de Enunciados', icon: <GridOn/>, link: '/listaEnunciadosAlumno' },
+    { text: 'Lista de Enunciados Prof', icon: <GridOn/>, link: '/listaEnunciadosProfesor' },
+    { text: 'Lista de Enunciados Coor', icon: <GridOn/>, link: '/listaEnunciadosCoordinador' },
+
     { text: 'Inicio seción', icon: <PermIdentity/>, link: '/login' },
 
   ],

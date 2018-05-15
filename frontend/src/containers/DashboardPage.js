@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {cyan600, pink600, purple600, orange600} from 'material-ui/styles/colors';
 import Assessment from 'material-ui/svg-icons/action/assessment';
 import Face from 'material-ui/svg-icons/action/face';
@@ -11,11 +11,22 @@ import BrowserUsage from '../components/dashboard/BrowserUsage';
 import RecentlyProducts from '../components/dashboard/RecentlyProducts';
 import globalStyles from '../styles';
 import Data from '../data';
-
-const DashboardPage = () => {
-
-  return (
-    <div>
+class DashboardPage extends Component{
+  constructor(props){
+    super(props);
+    console.log(props)
+    this.state ={
+     
+     
+    }
+  }
+  function = (param) => {
+   
+    }
+  
+  render(){
+      return(
+        <div>
       <h3 style={globalStyles.navigation}> Dashboard</h3>
       {/*<div className="row">
         <div className="col-sm-2">
@@ -43,7 +54,10 @@ const DashboardPage = () => {
           <BrowserUsage data={Data.dashBoardPage.browserUsage}/>
         </div>
       </div>
-  );
-};
+      );
+
+  }
+}
+
 
 export default DashboardPage;

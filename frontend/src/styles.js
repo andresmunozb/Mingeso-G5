@@ -3,14 +3,14 @@ import {grey600} from 'material-ui/styles/colors';
 
 const styles = {
   navigation: {
-    width: 500,
     fontSize: 15,
     fontWeight: typography.fontWeightLight,
     color: grey600,
     paddingBottom: 15,
     display: 'block',
+    position:'relative',
+    left:'20%'
 
-    margin: '0 auto'
   },
   title: {
     fontSize: 24,
@@ -20,12 +20,35 @@ const styles = {
   paper: {
     width: 600,
     padding: 30,
+    position:'relative',
+    left:'20%'
+  },
+  paper2:{
+    padding: 30
 
-    margin: '0 auto'
+  },
+
+  paper3: {
+    width: 1000,
+    padding: 30,
+    position:'relative',
+    left:'2%'
+
   },
   clear: {
     clear: 'both'
+  },
+  forms:{
+    width: 500
+  },
+  buttons: {
+    marginTop: 30,
+    float: 'right'
+  },
+  saveButton: {
+    marginLeft: 5
   }
 };
+
 
 export default styles;

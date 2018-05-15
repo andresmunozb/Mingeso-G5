@@ -1,33 +1,74 @@
-import React, {PropTypes} from 'react';
+import React, { Component } from 'react';
+import {PropTypes} from 'react';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import globalStyles from '../styles';
 
-const PageBase = (props) => {
+class PageBase extends Component{
+  constructor(props){
+    super(props);
+    console.log(props)
+    this.state ={
+      titulo: this.props.title,
+      navegacion: this.props.navigation,
+      type: this.props.type
+     
+    }
+  }
+  function = () => {
+   
+  }
+  render(){
+      return(
+        <div>
+          <span style={globalStyles.navigation}>{this.state.navegacion}</span>
 
-    const {title, navigation} = props;
+          {this.state.type == "paper" &&
+           <Paper style={globalStyles.paper}>
+              <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
-    return (
-      <div>
-        <span style={globalStyles.navigation}>{navigation}</span>
+              <Divider/>
+              {this.props.children}
 
-        <Paper style={globalStyles.paper}>
-          <h3 style={globalStyles.title}>{title}</h3>
+              <div style={globalStyles.clear}/>
 
-          <Divider/>
-          {props.children}
+            </Paper>
+          }
+          {this.state.type == "paper2" &&
+           <Paper style={globalStyles.paper2}>
+                <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
-          <div style={globalStyles.clear}/>
+                <Divider/>
+                {this.props.children}
 
-        </Paper>
+                <div style={globalStyles.clear}/>
+
+          </Paper>
+          }
+          {this.state.type == "paper3" &&
+          <Paper style={globalStyles.paper3}>
+               <h3 style={globalStyles.title}>{this.state.titulo}</h3>
+
+               <Divider/>
+               {this.props.children}
+
+               <div style={globalStyles.clear}/>
+
+         </Paper>
+        
+        
+        
+          }
+
+         
       </div>
-    );
-};
 
-PageBase.propTypes = {
-  title: PropTypes.string,
-  navigation: PropTypes.string,
-  children: PropTypes.element
-};
+
+      );
+
+  }
+}
+
+
 
 export default PageBase;
