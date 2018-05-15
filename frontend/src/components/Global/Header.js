@@ -19,40 +19,40 @@ class Header extends Component {
                 <Navbar.Collapse>
                     <Nav>
                     <NavDropdown eventKey={3} title="Coordinator" id="basic-nav-dropdown">
-                        <Link to={{
+                        <li><Link to={{
                             pathname: '/Dashboard',
                             state: { enunciado: "soy un nuevo enunciado" }
                         }}>
                             Dashboard
 
-                        </Link>
+                        </Link></li>
                     </NavDropdown>
                     <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
-                        <Link to={{
+                        <li><Link to={{
                             pathname: '/nuevoEnunciado',
                             state: { enunciado: "soy un nuevo enunciado" }
                         }}>
                             Crear enunciado
 
-                        </Link>
-                        <Link to={{
+                        </Link></li>
+                        <li><Link to={{
                             pathname: '/listaDeEnunciados',
                             state: { enunciado: "soy una lista de enunciados" }
                         }}>
-                                Lista de Enunciados
-                        </Link>
+                                Lista de enunciados
+                        </Link></li>
 
                         
 
                     </NavDropdown>
                     <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
                         
-                        <Link to={{
+                        <li><Link to={{
                             pathname: '/listaEnunciados',
                             state: { enunciado: "soy alumno" }
                         }}>
                                 Enunciados
-                        </Link>
+                        </Link></li>
                         
                         
 
