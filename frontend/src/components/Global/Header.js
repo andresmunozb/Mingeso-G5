@@ -24,13 +24,18 @@ class Header extends Component {
                     </NavDropdown>
                     <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
                         <Link to={{
-                            pathname: '/hola2',
-                            state: { fromDashboard: true }
+                            pathname: '/nuevoEnunciado',
+                            state: { enunciado: "soy un nuevo enunciado" }
                         }}>
-                       Nuevo Enunciado
+                       Crear enunciado
 
                         </Link>
-                        <MenuItem >Lista de Enunciados</MenuItem>
+                        <Link to={{
+                            pathname: '/listaDeEnunciados',
+                            state: { enunciado: "soy una lista de enunciados" }
+                        }}>
+                                    Lista de Enunciados
+                        </Link>
 
                         
 
