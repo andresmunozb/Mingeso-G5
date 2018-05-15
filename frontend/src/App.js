@@ -25,6 +25,7 @@ class App extends Component {
           <Route path= "/nuevoEnunciado" render={(props) => <NewExercise {...props} estilos={"va a ser pequeño"}/>}/>
           <Route path= "/listaDeEnunciados" render={(props) => <IssueListTeacher {...props} isAuthed={"hola, soy una lista de enunciados de un profesor"}/>}/>
           <Route path= "/listaEnunciados" render={(props) => <Student {...props} isAuthed={"hola student"}/>}/>
+          <Route path= "/practica" render={(props) => <Student {...props} isAuthed={"hola student"}/>}/>
            <Redirect from= "/" to="/dashboardDefault"/>
 
          </Switch>
