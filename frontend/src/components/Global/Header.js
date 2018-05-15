@@ -36,7 +36,7 @@ class Header extends Component {
 
                         </Link></li>
                         <li><Link to={{
-                            pathname: '/listaDeEnunciados',
+                            pathname: '/listaEnunciadosProfesor',
                             state: { enunciado: "soy una lista de enunciados" }
                         }}>
                                 Lista de enunciados
@@ -48,7 +48,7 @@ class Header extends Component {
                     <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
                         
                         <li><Link to={{
-                            pathname: '/listaEnunciados',
+                            pathname: '/listaEnunciadosAlumno',
                             state: { enunciado: "soy alumno" }
                         }}>
                                 Enunciados

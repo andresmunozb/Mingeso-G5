@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Header from './Global/Header';
+import logo from './components/logo.svg';
+import './components/App.css';
+import Header from './components/Global/Header';
 import { Switch, Route, Redirect } from 'react-router-dom'
-import Admin from "./Admin/index"
-import Student from "./Student/Solution/index"
-import NewExercise from "./Teacher/Exercise/NewExercise"
-import DashBoardDefault from "./dashboard/dashboard"
-import IssueListTeacher from "./Teacher/Exercise/IssueList"
+import Admin from "./components/Admin/index"
+import Student from "./components/Student/Solution/index"
+import NewExercise from "./components/NewExercise"
+import DashBoardDefault from "./components/dashboard/dashboard"
+import IssueListTeacher from "./components/Teacher/IssueList"
+import IssueListBase from "./components/PaginationTablePageBase"
 
 //<Route path= "/dashboardCordinador" render={(props) => <Admin {...props} isAuthed={"hola admin"}/>}/>
 
@@ -17,6 +18,8 @@ class App extends Component {
       <div className="App">
         <Header/>
         <Switch>
+           <Route path= "/listaEnunciadosProfesor" render={(props) => <IssueListBase {...props} type={"prof"}/>}/>
+           <Route path="/listaEnunciadosAlumno" render={(props) => <IssueListBase {...props} type={"alumn"}/>}/>
 
           <Route path= "/dashboardDefault" render={(props) => <DashBoardDefault {...props} isAuthed={"hola admin"}/>}/>
           <Route path= "/nuevoEnunciado" render={(props) => <NewExercise {...props} estilos={"va a ser pequeño"}/>}/>
