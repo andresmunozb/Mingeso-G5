@@ -12,38 +12,48 @@ class Header extends Component {
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
-                    <a href="#brand">Pltaforma</a>
+                    <a href="/Dashboard">Plataforma</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
                     <NavDropdown eventKey={3} title="Coordinator" id="basic-nav-dropdown">
-                        <MenuItem eventKey={3.1}>Dashboard</MenuItem>
+                        <Link to={{
+                            pathname: '/Dashboard',
+                            state: { enunciado: "soy un nuevo enunciado" }
+                        }}>
+                            Dashboard
 
+                        </Link>
                     </NavDropdown>
                     <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
                         <Link to={{
                             pathname: '/nuevoEnunciado',
                             state: { enunciado: "soy un nuevo enunciado" }
                         }}>
-                       Crear enunciado
+                            Crear enunciado
 
                         </Link>
                         <Link to={{
                             pathname: '/listaDeEnunciados',
                             state: { enunciado: "soy una lista de enunciados" }
                         }}>
-                                    Lista de Enunciados
+                                Lista de Enunciados
                         </Link>
 
                         
 
                     </NavDropdown>
                     <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
-                  
-                        <MenuItem >Enunciados</MenuItem>
-
+                        
+                        <Link to={{
+                            pathname: '/listaEnunciados',
+                            state: { enunciado: "soy alumno" }
+                        }}>
+                                Enunciados
+                        </Link>
+                        
                         
 
                     </NavDropdown>

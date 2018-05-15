@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
+
 class Solution extends Component{
     constructor(props){
         super(props)
@@ -9,16 +10,12 @@ class Solution extends Component{
     render(){
 
         return(
-            <Link to={{
-                pathname: '/hola',
-                state: { fromDashboard: true }
-                
-              }}>
+        
 
             <p>
-            Llegue2
+            Llegue8
               </p>
-              </Link>
+           
 
             
      
