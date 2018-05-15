@@ -53,10 +53,18 @@ class Header extends Component {
                         }}>
                                 Enunciados
                         </Link></li>
+                    </NavDropdown>    
                         
-                        
+                    <NavDropdown eventKey={3} title="aa" id="basic-nav-dropdown">
+                        <li><Link to={{
+                            pathname: '/practica',
+                            state: { enunciado: "soy " }
+                        }}>
+                            practica
 
+                        </Link></li>
                     </NavDropdown>
+
                     </Nav>
                     <Nav pullRight>
                     <NavItem eventKey={1} href="#">
