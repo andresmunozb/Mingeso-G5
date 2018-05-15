@@ -27,6 +27,9 @@ public class Exercise {
     @Column(name = "published")
     private boolean published;
 
+    @Column(name = "function_name")
+    private String functionName;
+
     @OneToMany(mappedBy = "exercise")
     @JsonIgnore
     private List<TestCase> testCases;
