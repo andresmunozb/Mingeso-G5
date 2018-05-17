@@ -49,7 +49,8 @@ class Solution extends Component{
         <div class="container">
             <div className="row">
                 
-                  
+                <textarea rows="10" cols="180" //disabled  value= "vsfdasSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"//value={this.state.enunciado} //bloqquear enunciado 
+                />  
             </div>
              <div className="row">
                 <div className="col-sm-2">
@@ -61,11 +62,11 @@ class Solution extends Component{
                     </select>
                 </div>
                 <div className="col-sm-1 ">
-                    <button  className="btn btn-primary">Ejecutar</button>
+                    <button  onClick={this.runCode.bind(this)} className="btn btn-primary">Ejecutar</button>
                 </div>
                 <div className="col-sm-7 "></div>
                 <div className="col-sm-1">
-                
+                <button onClick={this.sendSolution.bind(this)} className="btn btn-success">Enviar</button>
                 </div>   
             </div><br></br>
             <div className="row" >
@@ -95,11 +96,7 @@ class Solution extends Component{
             </div>
         </div>
         );
-    }
-
-
-    
-  
+    }   
 }
 
 export default Solution;
