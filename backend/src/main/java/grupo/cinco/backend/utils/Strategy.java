@@ -1,6 +1,8 @@
 package grupo.cinco.backend.utils;
 
+import org.json.simple.JSONObject;
+
 public interface Strategy {
 
-    void executeCode(String code);
+    JSONObject executeCode(String code);
 }

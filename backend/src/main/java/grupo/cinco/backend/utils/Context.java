@@ -1,5 +1,7 @@
 package grupo.cinco.backend.utils;
 
+import org.json.simple.JSONObject;
+
 public class Context {
     Strategy strategy;
 
@@ -9,7 +11,7 @@ public class Context {
     public void setStrategy(Strategy strategy){
         this.strategy = strategy;
     }
-    public void executeCode(String code){
-        this.strategy.executeCode(code);
+    public JSONObject executeCode(String code){
+        return this.strategy.executeCode(code);
     }
 }
