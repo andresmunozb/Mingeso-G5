@@ -291,6 +291,7 @@ class FormPage extends Component{
 
                 {this.state.type==="code"&& 
                   <div>
+                    <form style={Css.forms3}>
                     <TextField
                       hintText="Name"
                       value = {this.props.enunciado.title}
@@ -303,10 +304,14 @@ class FormPage extends Component{
                       value = {this.props.enunciado.description}
                       fullWidth={true}
                       multiLine={true}
-                      rows={10}
-                      rowsMax={14}
+                      rows={8}
+                      cols = {1000}
+                      rowsMax={8}
                       /> 
-                      <CodePage/>
+                      </form>
+                      
+                        <CodePage/>
+                      
                  </div>
               }
       </div>

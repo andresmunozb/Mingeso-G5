@@ -34,8 +34,9 @@ class Solution extends Component{
         super(props)
         console.log(props)
         this.state = { lenguajeElegido: "", codigoAlumno: "", view:"",
-        //titulo: 
-        //eunciado: this.props.enunciados.enunciado,    
+        //titulo: this.props.enuniado.title, 
+        //eunciado: this.props.enunciado.description,    
+        //id:this.props.enunciado.id,
         };//1
 
     }
@@ -66,8 +67,6 @@ class Solution extends Component{
     }
 
 
-
-
     render(){
          console.log(this.props)
             if (this.state.view === "Cancelar") 
@@ -76,10 +75,8 @@ class Solution extends Component{
         return(
         <div class="container">
             <div className="row">
- 
-            </div>
-            <Divider/>
-             <div className="row">
+            <br></br>
+            <br></br>
                 <div className="col-sm-2">
                     <select onClick={this.updateLenguaje.bind(this)} >
                         <option hidden>Lenguaje</option>
@@ -101,7 +98,7 @@ class Solution extends Component{
                 <button onClick = {this.loadCancelar}
                 className="btn btn-danger" >Cancelar</button>
                 </div> 
-            </div><Divider/>
+            </div><br></br>
             <div className="row" >
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
                     <AceEditor
@@ -131,14 +128,13 @@ class Solution extends Component{
         </div>
         );
     } 
-    
-    
-    runCode(){
-        if(this.state.lenguajeElegido!= ''){
-            //ejecutar codigo
 
-        }else{
+      runCode(){
+        if(this.state.lenguajeElegido=== ''){// ==
+            
             alert('seleccione un lenguaje');
+        }else{
+            //ejecutar codigo
 
         }
     }
@@ -155,6 +151,7 @@ class Solution extends Component{
                 }
             };             
             const jsonSendSolution ={
+                id:this.props.enunciado.id,
                 codigoAlumno: this.state.codigoAlumno,
                 lenguajeElegido: this.state.lenguajeElegido,
             };
@@ -171,7 +168,7 @@ class Solution extends Component{
         else{
             alert('Fallo el envio');
         }
-    }      
+    }
 }
 
 export default Solution;

@@ -45,8 +45,17 @@ const styles = {
     width: 500
   },
   forms2:{
+    position:'relative',
+    left:'0%',
     width: 800
   },
+
+   forms3:{
+    position:'relative',
+    left:'20%',
+    width: 800
+  },
+
   buttons: {
     marginTop: 30,
     float: 'right'
