@@ -1,5 +1,17 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
+import RaisedButton from 'material-ui/RaisedButton';
+import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import Toggle from 'material-ui/Toggle';
+import DatePicker from 'material-ui/DatePicker';
+import {grey400} from 'material-ui/styles/colors';
+import Divider from 'material-ui/Divider';
+import PageBase from '../containers/PageBase';
+import Css from '../styles'
+
+
 import Axios from 'axios';
 import AceEditor from 'react-ace';
 import brace from 'brace';
@@ -61,6 +73,7 @@ class Solution extends Component{
         return(
         <div class="container">
             <div className="row">
+
                 <textarea rows="10" cols="180" disabled  //value={this.state.enunciado} //bloqquear enunciado 
                 />  
             </div>
