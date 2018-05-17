@@ -70,10 +70,7 @@ columns: {
 }
 };
 
-// EN ESE ORDEN DE ARRIBA A ABAJO REEMPLAZAR ESTAS RUTAS
- //verEnunciadoProfesor
 
-///editarEnunciadoProfesor
 class TeacherTable extends Component {
  
   constructor(props) {
@@ -204,10 +201,7 @@ handleRowSelection = (selectedRows) => {
                        </FloatingActionButton>
                     }
                     { this.state.booleanButtonReal && this.isSelected(item.id) &&
-
-                      <Link to={{ pathname: '/verEnunciadoProfesor',
-                                  state: { enunciado: this.state.selectedIssue }
-                                  }}>
+                    <Link className= "button"to="/verEnunciadoProfesor" params={{ enunciado: this.state.selectedIssue }}>                            
                           <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
@@ -238,7 +232,7 @@ handleRowSelection = (selectedRows) => {
                        </FloatingActionButton>
                     }
                      { this.state.booleanButtonReal &&  this.isSelected(item.id) &&
-                    <Link className= "button"to="/editarEnunciado" params={{ enunciado: this.state.selectedIssue }}>                            
+                    <Link className= "button"to="/editarEnunciadoProfesor" params={{ enunciado: this.state.selectedIssue }}>                            
                           <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}

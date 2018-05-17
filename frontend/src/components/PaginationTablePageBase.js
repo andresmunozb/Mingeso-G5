@@ -51,7 +51,7 @@ class PaginationTablePageBase extends Component {
     <PageBase title="Lista de enunciados"
               navigation="" type= "paper3"
              >
-             {this.state.type == "prof" &&
+             {this.state.type === "prof" &&
              <div>
                   <SelectField
                             floatingLabelText="Estado"
@@ -66,7 +66,7 @@ class PaginationTablePageBase extends Component {
              </div>
             
               }
-             {this.state.type == "alumn" &&
+             {this.state.type === "alumn" &&
                <PaginationTablePage  publicado = {"Publicado"} type = {this.state.type}/>
 
             

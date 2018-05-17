@@ -143,10 +143,10 @@ class NewExercise extends Component{
         };
         console.log("este es el estado de la publicacion")
         console.log(this.state.publicacion) 
-        if(this.state.publicacion == "Publicar"){
+        if(this.state.publicacion === "Publicar"){
           this.setState({publish:true}, this.agregarEnunciado2);
         }
-        else if (this.state.publicacion == "No publicar"){
+        else if (this.state.publicacion === "No publicar"){
           this.setState({publish:false},this.agregarEnunciado2)
         }
         

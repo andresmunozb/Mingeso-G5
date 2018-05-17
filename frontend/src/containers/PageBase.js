@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {PropTypes} from 'react';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import globalStyles from '../styles';
@@ -28,7 +27,7 @@ class PageBase extends Component{
         <div>
           <span style={globalStyles.navigation}>{this.state.navegacion}</span>
 
-          {this.state.type == "paper" &&
+          {this.state.type === "paper" &&
            <Paper style={globalStyles.paper}>
               <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
@@ -39,7 +38,7 @@ class PageBase extends Component{
 
             </Paper>
           }
-          {this.state.type == "paper2" &&
+          {this.state.type === "paper2" &&
            <Paper style={globalStyles.paper2}>
                 <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
@@ -50,7 +49,7 @@ class PageBase extends Component{
 
           </Paper>
           }
-          {this.state.type == "paper3" &&
+          {this.state.type === "paper3" &&
           <Paper style={globalStyles.paper3}>
                <h3 style={globalStyles.title}>{this.state.titulo}</h3>
 
