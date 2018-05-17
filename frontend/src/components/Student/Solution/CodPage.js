@@ -13,28 +13,14 @@ import 'brace/theme/terminal';
 
 import 'brace/snippets/python';
 import 'brace/ext/language_tools';
-//onChange={this.updateLenguaje.bind(this)}
-//{this.state.lenjuajeSelect} 
-// alert('El lenguaje elegido es: ' + this.state.value);
-/*<TextField
-                  hintText="enunciado"
-                  floatingLabelText="Enunciado"
-                  value = value={this.state.enunciado}
-    
-                  fullWidth={true}
-                  multiLine={true}
-                  rows={10}
-                  rowsMax={14}
-                  cols={180}
-                /> 
-*/
 
 class Solution extends Component{
     constructor(props){
         super(props)
         console.log(props)
-        this.state = { lenguajeElegido: "", codigoAlumno: "", //view:"",
-       
+        this.state = { lenguajeElegido: "", codigoAlumno: "", view:"",
+        //titulo: 
+        //eunciado: this.props.enunciados.enunciado,    
         };//1
 
     }
@@ -68,15 +54,14 @@ class Solution extends Component{
 
 
     render(){
-       //  console.log(this.props)
+         console.log(this.props)
             if (this.state.view === "Cancelar") 
                 alert('Cancel'); 
                // return  <"/listaEnunciados"/> ;
         return(
         <div class="container">
             <div className="row">
-                
-                <textarea rows="10" cols="180" 
+                <textarea rows="10" cols="180" disabled  //value={this.state.enunciado} //bloqquear enunciado 
                 />  
             </div>
              <div className="row">
@@ -132,6 +117,7 @@ class Solution extends Component{
         );
     } 
     
+    
     runCode(){
         if(this.state.lenguajeElegido!= ''){
             //ejecutar codigo
@@ -144,15 +130,33 @@ class Solution extends Component{
 
     sendSolution(){
 
-        if(this.state.codigoAlumno!= '' ){
-            alert('Tarea enviada ' + this.state.codigoAlumno);//ojala agregar fecha
-            }
+        if(this.state.codigoAlumno!= '' && this.state.lenguajeElegido!= ''){
+            alert('Tarea eviada ');//ojala agregar fecha
+                      
+            let axiosConfig = {
+                   headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    "Access-Control-Allow-Origin": "@crossorigin",
+                }
+            };             
+            const jsonSendSolution ={
+                codigoAlumno: this.state.codigoAlumno,
+                lenguajeElegido: this.state.lenguajeElegido,
+            };
+    
+            Axios.post('http://URL', jsonSendSolution, axiosConfig)
+                .then((res) => {
+                    console.log("RESPONSE RECEIVED: ", res);
+                    alert('Tarea eviada ');//ojala agregar fecha
+                })
+                .catch((err) => {
+                    console.log("AXIOS ERROR: ", err);
+                })
+        }
         else{
             alert('Fallo el envio');
         }
-    } 
-                      
-         
+    }      
 }
 
 export default Solution;
