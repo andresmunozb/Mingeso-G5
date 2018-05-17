@@ -1,5 +1,6 @@
-import React,{Component} from 'react'
-import {Link} from 'react-router-dom'
+import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
+import Axios from 'axios';
 import AceEditor from 'react-ace';
 import brace from 'brace';
 import 'brace/mode/java';
@@ -14,24 +15,32 @@ import 'brace/snippets/python';
 import 'brace/ext/language_tools';
 //onChange={this.updateLenguaje.bind(this)}
 //{this.state.lenjuajeSelect} 
+// alert('El lenguaje elegido es: ' + this.state.value);
+/*<TextField
+                  hintText="enunciado"
+                  floatingLabelText="Enunciado"
+                  value = value={this.state.enunciado}
+    
+                  fullWidth={true}
+                  multiLine={true}
+                  rows={10}
+                  rowsMax={14}
+                  cols={180}
+                /> 
+*/
 
 class Solution extends Component{
     constructor(props){
         super(props)
         console.log(props)
-        this.state={ value: '' };//1
-        
+        this.state = { lenguajeElegido: "", codigoAlumno: "", 
+        //enunciado: this.this.props.enunciados.enunciado,    //como me pasa el enunciado
+        };//1
 
     }
-  
-   handleChange(event){
-    this.setState({value:event.target.value});//1
-   }
-    
-    handleSubmit(event) {
-    alert('Lenguaje escogido ' + this.state.value);
-    event.preventDefault();
-  }
+
+    updateLenguaje(event){this.setState({lenguajeElegido:event.target.value});}
+    //updateCodigoA(event){this.setState({codigoAlumno: event.target.value});}//como actualizar lo que escribe el alumno
 
 
     render(){
@@ -39,38 +48,38 @@ class Solution extends Component{
         return(
         <div class="container">
             <div className="row">
-                <textarea rows="10" cols="180" enabled="true">
-                    </textarea>
+                
+                  
             </div>
              <div className="row">
-                <div className="col-sm-3">
-                    <select value={this.state.value} onChange = {this.handleChange}> 
-                        <option selected hidden>Lenguaje</option>
+                <div className="col-sm-2">
+                    <select onClick={this.updateLenguaje.bind(this)} >
+                        <option hidden>Lenguaje</option>
                         <option value="python">Python</option>
                         <option value="c_cpp">C</option>
                         <option value="java">Java</option>
                     </select>
-                    <div className="col-sm-3">
-                        <button type="button" className="btn btn-primary">Run</button>
-                    </div>
                 </div>
-            </div>
-
-            <br></br>
-                    
-
+                <div className="col-sm-1 ">
+                    <button  className="btn btn-primary">Ejecutar</button>
+                </div>
+                <div className="col-sm-7 "></div>
+                <div className="col-sm-1">
+                
+                </div>   
+            </div><br></br>
             <div className="row" >
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
                     <AceEditor
-                    mode="python" //escoger lenguaje
+                    mode= {this.state.lenguajeElegido} //escoger lenguaje
                     theme="terminal"
                     name="blah2"
-                    // onChange={this.onChange}
+                    //onChange={this.updateCodigoA.bind(this)}
                     fontSize={18}
                     showPrintMargin={true}
                     showGutter={true}
                     highlightActiveLine={true}
-                    value=""
+                    value = ""
                     setOptions={{
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: false,
@@ -80,13 +89,17 @@ class Solution extends Component{
                     }}/>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
-                    <textarea acer-dark rows="25" cols="81">
+                    <textarea rows="25" cols="81">
                     </textarea>
                 </div>
             </div>
         </div>
         );
     }
+
+
+    
+  
 }
 
 export default Solution;
