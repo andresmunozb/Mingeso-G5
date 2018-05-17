@@ -6,6 +6,8 @@ import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.SolutionRepository;
 import grupo.cinco.backend.repositories.UserRepository;
+import grupo.cinco.backend.utils.Context;
+import grupo.cinco.backend.utils.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,4 +62,16 @@ public class SolutionService {
         Solution solution = solutionRepository.findById(id).get();
         solutionRepository.delete(solution);
     }
+
+    @RequestMapping(value = "/execute", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public void execute(@RequestBody Solution resource) {
+        Factory  factory = new Factory();
+        Context context = new Context(factory.getStrategy(resource.getLanguage()));
+        context.executeCode(resource.getScript());
+
+    }
+
+
 }
