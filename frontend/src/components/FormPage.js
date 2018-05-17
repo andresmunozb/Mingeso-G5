@@ -10,8 +10,9 @@ import DatePicker from 'material-ui/DatePicker';
 import {grey400} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import PageBase from '../containers/PageBase';
-import Css from '../styles'
-import Axios from 'axios'
+import CodePage from './CodePage';
+import Css from '../styles';
+import Axios from 'axios';
 
 
 
@@ -92,43 +93,39 @@ class FormPage extends Component{
 
   }
   render(){
-      
-      return(
+    return(
       <div>
-                { this.state.type === "lookUp" && this.state.preparations &&
-               <div> 
-                        <div>
-                              <TextField
-                                  hintText="Name"
-                                  value = {this.props.enunciado.title}
-                                  floatingLabelText="Titulo"
-                                  fullWidth={true}
-                                />
-                                {this.state.speciality === "prof" &&
-                                      
-                                      <TextField
-                                      hintText="Name2"
-                                      value = {this.getPublish("lookUp")}
-                                      floatingLabelText="Estado de publicacion"
-                                      fullWidth={true}
-                                    />
-                                      
-                          
-                                 }
-                                <TextField
-                                  hintText="enunciado"
-                                  floatingLabelText="Enunciado"
-                                  value = {this.props.enunciado.description}
-                                  fullWidth={true}
-                                  multiLine={true}
-                                  rows={10}
-                                  rowsMax={14}
-                                /> 
-                           <Divider/>
-                          </div>
+        { this.state.type === "lookUp" && this.state.preparations &&
+          <div> 
+              <div>
+                <TextField
+                  hintText="Name"
+                  value = {this.props.enunciado.title}
+                  floatingLabelText="Titulo"
+                  fullWidth={true}
+                />
+                {this.state.speciality === "prof" &&
+                  <TextField
+                    hintText="Name2"
+                    value = {this.getPublish("lookUp")}
+                    floatingLabelText="Estado de publicacion"
+                    fullWidth={true}
+                  />
+                }
+                <TextField
+                  hintText="enunciado"
+                  floatingLabelText="Enunciado"
+                  value = {this.props.enunciado.description}
+                  fullWidth={true}
+                  multiLine={true}
+                  rows={10}
+                  rowsMax={14}
+                /> 
+                <Divider/>
+              </div>
 
-                          <div style={Css.buttons}>
-                                {this.state.speciality === "prof" &&
+              <div style={Css.buttons}>
+                {this.state.speciality === "prof" &&
 
                                 //ROUTER V4
                            /*     <Link to={{
@@ -138,37 +135,33 @@ class FormPage extends Component{
                                   state: { fromDashboard: true }
                                 }}/>*/
                                       
-                                      <RaisedButton label="Volver"
-                                                          style={Css.saveButton}
-                                                          primary={true}
-                                                          onClick = {this.test}
-                                              />
-                                      
-                                }
-                                {this.state.speciality === "coord" &&
+                  <RaisedButton label="Volver"
+                    style={Css.saveButton}
+                    primary={true}
+                    onClick = {this.test}
+                  />
+                  }
+                  {this.state.speciality === "coord" &&
                                 //ROUTER V4
 
-                                      <RaisedButton label="Volver"
-                                                          style={Css.saveButton}
-                                                          primary={true}
-                                              />
-                                          
-                                }
-                                {this.state.speciality === "alumn" &&
+                    <RaisedButton label="Volver"
+                      style={Css.saveButton}
+                      primary={true}
+                    />
+                  }
+                  {this.state.speciality === "alumn" &&
                                 //ROUTER V4
 
-                                        <RaisedButton label="Volver"
-                                                        style={Css.saveButton}
-                                                        primary={true}
-                                            />
-                                        
-                                          
-                                }
-                           </div>
-                </div>
-                }
+                  <RaisedButton label="Volver"
+                  style={Css.saveButton}
+                  primary={true}
+                  />
+                  }
+              </div>
+        </div>
+      }
                 { this.state.type === "edit" && this.state.preparations &&
-                     <div>
+                  <div>
                         <TextField
                             hintText="Name"
                             value = {this.state.enunciadoPreDefinidoTitle}
@@ -196,18 +189,13 @@ class FormPage extends Component{
                                 rowsMax={14}
                                 onChange={this.updateDescriptionEdit.bind(this)}
                         /> 
-
-
                         <Divider/>
 
-                         <div style={Css.buttons}>
+                        <div style={Css.buttons}>
                          {this.state.speciality === "coord" &&
-                                                         //ROUTER V4
-
-                                <div style={Css.buttons}>
-
-                               <Link className= "button"to="/listaEnunciadosCoordinador" params={{ testvalue: "hello" }}> 
-                                    <RaisedButton label="Volver"
+                            <div style={Css.buttons}>
+                              <Link className= "button"to="/listaEnunciadosCoordinador" params={{ testvalue: "hello" }}> 
+                                <RaisedButton label="Volver"
                                                           style={Css.saveButton}
                                                           primary={true}
                                               />
@@ -238,7 +226,6 @@ class FormPage extends Component{
                           </div>
                   </div>
                 }
-
                 { this.state.type === "new" && this.state.preparations &&
 
                 <div> 
@@ -272,14 +259,14 @@ class FormPage extends Component{
                           /> 
 
 
-                           <Divider/>
+                          <Divider/>
 
-                            <div style={Css.buttons}>
+                           <div style={Css.buttons}>
                                         <RaisedButton label="Cancelar"
                                              onClick = {this.loadCancelar}
                                          />
 
-                               <RaisedButton label="Guardar"
+                            <RaisedButton label="Guardar"
                                             style={Css.saveButton}
                                               primary={true}
                                                onClick={this.agregarEnunciado.bind(this)}
@@ -289,23 +276,54 @@ class FormPage extends Component{
                     </div>
 
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {this.state.type==="code"&& 
+                  <div>
+                    <TextField
+                      hintText="Name"
+                      value = {this.props.enunciado.title}
+                      floatingLabelText="Titulo"
+                      fullWidth={true}
+                      />
+                    <TextField
+                      hintText="enunciado"
+                      floatingLabelText="Enunciado"
+                      value = {this.props.enunciado.description}
+                      fullWidth={true}
+                      multiLine={true}
+                      rows={10}
+                      rowsMax={14}
+                      /> 
+                      <CodePage/>
+                 </div>
+              }
       </div>
        
       );
-  }
+}
+
+
   updateTitleEdit(event){
     this.setState({
       enunciadoPreDefinidoTitle: event.target.value
     });
-
-
   }
   updatePublishEdit(newIndex){
     this.setState({
       enunciadoPreDefinidoPublish:  this.state.options[newIndex]
     });
-
-
   }
   updateDescriptionEdit(event){
     this.setState({

@@ -40,6 +40,9 @@ const styles = {
   forms:{
     width: 500
   },
+  forms2:{
+    width: 900
+  },
   buttons: {
     marginTop: 30,
     float: 'right'

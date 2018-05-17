@@ -70,17 +70,16 @@ class FormPageBase extends Component{
                 }
 
                  {this.state.type === "biggerForm" && 
-                        <div>
-
-
-
-                        </div>
-                    
-                    }
-                
-
-                    </div>
-                
+                  <PageBase title={this.state.tituloPagina}
+                        navigation={this.state.navegation} type = "paper"  >
+              
+                    <form style={Css.forms2}>
+                      <FormPage enunciado = {this.state.enunciadoPreDefinido} type= 'code' />
+                    </form>
+                  </PageBase>
+                }
+              </div>
+                             
                 );
   }
 

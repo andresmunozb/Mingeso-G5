@@ -25,7 +25,7 @@ class App extends Component {
           <Route path= "/nuevoEnunciado" render={(props) => <NewExercise {...props} estilos={"va a ser pequeño"}/>}/>
           <Route path="/verEnunciadoProfesor" render={(props) => <FormPageBase {...props} type={"littleForm"} subtype={"lookUp"} speciality= {"prof"} title={"Detalles del enunciado"} navegation={"Ver Enunciado"} />} />
           <Route path="/verEnunciadoAlumno" render={(props) => <FormPageBase {...props} type={"littleForm"} subtype={"lookUp"} speciality= {"alumn"} title={"Detalles del enunciado"} navegation={"Ver Enunciado"} />} />     
-          <Route path= "/practica" render={(props) => <Student {...props} isAuthed={"hola student"}/>}/>
+          <Route path= "/practica" render={(props) => <FormPageBase {...props} type={"biggerForm"} subtype={"lookUp"} speciality= {"alumn"} title={"Detalles del enunciado"} navegation={"Ver Enunciado"}/>}/>
            <Redirect from= "/" to="/dashboardDefault"/>
 
          </Switch>
