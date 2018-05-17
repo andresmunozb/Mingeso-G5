@@ -26,6 +26,9 @@ import 'brace/theme/terminal';
 import 'brace/snippets/python';
 import 'brace/ext/language_tools';
 
+//<textarea rows="10" cols="180" disabled  //value={this.state.enunciado} //bloqquear enunciado 
+                ///> 
+
 class Solution extends Component{
     constructor(props){
         super(props)
@@ -73,10 +76,9 @@ class Solution extends Component{
         return(
         <div class="container">
             <div className="row">
-
-                <textarea rows="10" cols="180" disabled  //value={this.state.enunciado} //bloqquear enunciado 
-                />  
+ 
             </div>
+            <Divider/>
              <div className="row">
                 <div className="col-sm-2">
                     <select onClick={this.updateLenguaje.bind(this)} >
@@ -99,7 +101,7 @@ class Solution extends Component{
                 <button onClick = {this.loadCancelar}
                 className="btn btn-danger" >Cancelar</button>
                 </div> 
-            </div><br></br>
+            </div><Divider/>
             <div className="row" >
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
                     <AceEditor

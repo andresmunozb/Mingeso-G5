@@ -23,7 +23,10 @@ const styles = {
     left:'28%'
   },
   paper2:{
-    padding: 30
+    width: 1200,
+    padding: 30,
+    position:'relative',
+    left:'5%'
 
   },
 
@@ -34,6 +37,7 @@ const styles = {
     left:'10%'
 
   },
+
   clear: {
     clear: 'both'
   },
@@ -41,7 +45,7 @@ const styles = {
     width: 500
   },
   forms2:{
-    width: 900
+    width: 800
   },
   buttons: {
     marginTop: 30,

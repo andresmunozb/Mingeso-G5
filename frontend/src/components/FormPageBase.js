@@ -71,7 +71,7 @@ class FormPageBase extends Component{
 
                  {this.state.type === "biggerForm" && 
                   <PageBase title={this.state.tituloPagina}
-                        navigation={this.state.navegation} type = "paper"  >
+                        navigation={this.state.navegation} type = "paper2"  >
               
                     <form style={Css.forms2}>
                       <FormPage enunciado = {this.state.enunciadoPreDefinido} type= 'code' />
