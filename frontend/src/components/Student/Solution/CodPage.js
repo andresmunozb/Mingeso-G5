@@ -33,23 +33,50 @@ class Solution extends Component{
     constructor(props){
         super(props)
         console.log(props)
-        this.state = { lenguajeElegido: "", codigoAlumno: "", 
-        //enunciado: this.this.props.enunciados.enunciado,    //como me pasa el enunciado
+        this.state = { lenguajeElegido: "", codigoAlumno: "", //view:"",
+       
         };//1
 
     }
 
-    updateLenguaje(event){this.setState({lenguajeElegido:event.target.value});}
+    updateLenguaje(event){
+        this.setState(
+            {lenguajeElegido:event.target.value}); 
+            event.preventDefault();
+    }
     //updateCodigoA(event){this.setState({codigoAlumno: event.target.value});}//como actualizar lo que escribe el alumno
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.codigoAlumno !== nextState.codigoAlumno) {
+          return false
+        } else {
+          return true;
+        }
+    }
+    onChange=(NewValue)=>{
+        console.log('Change',NewValue);
+        this.setState({
+            codigoAlumno:NewValue
+        });
+        
+    }
+    loadCancelar = () => {
+        this.setState({view: "Cancelar"});
+    }
+
+
 
 
     render(){
-
+       //  console.log(this.props)
+            if (this.state.view === "Cancelar") 
+                alert('Cancel'); 
+               // return  <"/listaEnunciados"/> ;
         return(
         <div class="container">
             <div className="row">
                 
-                <textarea rows="10" cols="180" //disabled  value= "vsfdasSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"//value={this.state.enunciado} //bloqquear enunciado 
+                <textarea rows="10" cols="180" 
                 />  
             </div>
              <div className="row">
@@ -62,12 +89,18 @@ class Solution extends Component{
                     </select>
                 </div>
                 <div className="col-sm-1 ">
-                    <button  onClick={this.runCode.bind(this)} className="btn btn-primary">Ejecutar</button>
+                    <button  onClick={this.runCode.bind(this)} 
+                    className="btn btn-primary">Ejecutar</button>
                 </div>
-                <div className="col-sm-7 "></div>
+                <div className="col-sm-6 "></div>
                 <div className="col-sm-1">
-                <button onClick={this.sendSolution.bind(this)} className="btn btn-success">Enviar</button>
+                <button onClick={this.sendSolution.bind(this)} 
+                className="btn btn-success">Enviar</button>
                 </div>   
+                <div className="col-sm-1">
+                <button onClick = {this.loadCancelar}
+                className="btn btn-danger" >Cancelar</button>
+                </div> 
             </div><br></br>
             <div className="row" >
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
@@ -76,6 +109,7 @@ class Solution extends Component{
                     theme="terminal"
                     name="blah2"
                     //onChange={this.updateCodigoA.bind(this)}
+                    onChange={this.onChange}
                     fontSize={18}
                     showPrintMargin={true}
                     showGutter={true}
@@ -96,7 +130,29 @@ class Solution extends Component{
             </div>
         </div>
         );
-    }   
+    } 
+    
+    runCode(){
+        if(this.state.lenguajeElegido!= ''){
+            //ejecutar codigo
+
+        }else{
+            alert('seleccione un lenguaje');
+
+        }
+    }
+
+    sendSolution(){
+
+        if(this.state.codigoAlumno!= '' ){
+            alert('Tarea enviada ' + this.state.codigoAlumno);//ojala agregar fecha
+            }
+        else{
+            alert('Fallo el envio');
+        }
+    } 
+                      
+         
 }
 
 export default Solution;
