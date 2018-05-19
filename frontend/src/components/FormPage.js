@@ -23,9 +23,9 @@ class FormPage extends Component{
     console.log(props)
     super(props);
     this.state ={
-      tituloEnunciado:"Titulo del enunciado",
-      publicacion:"Estado",
-      descripcion:"Enunciado",
+      tituloEnunciado:props.enunciado.title ,
+      publicacion:props.enunciado.published ,
+      descripcion:props.enunciado.description,
       options: ["Publicar", "No publicar"],
       publish: false,
       type: props.type,
@@ -35,25 +35,25 @@ class FormPage extends Component{
       enunciadoPreDefinidoTitle: null,
       enunciadoPreDefinidoPublish: null,
       enunciadoPreDefinidoDescription: null,
-      preparations : false  
+      publicado: null
      
     }
-    this.setPreparations = this.setPreparations.bind(this);
     this.test = this.test.bind(this);
 
   }
-  setPreparations(){
-    this.setState({preparations : true})
-  }
   componentWillMount(){
-    console.log("ojala me monte")
-    console.log(this.props.enunciado)
-    this.setState({
-      enunciadoPreDefinido: this.props.enunciado,
-      enunciadoPreDefinidoTitle: this.props.title,
-      enunciadoPreDefinidoPublish: this.props.published,
-      enunciadoPreDefinidoDescription: this.props.description,      
-    }, this.setPreparations)
+    if(this.props.enunciado.published){
+
+          this.setState({
+            publicado: "Publicado"  
+          });
+    }
+    else{
+
+          this.setState({
+            publicado: "No publicado"   
+          });
+    }
 
   }
 
@@ -78,7 +78,8 @@ class FormPage extends Component{
         }
     }
     else{
-            if(this.state.enunciadoPreDefinidoPublish){
+
+            if(this.state.publicacion){
               return "Publicado"
           }
           else{
@@ -95,7 +96,7 @@ class FormPage extends Component{
   render(){
     return(
       <div>
-        { this.state.type === "lookUp" && this.state.preparations &&
+        { this.state.type === "lookUp" &&
           <div> 
               <div>
                 <TextField
@@ -107,7 +108,7 @@ class FormPage extends Component{
                 {this.state.speciality === "prof" &&
                   <TextField
                     hintText="Name2"
-                    value = {this.getPublish("lookUp")}
+                    value = {this.state.publicado}
                     floatingLabelText="Estado de publicacion"
                     fullWidth={true}
                   />
@@ -121,59 +122,66 @@ class FormPage extends Component{
                   rows={10}
                   rowsMax={14}
                 /> 
-                <Divider/>
               </div>
 
               <div style={Css.buttons}>
                 {this.state.speciality === "prof" &&
 
-                                //ROUTER V4
-                           /*     <Link to={{
-                                  pathname: '/courses',
-                                  search: '?sort=name',
-                                  hash: '#the-hash',
-                                  state: { fromDashboard: true }
-                                }}/>*/
+                 //ROUTER V4
+                   <Link to={{
+                          pathname: '/listaEnunciadosProfesor',
+                          state: { fromEnunciadoProfesor: this.props.enunciado.published }
+                  }}>
                                       
                   <RaisedButton label="Volver"
                     style={Css.saveButton}
                     primary={true}
                     onClick = {this.test}
                   />
+                  </Link>
                   }
-                  {this.state.speciality === "coord" &&
-                                //ROUTER V4
-
-                    <RaisedButton label="Volver"
-                      style={Css.saveButton}
-                      primary={true}
-                    />
-                  }
+                  
                   {this.state.speciality === "alumn" &&
                                 //ROUTER V4
+                  <Link to={{
+                             pathname: '/listaEnunciadosAlumno',
+                          state: { fromEnunciadoProfesor: this.props.enunciado.published }
+                  }}>
+                          <RaisedButton label="Volver"
+                          style={Css.saveButton}
+                          primary={true}
+                          />
+                   </Link>
 
-                  <RaisedButton label="Volver"
-                  style={Css.saveButton}
-                  primary={true}
-                  />
                   }
               </div>
         </div>
       }
-                { this.state.type === "edit" && this.state.preparations &&
+                { this.state.type === "edit" &&
                   <div>
+                      <div>
                         <TextField
                             hintText="Name"
-                            value = {this.state.enunciadoPreDefinidoTitle}
+                            value = {this.state.tituloEnunciado}
                             floatingLabelText="Titulo"
                             fullWidth={true}
                             onChange={this.updateTitleEdit.bind(this)}
+                            errorText= {this.state.tituloEnunciado !== undefined && 
+                              this.state.tituloEnunciado.length === 0 &&
+                            'Este campo es requerido' }
+
                          />
                          <SelectField
-                            floatingLabelText="Estado"
-                            value = {this.state.enunciadoPreDefinidoPublish}
-                            onChange={(evt, newIndex) => this.updatePublishEdit(newIndex)} value={this.state.enunciadoPreDefinido.published} 
-                            fullWidth={true}>
+                            floatingLabelText={"Estado:   "+this.state.publicado}
+                            onChange={(evt, newIndex) => this.updatePublishEdit(newIndex)} 
+                            value={this.state.publicacion} 
+                            fullWidth={true}
+
+                            errorText= {this.state.publicacion !== undefined && 
+                              this.state.publicacion.length === 0 &&
+                            'Este campo es requerido' }
+
+                            >
                                 {this.state.options.map(function(w, index){
                                 return  <MenuItem key={index} label={w} value={w}>{w}</MenuItem>;
                                   })}
@@ -181,94 +189,98 @@ class FormPage extends Component{
                         <TextField
                                 hintText="enunciado"
                                 floatingLabelText="Enunciado"
-                                value = {this.state.enunciadoPreDefinidoDescription}
-
+                                value = {this.state.descripcion}
+                                errorText= {this.state.descripcion !== undefined && 
+                                  this.state.descripcion.length === 0 &&
+                                'Este campo es requerido' }
                                 fullWidth={true}
                                 multiLine={true}
                                 rows={10}
                                 rowsMax={14}
                                 onChange={this.updateDescriptionEdit.bind(this)}
+
                         /> 
-                        <Divider/>
-
-                        <div style={Css.buttons}>
-                         {this.state.speciality === "coord" &&
-                            <div style={Css.buttons}>
-                              <Link className= "button"to="/listaEnunciadosCoordinador" params={{ testvalue: "hello" }}> 
+                        </div>
+                           <div style={Css.buttons}>                       
+                           <Link to={{
+                                  pathname: '/listaEnunciadosProfesor',
+                                state: { fromEnunciadoProfesor: this.props.enunciado.published }
+                            }}>
                                 <RaisedButton label="Volver"
-                                                          style={Css.saveButton}
-                                                          primary={true}
-                                              />
-                               </Link>
-                                      
-                              </div>
-                          }
-                          {this.state.speciality === "prof" &&
-                                                          //ROUTER V4
-
-                              <div style={Css.buttons}>
-
-                                 <Link className= "button" to="/listaEnunciadosProfesor" params={{ testvalue: "hello" }}>
-                                      <RaisedButton label="Volver"
                                                         style={Css.saveButton}
                                                         primary={true}
                                             />
                                   </Link>
-                                 
-                            </div>
-                          }
-
-                              <RaisedButton label="Modificar"
-                                            style={Css.saveButton}
-                                            primary={true}
-                                            onClick={this.editarEnunciado.bind(this)}
+                          
+                                <RaisedButton label="Modificar"
+                                                        style={Css.saveButton}
+                                                        primary={true}
+                                                        onClick={this.editarEnunciado.bind(this)}
                                             />
-                          </div>
+                             </div>
+
+                          
+                       
+                        
                   </div>
                 }
-                { this.state.type === "new" && this.state.preparations &&
+                { this.state.type === "new" &&
 
                 <div> 
-                                                              
+                      <div>                           
                        <TextField
                                     hintText="Name"
                                     value = {this.state.tituloEnunciado}
                                     floatingLabelText="Titulo"
                                     fullWidth={true}
                                     onChange={this.updateTitle.bind(this)}
+
+                                    errorText= {this.state.tituloEnunciado !== undefined && 
+                                                this.state.tituloEnunciado.length === 0 &&
+                                              'Este campo es requerido' }
                        />
                         <SelectField
                                     floatingLabelText="Estado"
                                     value = {this.state.publicacion}
-                                    onChange={(evt, newIndex) => this.updateState(newIndex)} value={this.state.publicacion} 
-                                    fullWidth={true}>
+                                    onChange={(evt, newIndex) => this.updateState(newIndex)} 
+                                    errorText= {this.state.publicacion !== undefined && 
+                                      this.state.publicacion.length === 0 &&
+                                    'Este campo es requerido' }
+                                    >
                                         {this.state.options.map(function(w, index){
                                         return  <MenuItem key={index} label={w} value={w}>{w}</MenuItem>;
                                           })}
+
                        </SelectField>
                         <TextField
                                     hintText="enunciado"
                                     floatingLabelText="Enunciado"
                                     value = {this.state.descripcion}
-
                                     fullWidth={true}
                                     multiLine={true}
                                     rows={10}
                                     rowsMax={14}
                                     onChange={this.updateDescription.bind(this)}
+                                    errorText= {this.state.descripcion !== undefined && 
+                                      this.state.descripcion.length === 0 &&
+                                    'Este campo es requerido' }
+
                           /> 
+                          </div>
 
 
                           <Divider/>
 
                            <div style={Css.buttons}>
-                                        <RaisedButton label="Cancelar"
+                                        <RaisedButton label="Reutilizar"
                                              onClick = {this.loadCancelar}
+                                             style={Css.reUseBtn}
                                          />
 
                             <RaisedButton label="Guardar"
                                             style={Css.saveButton}
                                               primary={true}
+                                              style={Css.createBtn}
                                                onClick={this.agregarEnunciado.bind(this)}
                                           />
                               </div>
@@ -277,21 +289,9 @@ class FormPage extends Component{
 
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
                 {this.state.type==="code"&& 
                   <div>
-                    <form style={Css.forms3}>
+                    <div style={Css.forms3}>
                     <TextField
                       hintText="Name"
                       value = {this.props.enunciado.title}
@@ -308,9 +308,9 @@ class FormPage extends Component{
                       cols = {1000}
                       rowsMax={8}
                       /> 
-                      </form>
+                      </div>
                       
-                        <CodePage/>
+                        <CodePage enunciado= {this.props.enunciado}/>
                       
                  </div>
               }
@@ -321,18 +321,24 @@ class FormPage extends Component{
 
 
   updateTitleEdit(event){
+    console.log(this.state.tituloEnunciado)
     this.setState({
-      enunciadoPreDefinidoTitle: event.target.value
+      tituloEnunciado: event.target.value
     });
   }
   updatePublishEdit(newIndex){
+    console.log(this.state.options[newIndex])
     this.setState({
-      enunciadoPreDefinidoPublish:  this.state.options[newIndex]
-    });
+      publicacion:  this.state.options[newIndex],
+      publicado:  this.state.options[newIndex]
+    },    console.log(this.state.publicacion)
+  );
   }
   updateDescriptionEdit(event){
+    console.log(this.state.descripcion)
+
     this.setState({
-      enunciadoPreDefinidoDescription: event.target.value
+      descripcion: event.target.value
     });
 
 
@@ -362,6 +368,7 @@ class FormPage extends Component{
       description: this.state.descripcion,
       published: this.state.publish
     }
+   
     
     //http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/{id}, el id es para un usuario
     //en particular.
@@ -387,57 +394,73 @@ class FormPage extends Component{
     console.log(this.state.tituloEnunciado)
     console.log(this.state.publicacion)
     
-    if(this.state.tituloEnunciado, this.state.publicacion , this.state.descripcion){            
-    let axiosConfig = {
-      headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          "Access-Control-Allow-Origin": "@crossorigin",
-      }
-    };
-    console.log("este es el estado de la publicacion")
-    console.log(this.state.publicacion) 
-    if(this.state.publicacion === "Publicar"){
-      this.setState({publish:true}, this.agregarEnunciado2);
-    }
-    else if (this.state.publicacion === "No publicar"){
-      this.setState({publish:false},this.agregarEnunciado2)
-    }
-    
-   
-
+    if(this.state.tituloEnunciado !== undefined &&
+       this.state.publicacion !== undefined && this.state.descripcion !== undefined){
+        if(this.state.tituloEnunciado.length !== 0 &&
+          this.state.publicacion.length !== 0 &&  this.state.descripcion.length !== 0 ){
+          let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "@crossorigin",
+            }
+          };
+          console.log("este es el estado de la publicacion")
+          console.log(this.state.publicacion) 
+          if(this.state.publicacion === "Publicar"){
+            this.setState({publish:true}, this.agregarEnunciado2);
+          }
+          else if (this.state.publicacion === "No publicar"){
+            this.setState({publish:false},this.agregarEnunciado2)
+          }
+        } 
+        else{
+          alert('Debes completar todos los campos');
+        }           
     }
     else{
       alert('Debes completar todos los campos');
     }
   
   }
+  editarEnunciado2= () =>{
+    console.log("esto va a pasar")
 
-  editarEnunciado(){
-    console.log(this.state.enunciadoPreDefinidoTitle)
-    console.log(this.state.enunciadoPreDefinidoDescription)
-    console.log(this.state.enunciadoPreDefinidoPublish)
-    
+    console.log(this.state.tituloEnunciado)
+    console.log(this.state.descripcion)
+    console.log(this.state.publish)
+    let jsonAgregar = {
+      title:this.state.tituloEnunciado,
+      description: this.state.descripcion,
+      published:this.state.publish
+    }
     let axiosConfig = {
       headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           "Access-Control-Allow-Origin": "@crossorigin",
       }
     };
-    let jsonAgregar = {
-      title:this.state.enunciadoPreDefinidoTitle,
-      description: this.state.enunciadoPreDefinidoDescription,
-      published: this.state.enunciadoPreDefinidoPublish
-    }
-    
-    
+    console.log("se supone que soy un json VALIDO")
+    console.log("se supone que es el numero")
+    console.log(this.props.enunciado.id)
     //http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/{Id}/publish, el id es para un usuario
     //en particular.
     //Futuro push se cambiara el id dependiendo del usuario
-    Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/publish', jsonAgregar)
+    console.log('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.enunciado.id+'/publish')
+    Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.enunciado.id+'/publish',jsonAgregar)
     .then((res) => {
       console.log("RESPONSE RECEIVED: ", res);
-      alert('Enunciado agregado ' + this.state.enunciadoPreDefinidoTitle);
      
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+
+    });
+  
+    Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.enunciado.id+'/edit', jsonAgregar)
+    .then((res) => {
+      console.log("RESPONSE RECEIVED: ", res);
+    
+      alert('Se ha modificado sadisfactoriamente el enunciado de titulo'+this.state.tituloEnunciado);
 
 
     })
@@ -445,13 +468,41 @@ class FormPage extends Component{
       console.log("AXIOS ERROR: ", err);
 
     })
-    
-   
-
 
 
 
   }
+
+  editarEnunciado(){
+
+    console.log(this.state.tituloEnunciado)
+    console.log(this.state.descripcion)
+    console.log(this.state.publicacion)
+    if(this.state.tituloEnunciado !== undefined &&
+      this.state.publicacion !== undefined && this.state.descripcion !== undefined){
+      if(this.state.tituloEnunciado.length !== 0 &&
+        this.state.publicacion.length !== 0 &&  this.state.descripcion.length !== 0 ){          
+         
+          console.log("este es el estado de la publicacion")
+          console.log(this.state.publicacion) 
+          if(this.state.publicacion === "Publicar"){
+            this.setState({publish:true}, this.editarEnunciado2);
+          }
+          else if (this.state.publicacion === "No publicar"){
+            this.setState({publish:false},this.editarEnunciado2)
+          }
+          
+      }
+      else{
+        alert('Debes completar todos los campos');
+      }
+      
+ 
+  }
+  else{
+    alert('Debes completar todos los campos');
+  }
+}
 }
 
 export default FormPage;

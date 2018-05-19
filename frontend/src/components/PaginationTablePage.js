@@ -85,7 +85,6 @@ class TeacherTable extends Component {
       currentPage:props.presentPage,
       currentData: props.currentDataNow,
       selectedIssue: null,
-      typeOfTeacher: props.type,
       booleanButtonInitial: true,
       booleanButtonReal:false,
       selected: [-1]
@@ -98,12 +97,42 @@ class TeacherTable extends Component {
 
 
    }
+   componentWillMount(){
+     // CASO EXTREMO:
+     //Se realiza esto si es que se borra todos los enunciados y se tiene un objeto vacio
+     //Este no se puede mappear (iterar), por lo tanto se le asigna a la data actual como un arreglo vacio
+
+      if(Object.keys(this.state.currentData).length === 0 && this.state.currentData.constructor === Object){
+          this.setState({
+            currentData: []
+          })
+      }
+   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-        currentPage: nextProps.presentPage,
-        currentData: nextProps.currentDataNow
-    })
+    // CASO "EXTREMO" (muy comun que le pase a un usuario pero es especial en como tratarlo):
+     //Se realiza esta sentencia si es que se busca en la barra de buscar y no se encuentra ningun enunciado 
+     //que tenga esa o esas letras en comun con algun enunciado
+     //Este no se puede mappear (iterar) debido a que retorna un objeto vacio (no tiene metodo map y se cae) 
+     //al no encontrar algun  enunciado, por lo tanto se le asigna a la data actual como un arreglo vacio
+     //y no se carga nada debido a que no hay nada que coincida con lo buscado 
+     //Se realiza en este metodo debido a que buscar cambia la data a mostrar SIN que se tenga que renderear
+     //de nuevo este componente
+
+     if(Object.keys(nextProps.currentDataNow).length === 0 && nextProps.currentDataNow.constructor === Object){
+          this.setState({
+            currentData: []
+          })
+     }
+     //Ejecucion normal caso feliz
+     //Se encuentra el enunciado al tener letras en comun con el buscador o se cambia de pagina simplemente
+    else{
+        this.setState({
+          currentPage: nextProps.presentPage,
+          currentData: nextProps.currentDataNow
+        })
+     }
+  
 
   }
   updateBooleanButtonInitial(){
@@ -187,6 +216,7 @@ handleRowSelection = (selectedRows) => {
             </TableHeader>
         
          <TableBody>
+         
             {this.state.currentData.map( item =>
                 <TableRow key= {this.getKey()}selected={this.isSelected(item.id)}>
           
@@ -238,7 +268,11 @@ handleRowSelection = (selectedRows) => {
                        </FloatingActionButton>
                     }
                      { this.state.booleanButtonReal &&  this.isSelected(item.id) &&
-                    <Link className= "button"to="/editarEnunciado" params={{ enunciado: this.state.selectedIssue }}>                            
+                    
+                    <Link to={{ pathname: '/editarEnunciado',
+                    state: { enunciado: this.state.selectedIssue }
+                    }}>
+                    
                           <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
@@ -344,24 +378,50 @@ class StudentTable extends Component {
     this.getKey = this.getKey.bind(this);
 
    }
+   componentWillMount(){
+    // CASO EXTREMO:
+     //Se realiza esto si es que se borra todos los enunciados y se tiene un objeto vacio
+     //Este no se puede mappear (iterar), por lo tanto se le asigna a la data actual como un arreglo vacio
+    if(Object.keys(this.state.currentData).length === 0 && this.state.currentData.constructor === Object){
+        this.setState({
+          currentData: []
+        })
+    }
+ }
+   
 
   componentWillReceiveProps(nextProps) {
 
-    if(nextProps.presentPage !== undefined && nextProps.currentData !== undefined){
-      this.setState({
-        currentPage: nextProps.presentPage,
-        currentData: nextProps.currentDataNow
-       })
+     // CASO "EXTREMO" (muy comun que le pase a un usuario pero es especial en como tratarlo):
+     //Se realiza esta sentencia si es que se busca en la barra de buscar y no se encuentra ningun enunciado 
+     //que tenga esa o esas letras en comun con algun enunciado
+     //Este no se puede mappear (iterar) debido a que retorna un objeto vacio (no tiene metodo map y se cae) 
+     //al no encontrar algun  enunciado, por lo tanto se le asigna a la data actual como un arreglo vacio
+     //y no se carga nada debido a que no hay nada que coincida con lo buscado 
+     //Se realiza en este metodo debido a que buscar cambia la data a mostrar SIN que se tenga que renderear
+     //de nuevo este componente
 
-    }
+     if(Object.keys(nextProps.currentDataNow).length === 0 && nextProps.currentDataNow.constructor === Object){
+      this.setState({
+        currentData: []
+      })
+      }
+      //Ejecucion normal caso feliz
+      //Se encuentra el enunciado al tener letras en comun con el buscador o se cambia de pagina simplemente
+      else{
+          this.setState({
+            currentPage: nextProps.presentPage,
+            currentData: nextProps.currentDataNow
+          })
+      }
 
   }
   updateBooleanButtonInitial(){
-    if(this.state.booleanButtonInitial){
-        this.setState({booleanButtonInitial: false}, this.updateBooleanButtonReal)
-    }
-    else{
-      this.setState({booleanButtonInitial: true},this.updateBooleanButtonReal)
+     if(this.state.selectedIssue === null){
+          this.setState({booleanButtonInitial: false}, this.updateBooleanButtonReal)
+      }
+    else if(this.state.selected.length=== 0 ){
+      this.setState({booleanButtonInitial: true}, this.updateBooleanButtonReal)
 
     }
 
@@ -370,10 +430,10 @@ class StudentTable extends Component {
   updateBooleanButtonReal(){
 
     if(this.state.booleanButtonReal){
-      this.setState({booleanButtonReal: false})
+      this.setState({booleanButtonReal: false}, this._onRowSelection)
   }
   else{
-    this.setState({booleanButtonReal: true})
+    this.setState({booleanButtonReal: true},this._onRowSelection)
 
   }
 }
@@ -397,18 +457,21 @@ class StudentTable extends Component {
   handleRowSelection = (selectedRows) => {
     this.setState({
       selected: selectedRows,
-    }, this._onRowSelection);
+    }, this.updateBooleanButtonInitial);
   };
 
 
 
   
   _onRowSelection = () => {
-    
-    const element = this.state.enunciados[this.state.selected[0]+this.state.currentPage*5];
-    console.log(element)
-    this.setState({selectedIssue:element },this.updateBooleanButtonInitial);
-
+    if(this.state.selected.length === 0 ){
+      this.setState({selectedIssue: null});
+    }
+    else{      
+      const element = this.state.enunciados[this.state.selected[0]+this.state.currentPage*5];
+      console.log(element)
+      this.setState({selectedIssue:element });
+   }
     
   }
 
@@ -437,7 +500,7 @@ class StudentTable extends Component {
              <TableRow key= {this.getKey()}selected={this.isSelected(item.id)}>
                 <TableRowColumn style={styles.columns.title}>{item.title}</TableRowColumn>
                     <TableRowColumn style={styles.columns.info}>
-                    { this.state.booleanButtonInitial &&
+                    {  (this.state.booleanButtonInitial || !(this.isSelected(item.id))) &&
                       <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
@@ -447,9 +510,11 @@ class StudentTable extends Component {
                               <ContentLookUp />
                        </FloatingActionButton>
                     }
-                    { this.state.booleanButtonReal &&
-                    <Link className= "button"to="/verEnunciadoAlumno" params={{ enunciado: this.state.selectedIssue }}>                            
-                          <FloatingActionButton zDepth={0}
+                    { this.state.booleanButtonReal && this.isSelected(item.id) &&
+                      <Link to={{ pathname: '/verEnunciadoAlumno',
+                      state: { enunciado: this.state.selectedIssue }
+                      }}>
+                      <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
                                                   iconStyle={styles.editButton}>
@@ -460,7 +525,7 @@ class StudentTable extends Component {
                     }
                     </TableRowColumn>
                     <TableRowColumn style={styles.columns.toCode}>
-                    { this.state.booleanButtonInitial &&
+                    { (this.state.booleanButtonInitial || !(this.isSelected(item.id))) &&
                       <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
@@ -469,9 +534,12 @@ class StudentTable extends Component {
                               <ContentCode />
                        </FloatingActionButton>
                     }
-                    { this.state.booleanButtonReal &&
-                    <Link className= "button"to="/ejercitacionCodigo" params={{ enunciado: this.state.selectedIssue }}>                            
-                          <FloatingActionButton zDepth={0}
+                    { this.state.booleanButtonReal &&  this.isSelected(item.id) &&
+
+                       <Link to={{ pathname: '/ejercitacionCodigo',
+                            state: { enunciado: this.state.selectedIssue }
+                        }}>
+                        <FloatingActionButton zDepth={0}
                                                   mini={true}
                                                   backgroundColor={grey200}
                                                   iconStyle={styles.editButton}>
@@ -681,16 +749,20 @@ class PaginationTablePage extends Component {
 
  setTables(){
      if( this.state.type === "alumn"){
-         this.setState({
-             typeStudentBool: true
+      
+            this.setState({
+              typeStudentBool: true
 
-         });
+          });
+       
      }
      else{
-         this.setState({
-           typeTeacherBool: true
+      
+          this.setState({
+            typeTeacherBool: true
 
-       });
+              });
+        
      }
 
 

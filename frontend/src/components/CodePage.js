@@ -26,17 +26,17 @@ import 'brace/theme/terminal';
 import 'brace/snippets/python';
 import 'brace/ext/language_tools';
 
-//<textarea rows="10" cols="180" disabled  //value={this.state.enunciado} //bloqquear enunciado 
-                ///> 
-
-class Solution extends Component{
+class CodePage extends Component{
     constructor(props){
         super(props)
+        console.log("Estos son mis props de codepage")
         console.log(props)
-        this.state = { lenguajeElegido: "", codigoAlumno: "", view:"",
-        //titulo: this.props.enuniado.title, 
-        //eunciado: this.props.enunciado.description,    
-        //id:this.props.enunciado.id,
+        this.state = { 
+            lenguajeElegido: "", 
+            codigoAlumno: "",
+            titulo: this.props.enunciado.title, 
+            descripcion: this.props.enunciado.description,    
+            id:this.props.enunciado.id,
         };//1
 
     }
@@ -44,7 +44,7 @@ class Solution extends Component{
     updateLenguaje(event){
         this.setState(
             {lenguajeElegido:event.target.value}); 
-            event.preventDefault();
+           
     }
     //updateCodigoA(event){this.setState({codigoAlumno: event.target.value});}//como actualizar lo que escribe el alumno
 
@@ -62,18 +62,11 @@ class Solution extends Component{
         });
         
     }
-    loadCancelar = () => {
-        this.setState({view: "Cancelar"});
-    }
 
 
     render(){
-         console.log(this.props)
-            if (this.state.view === "Cancelar") 
-                alert('Cancel'); 
-               // return  <"/listaEnunciados"/> ;
         return(
-        <div class="container">
+        <div className="container">
             <div className="row">
             <br></br>
             <br></br>
@@ -85,18 +78,29 @@ class Solution extends Component{
                         <option value="java">Java</option>
                     </select>
                 </div>
+
+
                 <div className="col-sm-1 ">
-                    <button  onClick={this.runCode.bind(this)} 
+                    <button  //onClick={this.runCode.bind(this)} 
                     className="btn btn-primary">Ejecutar</button>
                 </div>
+
+
                 <div className="col-sm-6 "></div>
+                
                 <div className="col-sm-1">
-                <button onClick={this.sendSolution.bind(this)} 
-                className="btn btn-success">Enviar</button>
-                </div>   
-                <div className="col-sm-1">
-                <button onClick = {this.loadCancelar}
-                className="btn btn-danger" >Cancelar</button>
+                        <button onClick={this.sendSolution.bind(this)} 
+                        className="btn btn-success">Enviar</button>
+                </div> 
+
+                 <div className="col-sm-1">
+                 <Link to={{
+                             pathname: '/listaEnunciadosAlumno',
+                                state: { fromEnunciadoProfesor: this.props.enunciado.published }
+                            }}>
+                    <button className="btn btn-danger" >Volver</button>
+                 </Link>
+
                 </div> 
             </div><br></br>
             <div className="row" >
@@ -130,19 +134,12 @@ class Solution extends Component{
     } 
 
       runCode(){
-        if(this.state.lenguajeElegido=== ''){// ==
-            
-            alert('seleccione un lenguaje');
-        }else{
-            //ejecutar codigo
-
-        }
     }
 
     sendSolution(){
 
-        if(this.state.codigoAlumno!= '' && this.state.lenguajeElegido!= ''){
-            alert('Tarea eviada ');//ojala agregar fecha
+        if(this.state.codigoAlumno.length !== 0 && this.state.lenguajeElegido.length !== 0 ){
+          
                       
             let axiosConfig = {
                    headers: {
@@ -155,20 +152,20 @@ class Solution extends Component{
                 codigoAlumno: this.state.codigoAlumno,
                 lenguajeElegido: this.state.lenguajeElegido,
             };
-    
-            Axios.post('http://URL', jsonSendSolution, axiosConfig)
+            alert('Tarea enviada ');//ojala agregar fecha
+            /*Axios.post('http://URL', jsonSendSolution, axiosConfig)
                 .then((res) => {
                     console.log("RESPONSE RECEIVED: ", res);
                     alert('Tarea eviada ');//ojala agregar fecha
                 })
                 .catch((err) => {
-                    console.log("AXIOS ERROR: ", err);
-                })
+                   alert('Fallo el envio del codigo');
+                })*/
         }
         else{
-            alert('Fallo el envio');
+            alert('Debe escribir codigo o no tiene lenguaje seleccionado');
         }
     }
 }
 
-export default Solution;
+export default CodePage;

@@ -25,14 +25,63 @@ class PaginationTablePageBase extends Component {
         publicacion: "",
         options: ["Publicado", "No publicado"],
         abierto: false,
-        type: props.type
+        type: props.type,
+        volvioDePagina: props.location.state.fromEnunciadoProfesor
+
 
     }
 
     this.getPagination = this.getPagination.bind(this);
    }
+ 
+   shouldComponentUpdate(nextProps,nextState){
+     //Si es que se va de una lista a otra, ver su tipo
+     //si es diferente, entonces se updatea el tipo y se renderea
 
-  componentDidMount() {
+    //WARNING:
+    //Formalmente, no se puede ir de una lista a otra debido a que cada usuario 
+    //tiene solo una lista
+    //Esto es para efectos de tener todos los links accesibles y andar probando
+    console.log(nextProps)
+    if(this.props.type !== nextProps.type){
+      console.log("Me debo re-renderear")
+        this.setState({
+            type:nextProps.type
+        })
+        return true;
+    }
+    else{
+      return true;
+    }
+   }
+
+
+   
+  
+  componentWillMount() {
+    console.log(this.state.volvioDePagina)
+      if(this.state.volvioDePagina !== undefined){
+        if(this.state.volvioDePagina){
+          this.setState({
+            publicacion: "Publicado",
+            abierto: true,
+            volvioDePagina:false
+          });
+        }
+        else{
+          this.setState({
+            publicacion: "No publicado",
+            abierto: true,
+            volvioDePagina:false
+
+          });
+        }
+          
+      
+      }
+     
+
+
   }
 
    handlePageClick = (data) => {
@@ -61,6 +110,7 @@ class PaginationTablePageBase extends Component {
                             return  <MenuItem key={index} label={w} value={w}>{w}</MenuItem>;
                               })}
                   </SelectField>
+                 
                     {this.state.abierto  && <PaginationTablePage  publicado = {this.state.publicacion} type = {this.state.type}/>
                        }
              </div>
@@ -76,22 +126,36 @@ class PaginationTablePageBase extends Component {
   );
  }
 
- updateState(newIndex){
+ updateState(newIndex, tipo){
     console.log(this.state.abierto);
+    console.log("pase por aqui");
+    console.log(newIndex);
+
     if(this.state.abierto){
-      console.log("pase por aqui");
-      this.setState({
-        publicacion: this.state.options[newIndex],
-        abierto:false
-      });
-      setTimeout(()=>this.setState({abierto: true}), 50);
+      if(!this.state.volvioDePagina){
+
+        console.log("pase por aqui");
+        this.setState({
+          publicacion: this.state.options[newIndex],
+          abierto:false
+        });
+        setTimeout(()=>this.setState({abierto: true}), 50);
+      }
+      else{
+        this.setState({
+          volvioDePagina: undefined
+        });
+      }
     }
     else{
-      this.setState({
-        publicacion: this.state.options[newIndex],
-        abierto: true
-      });
+              this.setState({
+                publicacion: this.state.options[newIndex],
+                abierto: true
+              });
+            
+         
 
+      
     }
 
   }

@@ -28,8 +28,24 @@ class FormPageBase extends Component{
       type: props.type,
       subtype: props.subtype,
       speciality: props.speciality,
-      enunciadoPreDefinido: props.location.state.enunciado,
+      enunciadoPreDefinido: null,
       enunciadoNulo: [{title:"", description: "", published: "" }]
+    }
+  }
+
+ 
+  componentWillMount(){
+    if(this.props.location.state === undefined){
+        this.setState({
+          enunciadoPreDefinido:  [{title:"", description: "", published: "" }]
+        })
+
+    }
+    else{
+      this.setState({
+        enunciadoPreDefinido: this.props.location.state.enunciado
+      })
+
     }
   }
   render(){

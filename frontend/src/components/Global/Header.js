@@ -18,53 +18,43 @@ class Header extends Component {
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                    <NavDropdown eventKey={3} title="Coordinator" id="basic-nav-dropdown">
-                        <li><Link to={{
-                            pathname: '/Dashboard',
-                            state: { enunciado: "soy un nuevo enunciado" }
-                        }}>
-                            Dashboard
+                            <NavDropdown eventKey={3} title="Coordinator" id="basic-nav-dropdown">
+                                <li><Link to={{
+                                    pathname: '/Dashboard',
+                                    state: { enunciado: "soy un nuevo enunciado" }
+                                }}>
+                                    Dashboard
 
-                        </Link></li>
-                    </NavDropdown>
-                    <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
-                        <li><Link to={{
-                            pathname: '/nuevoEnunciado',
-                            state: { enunciado: "soy un nuevo enunciado" }
-                        }}>
-                            Crear enunciado
+                                </Link></li>
+                            </NavDropdown>
+                            <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
+                                <li><Link to={{
+                                    pathname: '/nuevoEnunciado',
+                                    state: { enunciado: "soy un nuevo enunciado" }
+                                }}>
+                                    Crear enunciado
 
-                        </Link></li>
-                        <li><Link to={{
-                            pathname: '/listaEnunciadosProfesor',
-                            state: { enunciado: "soy una lista de enunciados" }
-                        }}>
-                                Lista de enunciados
-                        </Link></li>
+                                </Link></li>
+                                <li><Link to={{
+                                    pathname: '/listaEnunciadosProfesor',
+                                    state: { enunciado: "soy una lista de enunciados" }
+                                }}>
+                                        Lista de enunciados
+                                </Link></li>
 
-                        
+                                
 
-                    </NavDropdown>
-                    <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
-                        
-                        <li><Link to={{
-                            pathname: '/listaEnunciadosAlumno',
-                            state: { enunciado: "soy alumno" }
-                        }}>
-                                Enunciados
-                        </Link></li>
-                    </NavDropdown>    
-                        
-                    <NavDropdown eventKey={3} title="aa" id="basic-nav-dropdown">
-                        <li><Link to={{
-                            pathname: '/practica',
-                            state: { enunciado: "soy " }
-                        }}>
-                            practica
-
-                        </Link></li>
-                    </NavDropdown>
-
+                            </NavDropdown>
+                            <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
+                                
+                                <li><Link to={{
+                                    pathname: '/listaEnunciadosAlumno',
+                                    state: { enunciado: "soy alumno" }
+                                }}>
+                                        Enunciados
+                                </Link></li>
+                            </NavDropdown>    
+                    
                     </Nav>
                     <Nav pullRight>
                     <NavItem eventKey={1} href="#">

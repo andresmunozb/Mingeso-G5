@@ -57,12 +57,27 @@ const styles = {
   },
 
   buttons: {
-    marginTop: 30,
-    float: 'right'
+    textAlign: 'center',
+    padding: 10
+
+  },
+  selectOptions: {
+  },
+  buttons2: {
+    left:'15%',
+
   },
   saveButton: {
     marginLeft: 5
-  }
+  },
+
+  createBtn: {
+    float: 'right'
+  },
+
+  reUseBtn: {
+    float: 'left'
+  },
 };
 
 
