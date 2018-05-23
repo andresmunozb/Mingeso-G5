@@ -1,0 +1,17 @@
+962701738627-seuval0bqb0ngsbk8oqe0lp79jvkhs0l.apps.googleusercontent.com
+
+
+
+<script src="https://www.gstatic.com/firebasejs/5.0.3/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyA5BYOHIywWvnRdL1nfIgNyUp3ROrvLuRk",
+    authDomain: "mingeso-g5.firebaseapp.com",
+    databaseURL: "https://mingeso-g5.firebaseio.com",
+    projectId: "mingeso-g5",
+    storageBucket: "mingeso-g5.appspot.com",
+    messagingSenderId: "18494868498"
+  };
+  firebase.initializeApp(config);
+</script>
