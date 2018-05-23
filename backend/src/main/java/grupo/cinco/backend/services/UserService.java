@@ -5,6 +5,7 @@ import grupo.cinco.backend.entities.Solution;
 import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,14 @@ public class UserService {
     public List<Exercise> getAllExercises(@PathVariable("id") Integer id) {
         User user = userRepository.findById(id).get();
         return user.getExercises();
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User create(@RequestBody User resource)
+    {
+        return userRepository.save(resource);
     }
 
 }
