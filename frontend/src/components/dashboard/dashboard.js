@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 
-class Admin extends Component{
+class dashboard extends Component{
     constructor(props){
         super(props)
         console.log(props)
@@ -11,10 +11,10 @@ class Admin extends Component{
 
         return(
             <p>
-                Llegue
+                Soy el dashboard default 
             </p>
         );
     }
 }
 
-export default Admin;
+export default dashboard;

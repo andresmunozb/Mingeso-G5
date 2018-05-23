@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Grid,Navbar,Nav,NavItem,NavbarBrand,MenuItem,NavDropdown} from 'react-bootstrap';
+import {Link} from 'react-router-dom'
 
 
 
@@ -11,46 +12,56 @@ class Header extends Component {
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
-                    <a href="#brand">React-Bootstrap</a>
+                    <a href="/Dashboard">Plataforma</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav>
-                    <NavItem eventKey={1} href="#">
-                        Link
-                    </NavItem>
-                    <NavItem eventKey={2} href="#">
-                        Link
-                    </NavItem>
-                    <NavDropdown eventKey={3} title="Admin" id="basic-nav-dropdown">
-                        <MenuItem eventKey={3.1}>Action</MenuItem>
-                        <MenuItem eventKey={3.2}>Another action</MenuItem>
-                        <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                        <MenuItem divider />
-                        <MenuItem eventKey={3.3}>Separated link</MenuItem>
-                    </NavDropdown>
-                    <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
-                        <MenuItem eventKey={3.1}>Action</MenuItem>
-                        <MenuItem eventKey={3.2}>Another action</MenuItem>
-                        <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                        <MenuItem divider />
-                        <MenuItem eventKey={3.3}>Separated link</MenuItem>
-                    </NavDropdown>
-                    <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
-                        <MenuItem eventKey={3.1}>Action</MenuItem>
-                        <MenuItem eventKey={3.2}>Another action</MenuItem>
-                        <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                        <MenuItem divider />
-                        <MenuItem eventKey={3.3}>Separated link</MenuItem>
-                    </NavDropdown>
+                            <NavDropdown eventKey={3} title="Coordinator" id="basic-nav-dropdown">
+                                <li><Link to={{
+                                    pathname: '/Dashboard',
+                                    state: { enunciado: "soy un nuevo enunciado" }
+                                }}>
+                                    Dashboard
+
+                                </Link></li>
+                            </NavDropdown>
+                            <NavDropdown eventKey={3} title="Teacher" id="basic-nav-dropdown">
+                                <li><Link to={{
+                                    pathname: '/nuevoEnunciado',
+                                    state: { enunciado: "soy un nuevo enunciado" }
+                                }}>
+                                    Crear enunciado
+
+                                </Link></li>
+                                <li><Link to={{
+                                    pathname: '/listaEnunciadosProfesor',
+                                    state: { enunciado: "soy una lista de enunciados" }
+                                }}>
+                                        Lista de enunciados
+                                </Link></li>
+
+                                
+
+                            </NavDropdown>
+                            <NavDropdown eventKey={3} title="Student" id="basic-nav-dropdown">
+                                
+                                <li><Link to={{
+                                    pathname: '/listaEnunciadosAlumno',
+                                    state: { enunciado: "soy alumno" }
+                                }}>
+                                        Enunciados
+                                </Link></li>
+                            </NavDropdown>    
+                    
                     </Nav>
                     <Nav pullRight>
                     <NavItem eventKey={1} href="#">
-                        Link Right
+                        Log in
                     </NavItem>
                     <NavItem eventKey={2} href="#">
-                        Link Right
+                           Log out
                     </NavItem>
                     </Nav>
                 </Navbar.Collapse>
