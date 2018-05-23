@@ -59,6 +59,8 @@ CREATE TABLE `exercises` (
 	`description` text DEFAULT NULL,
   
 	`published` boolean DEFAULT false,
+
+	`function_name` varchar(50) DEFAULT NULL,
   
 	FOREIGN KEY (`id_user`) REFERENCES `users`(`id`)
 );
