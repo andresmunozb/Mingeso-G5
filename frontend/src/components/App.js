@@ -4,7 +4,14 @@ import Header from './Global/Header';
 import Body from './Global/Body';
 import firebase from 'firebase';
 import routes from './routes'
+import Elements from './Student/ExerciseListFolder/ExerciseListStudent'
+import Elements2 from './Teacher/CreateExerciseForm'
+import Elements3 from './Teacher/EditExerciseForm'
+import Elements4 from './Teacher/ExerciseListFolder/ExerciseListUnpublishedTeacher'
+import Elements5 from './Teacher/ExerciseListFolder/ExerciseListPublishedTeacher'
 
+
+import Axios from 'axios'
 
 class App extends Component {
   constructor () {
@@ -50,7 +57,7 @@ class App extends Component {
         user={this.state.user}
         onAuth={this.handleAuth}
         onLogout={this.handleLogout}/>
-        <Body user={this.state.user} routes={routes}/>
+        <Elements/>
       </div>
     );
   }
