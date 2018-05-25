@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 
-class DashboardStudent extends Component {
+class HomeStudent extends Component {
     constructor () {
       super()
       this.funcion = this.funcion.bind(this)
@@ -21,12 +21,12 @@ class DashboardStudent extends Component {
     
     render() {
       return (
-        <div className="DashboardStudent">
+        <div className="HomeStudent">
           Dashboard estudiante
         </div>
       );
     }
   }
   
-  export default DashboardStudent;
+  export default HomeStudent;
   

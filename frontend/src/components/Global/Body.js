@@ -1,14 +1,15 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route,Redirect} from 'react-router-dom';
 
 
 //Admin
 import HomeAdmin from '../Admin/HomeAdmin'
 
 //Student
-import HomeStundet from '../Student/HomeStudent';
+import HomeStudent from '../Student/HomeStudent';
 import Solution from '../Student/Solution';
+import ExerciseListStudent from '../Student/ExerciseListFolder/ExerciseListStudent'
 
 //Teacher
 import HomeTeacher from '../Teacher/HomeTeacher'
@@ -26,36 +27,98 @@ import ExerciseItemUnpublishedTeacher from '../Teacher/ExerciseListFolder/Exerci
 
 
 class Body extends Component{
+    constructor(props){
+        super(props);
+        console.log("estos son mis props")
+        console.log(props);
+        this.state = {
+            typeOfUser: props.rol
+        }
+    }
     
     render(){
         return(
-            <Switch>
-            <Route path='/home_admin' exact={true} render={props => (<HomeAdmin {...props} />)}></Route>
-            
-            <Route path='/home_student' exact={true} render={props => (<HomeStundet {...props} />)}></Route>
-            <Route path='/solution' exact={true} render={props => (<Solution {...props} />)}></Route>
-            
-            <Route path='/home_teacher' exact={true} render={props => (<HomeTeacher {...props} />)}></Route>
-            <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm {...props} />)}></Route>
-            <Route path='/published_exercises_teacher' exact={true} render={props => (<ExerciseListPublishedTeacher {...props} />)}></Route>
-            <Route path='/unpublished_exercises_teacher' exact={true} render={props => (<ExerciseItemUnpublishedTeacher {...props} />)}></Route>
-            <Route path='/edit_exercise' exact={true} render={props => (<EditExerciseForm {...props} />)}></Route>
+        <div className="Body">
+              
+            {this.state.typeOfUser === 'student' && 
+              <Switch>
+                    <Route path='/home_student' exact={true} render={props => (<HomeStudent {...props} />)}></Route>
+                    <Route path='/solution' exact={true} render={props => (<Solution {...props} />)}></Route>
+                    <Route path='/exercises_student' exact={true} render={props => (<ExerciseListStudent {...props} />)}></Route>            
+                    <Redirect to='/home_student' from= '/'/>
 
+               </Switch>
+        
+        
+            }
 
-            
+            {this.state.typeOfUser === 'teacher' && 
+              <Switch>
+                  <Route path='/home_teacher' exact={true} render={props => (<HomeTeacher {...props} />)}></Route>
+
+                    <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm {...props} />)}></Route>
+                    <Route path='/published_exercises_teacher' exact={true} render={props => (<ExerciseListPublishedTeacher {...props} />)}></Route>
+                    <Route path='/unpublished_exercises_teacher' exact={true} render={props => (<ExerciseItemUnpublishedTeacher {...props} />)}></Route>
+                    <Route path='/edit_exercise' exact={true} render={props => (<EditExerciseForm {...props} />)}></Route>
+                    <Redirect to='/home_teacher' from= '/'/>
+             </Switch>
+        
+        
+              }
+
+            {this.state.typeOfUser === 'admin' && 
+              <Switch>
+                    <Route path='/home_admin' exact={true} render={props => (<HomeAdmin {...props} />)}></Route>
+                    <Redirect to='/home_admin' from= '/'/>
             </Switch>
+            }
+
+        </div>
+            
 
         );
     }
 }
 
 Body.propTypes = {
-    user: PropTypes.object,
+    user: PropTypes.string,
     routes:PropTypes.array.isRequired
 }
 
 export default Body;
 
+/*
+            {this.state.typeOfUser === 'student' && 
+              <Switch>
+                    <Route path='/home_student' exact={true} render={props => (<HomeStudent {...props} />)}></Route>
+                    <Route path='/solution' exact={true} render={props => (<Solution {...props} />)}></Route>
+                    <Route path='/exercises_student' exact={true} render={props => (<ExerciseListStudent {...props} />)}></Route>            
+                    <Redirect to='/home_student' from= '/'/>
+
+               </Switch>
+        
+        
+            }
+
+            {this.state.typeOfUser === 'teacher' && 
+              <Switch>
+                  <Route path='/home_teacher' exact={true} render={props => (<HomeTeacher {...props} />)}></Route>
+
+                    <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm {...props} />)}></Route>
+                    <Route path='/published_exercises_teacher' exact={true} render={props => (<ExerciseListPublishedTeacher {...props} />)}></Route>
+                    <Route path='/unpublished_exercises_teacher' exact={true} render={props => (<ExerciseItemUnpublishedTeacher {...props} />)}></Route>
+                    <Route path='/edit_exercise' exact={true} render={props => (<EditExerciseForm {...props} />)}></Route>
+                    <Redirect to='/home_teacher' from= '/'/>
+             </Switch>
+        
+        
+              }
+
+            {this.state.typeOfUser === 'admin' && 
+              <Switch>
+                    <Route path='/home_admin' exact={true} render={props => (<HomeAdmin {...props} />)}></Route>
+                    <Redirect to='/home_admin' from= '/'/>
+            </Switch>*/
 
 
 /* {this.props.routes && this.props.routes.map(

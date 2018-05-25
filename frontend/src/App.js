@@ -13,10 +13,10 @@ class App extends Component {
     this.getRol = this.getRol.bind(this)
     this.routesFilter = this.routesFilter.bind(this)
   }
-
+  //DEFAULT POR MIENTRAS
   state = {
     user: null,
-    rol: "teacher",
+    rol: "student",
     routes: routes,
     routesFiltered:[],
   }
@@ -61,7 +61,6 @@ class App extends Component {
 
   
   render() {
-    console.log(this.state)
     return (
       <div className="App">
         <Header
@@ -70,7 +69,7 @@ class App extends Component {
         onLogout={this.handleLogout}
         routes={this.state.routesFiltered}
         />
-        <Body user={this.state.user} routes={this.state.routesFiltered}/>
+        <Body /*id= {this.state.id}*/ rol={this.state.rol} routes={this.state.routesFiltered}/>
       </div>
     
     );
