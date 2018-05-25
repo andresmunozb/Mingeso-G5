@@ -1,5 +1,5 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Grid,Button,Divider } from 'semantic-ui-react'
+import { Form, TextArea,Button,Divider } from 'semantic-ui-react'
 import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';

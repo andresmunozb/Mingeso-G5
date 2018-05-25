@@ -81,8 +81,16 @@ export default
         enable:true,
       },
       {
+        title: 'Editar Enunciado',
+        path: '/edit_exercise',
+        exact: true,
+        component:"EditExerciseForm",
+        rol:"teacher",
+        enable:false,
+      },
+      {
         title: 'Mis Enunciados',
-        path: '/published_exercises_teacher',
+        path: '/exercises_teacher',
         exact: true,
         component:"ExerciseListTeacher",
         rol:"teacher",
@@ -92,15 +100,15 @@ export default
             title: 'Publicados',
             path: '/published_exercises_teacher',
             exact: true,
-            component:"ExerciseListTeacher",
+            component:"ExerciseListPublishedTeacher",
             rol:"teacher",
             enable:true,
           },
           {
             title: 'No Publicados',
-            path: '/published_exercises_teacher',
+            path: '/unpublished_exercises_teacher',
             exact: true,
-            component:"ExerciseListTeacher",
+            component:"ExerciseItemUnpublishedTeacher",
             rol:"teacher",
             enable:true,
           },
@@ -108,14 +116,7 @@ export default
       },
       
 
-      {
-        title: 'Editar Enunciado',
-        path: '/edit_exercise',
-        exact: true,
-        component:"EditExerciseForm",
-        rol:"teacher",
-        enable:false,
-      },
+     
       
     ]
   ;

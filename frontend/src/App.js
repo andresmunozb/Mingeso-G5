@@ -16,7 +16,7 @@ class App extends Component {
 
   state = {
     user: null,
-    rol: "student",
+    rol: "teacher",
     routes: routes,
     routesFiltered:[],
   }
