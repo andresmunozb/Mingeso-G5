@@ -1,6 +1,7 @@
 package grupo.cinco.backend.services;
 
 
+import grupo.cinco.backend.entities.Class;
 import grupo.cinco.backend.repositories.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

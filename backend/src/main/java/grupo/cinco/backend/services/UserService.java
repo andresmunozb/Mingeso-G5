@@ -77,7 +77,7 @@ public class UserService {
         resource.setRole(role);
         return userRepository.save(resource);
     }
-    
+
     @RequestMapping(value = "{id_user}/role/{mail}", method = RequestMethod.GET)
     @ResponseBody
     public Role getRoleUser(@PathVariable("id_user") Integer id_user,@PathVariable("mail") String mail)
