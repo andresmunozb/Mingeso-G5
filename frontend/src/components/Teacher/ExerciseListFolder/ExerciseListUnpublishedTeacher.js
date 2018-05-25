@@ -22,213 +22,6 @@ const background = {
 class ExerciseListUnpublishedTeacher extends Component {
     constructor(props) {
       super(props);
-      this.state = {
-        unpublishedItems: [],
-        currentPage:0,
-        pageCount:0,
-        offers :{},
-        filterOffers: {},
-        currentPageItems: [],
-        jsons: [{
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": false,"id":251
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":252
-
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":264
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":278
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":279
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":280
-
-                },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": false, "id":290
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":295
-
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":296
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":298
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":300
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":301
-
-                  },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": false, "id":302
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":303
-
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":304
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":306
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":305
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":310
-
-                },
-                {
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false, "id":315
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":316
-
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":317
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":318
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":320
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":321
-
-                },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": false, "id":322
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":333
-
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":334
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":335
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":336
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":338
-
-                  },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": false, "id":340
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":356
-                },
-                {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":357                    
-
-                },
-                {
-                    "title": "agua",
-                    "description": "ojala nuncax4 ",
-                    "published": false, "id":358
-                },
-                  {
-                    "title": "vaso plastico",
-                    "description": "ojala nuncax2",
-                    "published": false, "id":360
-                },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":361
-
-                }
-            ],
-            
-        }
       this.deleteExercise = this.deleteExercise.bind(this);
       this.editExercise = this.editExercise.bind(this);
       this.viewExercise = this.viewExercise.bind(this);
@@ -241,16 +34,230 @@ class ExerciseListUnpublishedTeacher extends Component {
 
 
     }
+    state = {
+
+      unpublishedItems: [],
+      currentPage:0,
+      pageCount:0,
+      offers :{},
+      filterOffers: {},
+      currentPageItems: [],
+      jsons: [{
+                  "title": "Chela",
+                  "description": "ojala nunca",
+                  "published": false,"id":251
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":252
+
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":264
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":278
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":279
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":280
+
+              },
+                {
+                  "title": "Chela",
+                  "description": "ojala nunca",
+                  "published": false, "id":290
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":295
+
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":296
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":298
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":300
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":301
+
+                },
+                {
+                  "title": "Chela",
+                  "description": "ojala nunca",
+                  "published": false, "id":302
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":303
+
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":304
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":306
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":305
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":310
+
+              },
+              {
+                "title": "Chela",
+                "description": "ojala nunca",
+                "published": false, "id":315
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":316
+
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":317
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":318
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":320
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":321
+
+              },
+                {
+                  "title": "Chela",
+                  "description": "ojala nunca",
+                  "published": false, "id":322
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":333
+
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":334
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":335
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":336
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":338
+
+                },
+                {
+                  "title": "Chela",
+                  "description": "ojala nunca",
+                  "published": false, "id":340
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":356
+              },
+              {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":357                    
+
+              },
+              {
+                  "title": "agua",
+                  "description": "ojala nuncax4 ",
+                  "published": false, "id":358
+              },
+                {
+                  "title": "vaso plastico",
+                  "description": "ojala nuncax2",
+                  "published": false, "id":360
+              },
+              {
+                "title": "vaso plastico",
+                "description": "ojala nuncax2",
+                "published": false, "id":361
+
+              }
+          ]
+          
+    }
     getExercises(){
-     /* Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/unpublished')
+      var _this = this;
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/unpublished')
       .then(response => {
-           this.setState({ unpublishedItems: response.data }, this.getPagination(null));
+          console.log("soy los ejercicios")
            console.log(response.data)
+           _this.setState({ unpublishedItems: response.data });
+           setTimeout(() => {
+              _this.getPagination(null)
+           }, 5);
+          
+
         })
       .catch(function(error) {
            console.log(error)
-     })*/
-     this.getPagination(null);
+     })
 
     }
   
@@ -319,8 +326,8 @@ class ExerciseListUnpublishedTeacher extends Component {
 
     }
     filterList(event) {
-      //let obj = this.state.unpublishedItems;
-      let obj = this.state.jsons;
+      let obj = this.state.unpublishedItems;
+     // let obj = this.state.jsons;
       let filteredArray = [];
       let filterObjects = [];
       Object.keys(obj).forEach(function (key) {
@@ -337,17 +344,25 @@ class ExerciseListUnpublishedTeacher extends Component {
       
     }
     getPagination(data){
+      console.log("soy los exercises")
+      console.log(this.state.jsons)
+
+      console.log("soy los exercises verdaderos")
+      console.log(this.state.unpublishedItems)
       let _this = this;
       var keys;
       if(data === null){
-        //keys = Object.keys(this.state.unpublishedItems)
-        keys = Object.keys(this.state.jsons);
+        keys = Object.keys(this.state.unpublishedItems)
+       // keys = Object.keys(this.state.jsons);
       }
       else{
        // keys = this.getKeys(data)
        keys = Object.keys(data);
        console.log(keys)
       }
+      
+      console.log("soy los keys")
+      console.log(keys)
        let pageLength = 8;
        let pageCount = Math.ceil(keys.length / pageLength);
        let pages = [];
@@ -356,8 +371,8 @@ class ExerciseListUnpublishedTeacher extends Component {
        if(data == null){
         for (let i = 0; i < pageCount; i++) {
           let key = keys[i * pageLength];
-             if(this.state.jsons.length /*this.state.unpublishedItems.length*/>=1) {
-                 query = /*this.state.unpublishedItems*/this.state.jsons.slice(key, (i+1)*pageLength);
+             if(this.state.unpublishedItems.length>=1) {
+                 query = this.state.unpublishedItems.slice(key, (i+1)*pageLength);
                  pages.push(query);
              }
          }

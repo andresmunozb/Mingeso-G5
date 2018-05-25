@@ -4,6 +4,8 @@ import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
 import Paper from 'material-ui/Paper';
+import {Link,Redirect} from 'react-router-dom';
+
 const background = {
     mediumFrame:{
       width: 600,
@@ -21,7 +23,7 @@ const background = {
 class EditExerciseForm extends Component{
        constructor(props) {
         super(props);
-        this.funcion = this.funcion.bind(this)
+        this.backToList = this.backToList.bind(this)
         this.editExercise = this.editExercise.bind(this);
         this.publishExercise = this.publishExercise.bind(this);
 
@@ -103,6 +105,15 @@ class EditExerciseForm extends Component{
           description: ""
         })
       }
+
+      backToList () {
+       /* <Redirect to={{
+            pathname: '/login',
+            search: '?utm=your+face',
+            state: { editAExercise: exercise }
+          }}/>*/
+      }
+    
     
       componentWillMount () {
        
@@ -142,6 +153,14 @@ class EditExerciseForm extends Component{
                              >
 
                              Vaciar campos
+                  </Button>
+                  <Button  floated= {'left'} 
+                             color='blue' 
+                             type='Empty'
+                             onClick={this.emptyFields}
+                             >
+
+                             Volver
                   </Button>
 
                      <Button floated= {'right'} 

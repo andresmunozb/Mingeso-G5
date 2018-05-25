@@ -122,16 +122,19 @@ class ExerciseListPublishedTeacher extends Component {
 
     }
     getExercises(){
-     /* Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/published')
+      var _this = this;
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/published')
       .then(response => {
-           this.setState({ publishedItems: response.data }, this.getPagination(null));
-           console.log(response.data)
-        })
+            console.log("soy los ejercicios")
+            console.log(response.data)
+            _this.setState({ publishedItems: response.data });
+            setTimeout(() => {
+              _this.getPagination(null)
+            }, 5);
+            })
       .catch(function(error) {
            console.log(error)
-     })*/
-          this.getPagination(null);
-
+     })
     }
     componentWillMount () {
       this.getExercises();
@@ -150,7 +153,7 @@ class ExerciseListPublishedTeacher extends Component {
    
     }
     filterList(event) {
-      //let obj = this.state.unpublishedItems;
+      //let obj = this.state.publishedItems;
       let obj = this.state.jsons;
       let filteredArray = [];
       let filterObjects = [];
@@ -169,8 +172,8 @@ class ExerciseListPublishedTeacher extends Component {
       let _this = this;
       var keys;
       if(data === null){
-        //keys = Object.keys(this.state.unpublishedItems)
-        keys = Object.keys(this.state.jsons);
+        keys = Object.keys(this.state.publishedItems)
+        //keys = Object.keys(this.state.jsons);
       }
       else{
        // keys = this.getKeys(data)
@@ -185,8 +188,8 @@ class ExerciseListPublishedTeacher extends Component {
        if(data == null){
         for (let i = 0; i < pageCount; i++) {
           let key = keys[i * pageLength];
-             if(this.state.jsons.length /*this.state.unpublishedItems.length*/>=1) {
-                 query = /*this.state.unpublishedItems*/this.state.jsons.slice(key, (i+1)*pageLength);
+             if(this.state.publishedItems.length>=1) {
+                 query = this.state.publishedItems.slice(key, (i+1)*pageLength);
                  pages.push(query);
              }
          }
