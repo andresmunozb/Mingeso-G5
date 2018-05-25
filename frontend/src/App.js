@@ -1,35 +1,45 @@
 import React, { Component } from 'react';
-import './App.css';
-import Header from './Global/Header';
-import Body from './Global/Body';
+import Header from './components/Global/Header/Header';
+import Body from './components/Global/Body';
 import firebase from 'firebase';
 import routes from './routes'
-import Elements from './Student/ExerciseListFolder/ExerciseListStudent'
-import Elements2 from './Teacher/CreateExerciseForm'
-import Elements3 from './Teacher/EditExerciseForm'
-import Elements4 from './Teacher/ExerciseListFolder/ExerciseListUnpublishedTeacher'
-import Elements5 from './Teacher/ExerciseListFolder/ExerciseListPublishedTeacher'
 
-
-import Axios from 'axios'
 
 class App extends Component {
   constructor () {
     super()
     this.handleAuth = this.handleAuth.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+    this.getRol = this.getRol.bind(this)
+    this.routesFilter = this.routesFilter.bind(this)
   }
 
   state = {
-    user: null
+    user: null,
+    rol: "student",
+    routes: routes,
+    routesFiltered:[],
+  }
+
+  getRol(){
+
+  }
+  routesFilter(rol){
+    let newRoutesFiltered = this.state.routes.filter(function(route){
+      return(route.rol === rol)
+    });
+    this.setState({
+      routesFiltered: newRoutesFiltered,
+    });
   }
 
   componentWillMount () {
     firebase.auth().onAuthStateChanged(user => {
       this.setState({ user });
       console.log(user);
-
     })
+    this.getRol();
+    this.routesFilter(this.state.rol);
   }
 
   handleAuth () {
@@ -51,14 +61,18 @@ class App extends Component {
 
   
   render() {
+    console.log(this.state)
     return (
       <div className="App">
         <Header
         user={this.state.user}
         onAuth={this.handleAuth}
-        onLogout={this.handleLogout}/>
-        <Elements/>
+        onLogout={this.handleLogout}
+        routes={this.state.routesFiltered}
+        />
+        <Body user={this.state.user} routes={this.state.routesFiltered}/>
       </div>
+    
     );
   }
 }

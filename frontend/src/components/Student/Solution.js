@@ -5,7 +5,7 @@ class Solution extends Component {
     constructor () {
       super()
       this.funcion = this.funcion.bind(this)
-      this.handleLogout = this.handleLogout.bind(this)
+      //this.handleLogout = this.handleLogout.bind(this)
     }
   
     state = {
