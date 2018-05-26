@@ -50,18 +50,20 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
-    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_user}/published", method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<Exercise> getPublished()
+    public Iterable<Exercise> getPublished(@PathVariable("id_user") Integer id_user)
     {
-        return exerciseRepository.findExercisesByPublishedEquals(true);
+        User user = userRepository.findById(id_user).get();
+        return exerciseRepository.findExercisesByUserEqualsAndAndPublishedEquals(user,true);
     }
 
-    @RequestMapping(value = "/unpublished", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_user}/unpublished", method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<Exercise> getUnpublished()
+    public Iterable<Exercise> getUnpublished(@PathVariable("id_user") Integer id_user)
     {
-        return exerciseRepository.findExercisesByPublishedEquals(false);
+        User user = userRepository.findById(id_user).get();
+        return exerciseRepository.findExercisesByUserEqualsAndAndPublishedEquals(user,false);
     }
 
     @RequestMapping(value = "/{id}/publish",method = RequestMethod.PUT)
