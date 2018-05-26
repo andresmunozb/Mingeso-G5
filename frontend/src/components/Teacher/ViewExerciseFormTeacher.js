@@ -4,45 +4,38 @@ import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
 import Paper from 'material-ui/Paper';
+import {Link,Redirect} from 'react-router-dom';
+
 const background = {
     mediumFrame:{
       width: 600,
-      height: 660,
-      padding: 30,
+      padding: 20,
       position:'relative',
-      left:'30%'
+      left:'28%'
     },
     textAreaStyle:{
-        minHeight: 400,
-        maxHeight: 400
+        minHeight: 300,
+        maxHeight: 300
 
     }
 }
-class viewExerciseTeacher extends Component{
+class ViewExerciseFormTeacher extends Component{
     constructor(props) {
         super(props);
-        this.backToList = this.backToList.bind(this);
+        console.log("Aqui en alguna parte deberia estar el enunciado")
+        console.log(props)
+        this.state = {
+            title: props.location.state.viewAExercise.title,
+            description: props.location.state.viewAExercise.description,
+            published:  props.location.state.viewAExercise.published
 
-      }
-    state = {
-
-        title: this.props.location.state.editAExercise.exercise.title,
-        description: this.props.location.state.editAExercise.exercise.description,
-        published:  this.props.location.state.editAExercise.exercise.published
-        
+        }
     }
     
     componentWillMount () {
   
     }
     
-    backToList () {
-        /* <Redirect to={{
-            pathname: '/login',
-            search: '?utm=your+face',
-            state: { editAExercise: exercise }
-          }}/>*/
-    }
   
     render() {
         let { title, description,published} = this.state
@@ -56,8 +49,8 @@ class viewExerciseTeacher extends Component{
           <MuiThemeProvider muiTheme={ThemeDefault}>  
             <Paper style={background.mediumFrame}>
 
-                <Form onSubmit={this.handleSubmit}>
-                    <h1>Nuevo Enunciado</h1>
+                <Form style={{textAlign:"center"}}>
+                    <h1> Detalles del Enunciado</h1>
                     <Form.Field>
                     <label>Titulo del enunciado</label>
                         <input  placeholder='Title' 
@@ -68,6 +61,7 @@ class viewExerciseTeacher extends Component{
                     <label>Estado de publicacion</label>
                         <input  placeholder='Title' 
                                 value= {published} 
+                                style={{width: 150}}
                                 />
                     </Form.Field>
                     <label>Descripcion</label>
@@ -76,14 +70,24 @@ class viewExerciseTeacher extends Component{
                               value= {description} 
                              />  
                      <Divider />
-
-                    <Button floated= {'right'} 
-                            primary={true} 
-                            type='Create'  
-                            onClick={this.backToList}>
-
-                            Volver
-                    </Button>
+                     {this.props.location.state.published &&
+                                <Link to={{
+                                    pathname: '/published_exercises_teacher'
+                                }}>
+                                    <Button primary={true} type='Back'>
+                                            Volver
+                                    </Button>
+                                </Link>
+                    }
+                    {!(this.props.location.state.published) &&
+                                <Link to={{
+                                    pathname: '/unpublished_exercises_teacher'
+                                }}>
+                                    <Button primary={true} type='Back'>
+                                            Volver
+                                    </Button>
+                                </Link>
+                    }
 
 
                 </Form>
@@ -102,4 +106,4 @@ class viewExerciseTeacher extends Component{
 
 }
 
-export default viewExerciseTeacher;
+export default ViewExerciseFormTeacher;

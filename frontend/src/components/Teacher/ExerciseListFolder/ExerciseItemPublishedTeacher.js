@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card, Image } from 'semantic-ui-react'
+import {Link,Redirect} from 'react-router-dom';
 
 
 class ExerciseItemPublishedTeacher extends Component {
@@ -7,7 +8,8 @@ class ExerciseItemPublishedTeacher extends Component {
       super(props);
       console.log(props);
       this.state.myProps = this.props 
-      this.viewItem = this.viewItem.bind(this)
+      console.log("soy el ejercicio")
+      console.log( this.state.myProps.exercise)
     }
   
     state = {
@@ -18,19 +20,22 @@ class ExerciseItemPublishedTeacher extends Component {
      
     }
   
-    viewItem () {
-      this.props.viewExercise(this.state.myProps.exercise)
-    }
   
     
     render() {
       return (               
         
                 <Card onClick={this.viewItem}>
-                  <Card.Content>
-                    <Card.Header>
-                    {this.props.exercise.title}
-                    </Card.Header>
+                  <Card.Content> 
+                    <Link to={{
+                      pathname: '/view_exercise_teacher',
+                      state: { viewAExercise: this.state.myProps.exercise, 
+                            published: true}
+                    }}>
+                        <Card.Header>
+                        {this.props.exercise.title}
+                        </Card.Header>
+                    </Link>
                     <Card.Meta>
                       Prof 1
                     </Card.Meta>

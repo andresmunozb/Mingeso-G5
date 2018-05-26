@@ -7,21 +7,21 @@ import Paper from 'material-ui/Paper';
 const background = {
     mediumFrame:{
       width: 600,
-      height: 660,
+      height: 600,
       padding: 30,
       position:'relative',
-      left:'30%'
+      left:'25%'
     },
     textAreaStyle:{
-        minHeight: 400,
-        maxHeight: 400
+        minHeight: 300,
+        maxHeight: 300
 
     }
 }
 class CreateExerciseForm extends Component{
     constructor(props) {
         super(props);
-        this.funcion = this.funcion.bind(this)
+        this.emptyFields = this.emptyFields.bind(this)
         this.postExercise = this.postExercise.bind(this);
         this.updateDescription = this.updateDescription.bind(this);
         this.updateTitle = this.updateTitle.bind(this);
@@ -37,8 +37,12 @@ class CreateExerciseForm extends Component{
   
     }
     
-    funcion () {
-     
+    emptyFields () {
+        this.setState({ 
+            title: "",
+            description: ""
+        })
+
     }
     
     updateTitle(event){
@@ -62,7 +66,7 @@ class CreateExerciseForm extends Component{
           <MuiThemeProvider muiTheme={ThemeDefault}>  
             <Paper style={background.mediumFrame}>
 
-                <Form onSubmit={this.handleSubmit}>
+                <Form style={{textAlign:"center"}}>
                     <h1>Nuevo Enunciado</h1>
                     <Form.Field>
                     <label>Titulo del enunciado</label>
@@ -79,7 +83,8 @@ class CreateExerciseForm extends Component{
 
                     <Button  floated= {'left'} 
                              color='red' 
-                             type='Void'  
+                             type='Void'
+                             onClick={this.emptyFields}  
                              >
 
                              Vaciar
@@ -132,7 +137,7 @@ class CreateExerciseForm extends Component{
                 published: false
               }
               
-              // TESTEADO Y FUNCIONANDO
+              // TESTEADO Y emptyFieldsANDO
 
 
               //http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/{id}, el id es para un usuario

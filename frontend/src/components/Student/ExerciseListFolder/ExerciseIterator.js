@@ -9,11 +9,46 @@ class ExerciseIterator extends Component {
 
    constructor( props ) {
         super( props );
+        this.state={
+          currentExercises: props.exercises
+        }
         this.keyCount = 0;
         this.getKey = this.getKey.bind(this);
     }
-    state = {
+
+    componentWillMount(){
+      // CASO EXTREMO:
+      //Se realiza esto si es que se borra todos los enunciados y se tiene un objeto vacio
+      //Este no se puede mappear (iterar), por lo tanto se le asigna a la data actual como un arreglo vacio
+
+      if(Object.keys(this.state.currentExercises).length === 0 
+          && this.state.currentExercises.constructor === Object){
+          this.setState({
+            currentExercises: []
+          })
+      }
+  }
+
+    componentWillReceiveProps(nextProps) {
+      // CASO "EXTREMO" (muy comun que le pase a un usuario pero es especial en como tratarlo):
+        //Se realiza esta sentencia si es que se busca en la barra de buscar y no se encuentra ningun enunciado 
+        //que tenga esa o esas letras en comun con algun enunciado
+
+        if(Object.keys(nextProps.exercises).length === 0 
+            && nextProps.exercises.constructor === Object){
+            this.setState({
+              currentExercises: []
+            })
+        }
+        //Ejecucion normal caso feliz
+        //Se encuentra el enunciado al tener letras en comun con el buscador o se cambia de pagina simplemente
+      else{
+          this.setState({
+            currentExercises: nextProps.exercises
+          })
+        }
     
+
     }
     getKey(){
        return this.keyCount++;
@@ -21,15 +56,13 @@ class ExerciseIterator extends Component {
     
       //fechaVencimiento={product.fechaVencimiento} 
       createListExercises(){
-            return this.props.exercises.map((exercise) => {
+            return this.state.currentExercises.map((exercise) => {
               return(
 
 
                 <ExerciseItemStudent
                     key={this.getKey()} 
                     exercise={exercise} 
-                    viewExercise = {this.props.viewExercise} 
-                    codeExercise = {this.props.codeExercise} 
                 />
 
 
@@ -40,7 +73,7 @@ class ExerciseIterator extends Component {
      render() {
         return (
 
-            <Card.Group itemsPerRow={5} stackable= {true}>
+            <Card.Group itemsPerRow={4} stackable= {true}>
 
             {this.createListExercises()}
             </Card.Group>

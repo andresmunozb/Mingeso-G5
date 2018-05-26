@@ -4,6 +4,8 @@ import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
 import Paper from 'material-ui/Paper';
+import {Link,Redirect} from 'react-router-dom';
+
 const background = {
     mediumFrame:{
       width: 600,
@@ -18,44 +20,29 @@ const background = {
 
     }
 }
-class viewExerciseStudent extends Component{
+class ViewExerciseFormStudent extends Component{
     constructor(props) {
-        super(props);
-        this.backToList = this.backToList.bind(this);
+        super(props); 
+        this.state = {
+            title: props.location.state.viewAExercise.title,
+            description: props.location.state.viewAExercise.description
+
+        }
 
       }
-    state = {
-
-        title: this.props.location.state.editAExercise.exercise.title,
-        description: this.props.location.state.editAExercise.exercise.description
-        
-    }
     
     componentWillMount () {
   
     }
     
-    backToList () {
-        /* <Redirect to={{
-            pathname: '/login',
-            search: '?utm=your+face',
-            state: { editAExercise: exercise }
-          }}/>*/
-    }
   
     render() {
-        let { title, description,published} = this.state
-        if(published){
-            published = 'Publicado'
-        }
-        else{
-            published = 'No publicado'
-        }
+        let { title, description} = this.state
         return (
           <MuiThemeProvider muiTheme={ThemeDefault}>  
             <Paper style={background.mediumFrame}>
 
-                <Form onSubmit={this.handleSubmit}>
+                <Form style={{textAlign:"center"}}>
                     <h1>Nuevo Enunciado</h1>
                     <Form.Field>
                     <label>Titulo del enunciado</label>
@@ -70,14 +57,11 @@ class viewExerciseStudent extends Component{
                              />  
                      <Divider />
 
-                    <Button 
-                            primary={true} 
-                            type='Create'  
-                            onClick={this.backToList}>
-
-                            Volver
-                    </Button>
-
+                      <Link to={{ pathname: '/exercises_student' }}>
+                             <Button primary={true} type='Back'>
+                                      Volver
+                              </Button>
+                      </Link>
 
                 </Form>
 
@@ -95,4 +79,4 @@ class viewExerciseStudent extends Component{
 
 }
 
-export default viewExerciseStudent;
+export default ViewExerciseFormStudent;

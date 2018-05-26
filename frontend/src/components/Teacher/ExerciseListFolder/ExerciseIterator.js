@@ -65,7 +65,6 @@ class ExerciseIterator extends Component {
   
                   
                   <ExerciseItemPublishedTeacher
-                      viewExercise = {this.props.viewExercise}
                       key={this.getKey()} 
                       exercise={exercise}
                   />
@@ -81,10 +80,9 @@ class ExerciseIterator extends Component {
                   
                   <ExerciseItemUnpublishedTeacher
                       deleteExercise = {this.props.deleteExercise}
-                      editExercise = {this.props.editExercise}
-                      viewExercise = {this.props.viewExercise}
                       key={this.getKey()} 
                       exercise={exercise}
+
                   />
   
   

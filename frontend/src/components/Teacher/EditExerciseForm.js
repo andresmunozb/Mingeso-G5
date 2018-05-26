@@ -1,5 +1,5 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Grid,Button,Divider } from 'semantic-ui-react'
+import { Form, TextArea,Grid,Button,Divider,Modal } from 'semantic-ui-react'
 import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
@@ -23,20 +23,34 @@ const background = {
 class EditExerciseForm extends Component{
        constructor(props) {
         super(props);
+        this.state = {
+
+          id: this.props.location.state.editAExercise.id,
+          title: this.props.location.state.editAExercise.title,
+          description: this.props.location.state.editAExercise.description,
+          published:  this.props.location.state.editAExercise.published,
+          open: false,
+          size: "mini"
+
+        }
         this.backToList = this.backToList.bind(this)
         this.editExercise = this.editExercise.bind(this);
         this.publishExercise = this.publishExercise.bind(this);
-
+        this.updateDescription = this.updateDescription.bind(this);
+        this.updateTitle = this.updateTitle.bind(this);
         this.emptyFields = this.emptyFields.bind(this);
-      }
-      state = {
+        this.show = this.show.bind(this);
+        this.close = this.close.bind(this);
 
-        id: this.props.location.state.editAExercise.exercise.id,
-        title: this.props.location.state.editAExercise.exercise.title,
-        description: this.props.location.state.editAExercise.exercise.description,
-        published:  this.props.location.state.editAExercise.exercise.published
       }
+      show(){
+        this.setState({open: true })
 
+      }
+      close(){
+        this.setState({ open: false })
+
+      }
       editExercise(){
         if(this.state.title !== undefined && this.state.description !== undefined){
 
@@ -47,18 +61,18 @@ class EditExerciseForm extends Component{
                     description: this.state.description
                   }
                   
-                /*  Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregar)
+                  Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregar)
                   .then((res) => {
                     console.log("RESPONSE RECEIVED: ", res);
                   
-                    alert('Se ha modificado sadisfactoriamente el enunciado de titulo: '+this.state.title);
+                    alert('Se ha modificado sadisfactoriamente el enunciado de actual titulo: '+this.state.title);
 
 
                   })
                   .catch((err) => {
                     console.log("AXIOS ERROR: ", err);
 
-                  })*/
+                  })
               }
               else{
                 alert('Debes completar todos los campos');
@@ -70,23 +84,22 @@ class EditExerciseForm extends Component{
       }
 
 
-      publishExercise () {
+      publishExercise =  () => {
         let jsonAgregar = {
           published:true
         }
-     /*   Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/publish',jsonAgregar)
+        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/publish',jsonAgregar)
         .then((res) => {
           console.log("RESPONSE RECEIVED: ", res);
-             <Redirect to={{
-                pathname: '/ExerciseListPublishedTeacher'
-              }}/>
+          alert('Se ha publicado el enunciado de actual titulo: '+this.state.title);
+
       
          
         })
         .catch((err) => {
           console.log("AXIOS ERROR: ", err);
     
-        });*/
+        });
       }
 
       updateTitle(event){
@@ -122,71 +135,99 @@ class EditExerciseForm extends Component{
     
       
       render() {
-  
+
         return (
-          <MuiThemeProvider muiTheme={ThemeDefault}>  
-            <Paper style={background.mediumFrame}>
+          <div>
+              <MuiThemeProvider muiTheme={ThemeDefault}>  
+                  <Paper style={background.mediumFrame}>
 
-                <Form>
-                    <h1>Edicion Enunciado</h1>
-                    <Form.Field>
-                      <label>Titulo del enunciado</label>
-                      <input  placeholder='Title' 
-                              value= {this.state.title} 
-                              onChange={this.updateTitle} 
-                              />
-                    </Form.Field>
+                      <Form style={{textAlign:"center"}}>
+                          <h1>Edicion Enunciado</h1>
+                          <Form.Field>
+                            <label>Titulo del enunciado</label>
+                            <input  placeholder='Title' 
+                                    value= {this.state.title} 
+                                    onChange={this.updateTitle} 
+                                    />
+                          </Form.Field>
 
-                    <label>Descripcion</label>
-                    <TextArea   placeholder='Descripcion'
-                                style={background.textAreaStyle}
-                                value= {this.state.description} 
-                                onChange={this.updateDescription}
-                                />  
+                          <label>Descripcion</label>
+                          <TextArea   placeholder='Descripcion'
+                                      style={background.textAreaStyle}
+                                      value= {this.state.description} 
+                                      onChange={this.updateDescription}
+                                      />  
 
-                    <Divider />
+                          <Divider />
 
-                    <Button  floated= {'left'} 
-                             color='red' 
-                             type='Empty'
-                             onClick={this.emptyFields}
-                             >
+                          <Button  floated= {'left'} 
+                                  color='red' 
+                                  type='Empty'
+                                  onClick={this.emptyFields}
+                                  >
 
-                             Vaciar campos
-                  </Button>
-                  <Button  floated= {'left'} 
-                             color='blue' 
-                             type='Empty'
-                             onClick={this.emptyFields}
-                             >
+                                  Vaciar
+                        </Button>
+                        <Link to={{
+                              pathname: '/unpublished_exercises_teacher'
+                          }}>
+                              <Button floated= {'left'}
+                                      primary={true} 
+                                      type='Back'>
+                                      Volver
+                              </Button>
+                          </Link>
 
-                             Volver
-                  </Button>
+                          <Button floated= {'right'} 
+                                  primary={true} 
+                                  type='Editar'
+                                  onClick={this.editExercise}
+                                  >
+                                  Modificar
+                          </Button>
+                          <Button  floated= {'right'} 
+                                    color='yellow' 
+                                    type='Publish'
+                                    /*onClick={this.publishExercise}*/
+                                    onClick={this.show}
+                                    >
+                                    Publicar
+                          </Button>
+                        
 
-                     <Button floated= {'right'} 
-                             primary={true} 
-                             type='Editar'
-                             onClick={this.editExercise}
-                             >
-                             Modificar
-                    </Button>
-                     <Button  floated= {'right'} 
-                              color='yellow' 
-                              type='Publish'
-                              onClick={this.publishExercise}
-                              >
-                              Publicar
-                    </Button>
+                      </Form>
+                    
+                      
+                    
 
 
-                </Form>
+                  </Paper>
+                
+                </MuiThemeProvider>
+                  <Modal  style={{ position:'relative'}} size={this.state.size} dimmer={this.state.dimmer}  open={this.state.open} onClose={this.close}>
+                    <Modal.Header>
+                      Publicar un enunciado
+                    </Modal.Header>
+                    <Modal.Content>
+                      <p>Estas seguro de publicar este enunciado?</p>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button negative
+                            >
+                        No
+                        </Button>
+                      <Button positive 
+                              icon='checkmark' labelPosition='right' content='Yes'
+                            />
+
+                    </Modal.Actions>
+                  </Modal>
 
 
 
-
-            </Paper>
-  
-          </MuiThemeProvider>
+          </div>
+          
+          
   
         );
         
@@ -194,3 +235,4 @@ class EditExerciseForm extends Component{
 }
 
 export default EditExerciseForm;
+

@@ -114,8 +114,6 @@ class ExerciseListStudent extends Component {
                 }
             ]
           }
-      this.viewExercise = this.viewExercise.bind(this)
-      this.codeExercise = this.codeExercise.bind(this)
 
       this.getExercises = this.getExercises.bind(this);
       this.getPagination = this.getPagination.bind(this);
@@ -144,32 +142,10 @@ class ExerciseListStudent extends Component {
 
     }
   
-    viewExercise (exercise) {
-      console.log("A ver");
-
-      console.log(exercise);
-        /* <Redirect to={{
-        pathname: '/login',
-        search: '?utm=your+face',
-        state: { viewAExercise: exercise }
-      }}/>*/
-   
-    }
-    codeExercise (exercise) {
-      console.log("A programar");
-
-      console.log(exercise);
-        /* <Redirect to={{
-        pathname: '/login',
-        search: '?utm=your+face',
-        state: { codeAExercise: exercise }
-      }}/>*/
-   
-    }
 
     filterList(event) {
-      //let obj = this.state.publishedItems;
-      let obj = this.state.jsons;
+      let obj = this.state.publishedItems;
+      //let obj = this.state.jsons;
       let filteredArray = [];
       let filterObjects = [];
       Object.keys(obj).forEach(function (key) {
@@ -186,18 +162,19 @@ class ExerciseListStudent extends Component {
       
     }
     getPagination(data){
+
       let _this = this;
       var keys;
       if(data === null){
         keys = Object.keys(this.state.publishedItems)
-       // keys = Object.keys(this.state.jsons);
+        //keys = Object.keys(this.state.jsons);
       }
       else{
        // keys = this.getKeys(data)
        keys = Object.keys(data);
-       console.log(keys)
+
       }
-       let pageLength = 10;
+       let pageLength = 8;
        let pageCount = Math.ceil(keys.length / pageLength);
        let pages = [];
        let query;
@@ -221,6 +198,9 @@ class ExerciseListStudent extends Component {
          }
        }
        
+       console.log("SOy el query")
+       console.log(query)
+   
        _this.setState({offers: pages, pageCount: pageCount, filterOffers: pages}, this.updateData);
    
    
@@ -257,33 +237,39 @@ class ExerciseListStudent extends Component {
       return (
         <MuiThemeProvider muiTheme={ThemeDefault}>  
           <Paper style={background.bigFrame}>
-          <h1>Enunciados publicados</h1>
-          <div className="tableElm" >
-              <Form.Field>
-                   <label>Campo de busqueda</label>
-                   <input  placeholder='Buscar ...' 
-                           onChange={this.filterList.bind(this)}  />
-              </Form.Field>
-          </div>
-          <Divider/>
-            <ExerciseIterator  exercises = { this.state.currentPageItems }
-                              viewExercise = {this.viewExercise} 
-                              codeExercise = {this.codeExercise}
-                              />
+             <Form style={{textAlign:"center"}} >
 
-           <div className="commentBox" id="react-paginate">
-                  <ReactPaginate previousLabel={"Anterior"}
-                              nextLabel={"Siguiente"}
-                              breakLabel={<a href="">...</a>}
-                              breakClassName={"break-me"}
-                              pageCount={this.state.pageCount}
-                              marginPagesDisplayed={2}
-                              pageRangeDisplayed={3}
-                              onPageChange={this.handlePageClick}
-                              containerClassName={"pagination"}
-                              subContainerClassName={"pages pagination"}
-                              activeClassName={"active"} />
-                </div>
+              <h1>Enunciados publicados</h1>
+              <div className="tableElm" >
+                  <Form.Field>
+                      <label>Campo de busqueda</label>
+                      <input  placeholder='Buscar ...' 
+                              onChange={this.filterList.bind(this)} 
+                              style={{width: 300}}  />
+                  </Form.Field>
+              </div>
+              <Divider/>
+                <ExerciseIterator  exercises = { this.state.currentPageItems }
+                                 
+                                  
+                                  />
+
+              <div className="commentBox" id="react-paginate">
+                      <ReactPaginate previousLabel={"Anterior"}
+                                  nextLabel={"Siguiente"}
+                                  breakLabel={<a href="">...</a>}
+                                  breakClassName={"break-me"}
+                                  pageCount={this.state.pageCount}
+                                  marginPagesDisplayed={2}
+                                  pageRangeDisplayed={3}
+                                  onPageChange={this.handlePageClick}
+                                  containerClassName={"pagination"}
+                                  subContainerClassName={"pages pagination"}
+                                  activeClassName={"active"} />
+               </div>
+
+             </Form>
+
           </Paper>
 
         </MuiThemeProvider>

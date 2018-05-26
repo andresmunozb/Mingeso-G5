@@ -23,8 +23,6 @@ class ExerciseListUnpublishedTeacher extends Component {
     constructor(props) {
       super(props);
       this.deleteExercise = this.deleteExercise.bind(this);
-      this.editExercise = this.editExercise.bind(this);
-      this.viewExercise = this.viewExercise.bind(this);
       this.deleteFromList = this.deleteFromList.bind(this);
 
       this.getExercises = this.getExercises.bind(this);
@@ -267,63 +265,47 @@ class ExerciseListUnpublishedTeacher extends Component {
     }
 
     deleteFromList(idRemove){
-      let unpublishedItemsNew = this.state.unpublishedItems
+        var _this = this;
+        console.log("el ID a borrar fue: ")
+        console.log(idRemove)
+      let unpublishedItemsNew = _this.state.unpublishedItems
       //Busca el elemento a borrar
       var removeIndex = unpublishedItemsNew.map(function(item) { return item.id; }).indexOf(idRemove);
+      console.log("el elemento a borrar fue: ")
+      console.log(removeIndex)
       //Borrar elemento
-      unpublishedItemsNew.splice(unpublishedItemsNew,1)
+      unpublishedItemsNew.splice(removeIndex,1)
       //Setteo de json de exercises y que se realice la paginacion de nuevo (Redibujar)
-      this.setState({
+      _this.setState({
           unpublishedItems: unpublishedItemsNew
-      }, this.getPagination(null));
+      });
+      setTimeout(() => {
+        _this.getPagination(null)
+     }, 1);
     }
   
     deleteExercise (exercise) {
       console.log("A borrar");
 
-      console.log(exercise);
+      console.log(exercise.id);
+      var _this = this;
       let axiosConfig = {
         headers: {
             'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "@crossorigin",
         }
       };   
-     /* Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercises.id+'/delete',axiosConfig)
+      Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/delete',axiosConfig)
         .then((res) => {
-            console.log("RESPONSE RECEIVED: ", res);
             //Localmente quitarle al json de los exercises el exercise borrado 
-              deleteFromList(exercises.id)
-
-
-          })
+            setTimeout(() => {
+               _this.deleteFromList(exercise.id)
+            }, 1);
+            })
         .catch((err) => {
             console.log("AXIOS ERROR: ", err);
           })
-      */
-    }
-    editExercise(exercise){
-      console.log("A editar");
-
-      console.log(exercise);
-     /* <Redirect to={{
-        pathname: '/login',
-        search: '?utm=your+face',
-        state: { editAExercise: exercise }
-      }}/>*/
       
-
-    }
-    viewExercise(exercise){
-      console.log("A ver");
-
-      console.log(exercise);
-     /* <Redirect to={{
-        pathname: '/login',
-        search: '?utm=your+face',
-        state: { viewAExercise: exercise }
-      }}/>*/
-      
-
     }
     filterList(event) {
       let obj = this.state.unpublishedItems;
@@ -424,35 +406,37 @@ class ExerciseListUnpublishedTeacher extends Component {
       return (
         <MuiThemeProvider muiTheme={ThemeDefault}>  
           <Paper style={background.bigFrame}>
-            <h1>Enunciados no publicados</h1>
-            <div className="tableElm" >
-                <Form.Field>
-                     <label>Campo de busqueda</label>
-                     <input  placeholder='Buscar ...' 
-                             onChange={this.filterList.bind(this)}  />
-                </Form.Field>
-            </div>
-            <Divider/>
-            <ExerciseIterator deleteExercise = {this.deleteExercise} 
-                              viewExercise = {this.viewExercise} 
-                              editExercise = {this.editExercise} 
-                              published= {false} 
-                              /*exercises = { this.state.unpublishedItems }*/
-                              exercises = { this.state.currentPageItems } />
+           
+          <Form style={{textAlign:"center"}} >
+                <h1 >Enunciados no publicados</h1>
+                    <Form.Field>
+                        <label >Campo de busqueda</label>
+                        <input  placeholder='Buscar ...' 
+                                onChange={this.filterList.bind(this)}
+                                style={{width: 300}}  />
+                    </Form.Field>
+                <Divider/>
+                <ExerciseIterator deleteExercise = {this.deleteExercise} 
+                                  published= {false} 
+                                  /*exercises = { this.state.unpublishedItems }*/
+                                  exercises = { this.state.currentPageItems } />
 
-            <div className="commentBox" id="react-paginate">
-                  <ReactPaginate previousLabel={"Anterior"}
-                              nextLabel={"Siguiente"}
-                              breakLabel={<a href="">...</a>}
-                              breakClassName={"break-me"}
-                              pageCount={this.state.pageCount}
-                              marginPagesDisplayed={2}
-                              pageRangeDisplayed={3}
-                              onPageChange={this.handlePageClick}
-                              containerClassName={"pagination"}
-                              subContainerClassName={"pages pagination"}
-                              activeClassName={"active"} />
-                </div>
+                <div className="commentBox" id="react-paginate">
+                      <ReactPaginate previousLabel={"Anterior"}
+                                  nextLabel={"Siguiente"}
+                                  breakLabel={<a href="">...</a>}
+                                  breakClassName={"break-me"}
+                                  pageCount={this.state.pageCount}
+                                  marginPagesDisplayed={2}
+                                  pageRangeDisplayed={3}
+                                  onPageChange={this.handlePageClick}
+                                  containerClassName={"pagination"}
+                                  subContainerClassName={"pages pagination"}
+                                  activeClassName={"active"} />
+                    </div>
+
+          </Form>
+
           </Paper>
 
         </MuiThemeProvider>

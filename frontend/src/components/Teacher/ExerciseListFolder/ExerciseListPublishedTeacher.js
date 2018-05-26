@@ -114,7 +114,6 @@ class ExerciseListPublishedTeacher extends Component {
             ],
             
         }
-      this.viewExercise = this.viewExercise.bind(this)
       this.getExercises = this.getExercises.bind(this);
       this.getPagination = this.getPagination.bind(this);
       this.updateData = this.updateData.bind(this);
@@ -141,17 +140,6 @@ class ExerciseListPublishedTeacher extends Component {
 
     }
   
-    viewExercise (exercise) {
-      console.log("A ver");
-
-      console.log(exercise);
-       /* <Redirect to={{
-        pathname: '/login',
-        search: '?utm=your+face',
-        state: { viewAExercise: exercise }
-      }}/>*/
-   
-    }
     filterList(event) {
       //let obj = this.state.publishedItems;
       let obj = this.state.jsons;
@@ -242,34 +230,41 @@ class ExerciseListPublishedTeacher extends Component {
 
       return (
         <MuiThemeProvider muiTheme={ThemeDefault}>  
-        <Paper style={background.bigFrame}>
-          <h1>Enunciados publicados</h1>
-          <div className="tableElm" >
-              <Form.Field>
-                   <label>Campo de busqueda</label>
-                   <input  placeholder='Buscar ...' 
-                           onChange={this.filterList.bind(this)}  />
-              </Form.Field>
-          </div>
-          <Divider/>
-          <ExerciseIterator viewExercise = {this.viewExercise} 
-                            published= {true} 
-                            /*exercises = { this.state.unpublishedItems }*/
-                            exercises = { this.state.currentPageItems } />
+           <Paper style={background.bigFrame}>
+               <Form style={{textAlign:"center"}} >
 
-          <div className="commentBox" id="react-paginate">
-                <ReactPaginate previousLabel={"Anterior"}
-                            nextLabel={"Siguiente"}
-                            breakLabel={<a href="">...</a>}
-                            breakClassName={"break-me"}
-                            pageCount={this.state.pageCount}
-                            marginPagesDisplayed={2}
-                            pageRangeDisplayed={3}
-                            onPageChange={this.handlePageClick}
-                            containerClassName={"pagination"}
-                            subContainerClassName={"pages pagination"}
-                            activeClassName={"active"} />
-              </div>
+            
+                    <h1>Enunciados publicados</h1>
+                    <div className="tableElm" >
+                        <Form.Field>
+                            <label>Campo de busqueda</label>
+                            <input  placeholder='Buscar ...' 
+                                    onChange={this.filterList.bind(this)} 
+                                    style={{width: 300}}   />
+                        </Form.Field>
+                    </div>
+                    <Divider/>
+                    <ExerciseIterator 
+                                      published= {true} 
+                                      /*exercises = { this.state.unpublishedItems }*/
+                                      exercises = { this.state.currentPageItems } />
+
+                    <div className="commentBox" id="react-paginate">
+                          <ReactPaginate previousLabel={"Anterior"}
+                                      nextLabel={"Siguiente"}
+                                      breakLabel={<a href="">...</a>}
+                                      breakClassName={"break-me"}
+                                      pageCount={this.state.pageCount}
+                                      marginPagesDisplayed={2}
+                                      pageRangeDisplayed={3}
+                                      onPageChange={this.handlePageClick}
+                                      containerClassName={"pagination"}
+                                      subContainerClassName={"pages pagination"}
+                                      activeClassName={"active"} />
+                        </div>
+
+                  </Form>
+
         </Paper>
 
       </MuiThemeProvider>
