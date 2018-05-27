@@ -33,8 +33,8 @@ class Header extends Component {
                     <Nav>
                     {this.props.routes && this.props.routes.map(
                         (route,key) => 
-                            route.routes ?  
-                            <NavDropdown title={route.title} id="basic-nav-dropdown">
+                            route.routes ?
+                            <NavDropdown key={key} title={route.title} id="basic-nav-dropdown">
                                 {route.routes.map((route2,key2)=> <MyLink key={key2} route={route2}/>)}
                             </NavDropdown>:
                             <MyLink key={key} route={route}/>
