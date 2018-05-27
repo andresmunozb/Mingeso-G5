@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Card, Image } from 'semantic-ui-react'
-import {Link,Redirect} from 'react-router-dom';
+import {Card} from 'semantic-ui-react'
+import {Link} from 'react-router-dom';
 
 
 class ExerciseItemPublishedTeacher extends Component {

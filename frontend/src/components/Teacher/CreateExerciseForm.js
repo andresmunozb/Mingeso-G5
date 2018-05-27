@@ -10,7 +10,7 @@ const background = {
       height: 600,
       padding: 30,
       position:'relative',
-      left:'25%'
+      left:'30%'
     },
     textAreaStyle:{
         minHeight: 300,

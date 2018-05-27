@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
 import ExerciseItemStudent from './ExerciseItemStudent'
-import Axios from 'axios'
-import { Button, Card, Image, Grid } from 'semantic-ui-react'
+import {Card } from 'semantic-ui-react'
 
 
 class ExerciseIterator extends Component {

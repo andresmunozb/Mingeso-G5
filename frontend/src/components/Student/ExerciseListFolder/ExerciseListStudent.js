@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import ExerciseIterator from './ExerciseIterator'
 import Axios from 'axios'
-import { Form, TextArea,Grid,Button,Divider } from 'semantic-ui-react'
+import { Form,Divider } from 'semantic-ui-react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from '../ThemeList';
 import Paper from 'material-ui/Paper';
@@ -13,7 +13,7 @@ const background = {
       width: 1200,
       padding: 30,
       position:'relative',
-      left:'5%'
+      left:'8%'
     }
 
 
@@ -147,7 +147,6 @@ class ExerciseListStudent extends Component {
       let obj = this.state.publishedItems;
       //let obj = this.state.jsons;
       let filteredArray = [];
-      let filterObjects = [];
       Object.keys(obj).forEach(function (key) {
         filteredArray.push(obj[key]);
       });
@@ -206,7 +205,7 @@ class ExerciseListStudent extends Component {
    
     }
     updateData(){
-      let {filterOffers,offers, isFirstPage, isLastPage} = this.state;
+      let {filterOffers} = this.state;
       var currentPage = this.state.currentPage;
       
      if(currentPage >= this.state.pageCount){

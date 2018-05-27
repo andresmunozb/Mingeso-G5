@@ -6,14 +6,14 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from '../ThemeList';
 import Paper from 'material-ui/Paper';
 import ReactPaginate from 'react-paginate';
-import { Form, TextArea,Grid,Button,Divider } from 'semantic-ui-react'
-import {Link,Redirect} from 'react-router-dom';
+import { Form,Divider } from 'semantic-ui-react'
 
 const background = {
     bigFrame:{
       width: 1300,
       padding: 30,
-      position:'relative'
+      position:'relative',
+      left: '5%'
     }
 
 
@@ -311,7 +311,6 @@ class ExerciseListUnpublishedTeacher extends Component {
       let obj = this.state.unpublishedItems;
      // let obj = this.state.jsons;
       let filteredArray = [];
-      let filterObjects = [];
       Object.keys(obj).forEach(function (key) {
         filteredArray.push(obj[key]);
       });
@@ -374,7 +373,7 @@ class ExerciseListUnpublishedTeacher extends Component {
    
     }
     updateData(){
-      let {filterOffers,offers, isFirstPage, isLastPage} = this.state;
+      let {filterOffers} = this.state;
       var currentPage = this.state.currentPage;
       
      if(currentPage >= this.state.pageCount){

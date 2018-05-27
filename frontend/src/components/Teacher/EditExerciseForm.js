@@ -1,10 +1,10 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Grid,Button,Divider,Modal } from 'semantic-ui-react'
+import { Form, TextArea,Button,Divider } from 'semantic-ui-react'
 import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
 import Paper from 'material-ui/Paper';
-import {Link,Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const background = {
     mediumFrame:{
@@ -189,7 +189,7 @@ class EditExerciseForm extends Component{
                                     color='yellow' 
                                     type='Publish'
                                     /*onClick={this.publishExercise}*/
-                                    onClick={this.show}
+                                    onClick={this.publishExercise}
                                     >
                                     Publicar
                           </Button>
@@ -204,24 +204,7 @@ class EditExerciseForm extends Component{
                   </Paper>
                 
                 </MuiThemeProvider>
-                  <Modal  style={{ position:'relative'}} size={this.state.size} dimmer={this.state.dimmer}  open={this.state.open} onClose={this.close}>
-                    <Modal.Header>
-                      Publicar un enunciado
-                    </Modal.Header>
-                    <Modal.Content>
-                      <p>Estas seguro de publicar este enunciado?</p>
-                    </Modal.Content>
-                    <Modal.Actions>
-                      <Button negative
-                            >
-                        No
-                        </Button>
-                      <Button positive 
-                              icon='checkmark' labelPosition='right' content='Yes'
-                            />
-
-                    </Modal.Actions>
-                  </Modal>
+                  
 
 
 

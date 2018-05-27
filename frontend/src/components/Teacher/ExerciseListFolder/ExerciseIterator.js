@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import ExerciseItemPublishedTeacher from './ExerciseItemPublishedTeacher'
 import ExerciseItemUnpublishedTeacher from './ExerciseItemUnpublishedTeacher'
 
-import Axios from 'axios'
-import { Button, Card, Image, Grid } from 'semantic-ui-react'
+import {Card} from 'semantic-ui-react'
 
 
 class ExerciseIterator extends Component {
