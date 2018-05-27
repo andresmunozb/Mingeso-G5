@@ -4,6 +4,8 @@ import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from './ThemeList';
 import Paper from 'material-ui/Paper';
+import {Modal} from 'react-bootstrap'
+
 const background = {
     mediumFrame:{
       width: 600,
@@ -25,6 +27,8 @@ class CreateExerciseForm extends Component{
         this.postExercise = this.postExercise.bind(this);
         this.updateDescription = this.updateDescription.bind(this);
         this.updateTitle = this.updateTitle.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleHide = this.handleHide.bind(this);
 
       }
     state = {
@@ -36,11 +40,20 @@ class CreateExerciseForm extends Component{
     componentWillMount () {
   
     }
+
+    handleShow() {
+        this.setState({ show: true });
+      }
+      handleHide() {
+        this.setState({ show: false });
+      }
+
+   emptyFields () {
     
-    emptyFields () {
-        this.setState({ 
+     this.setState({ 
             title: "",
-            description: ""
+            description: "",
+            show:false
         })
 
     }
@@ -63,6 +76,8 @@ class CreateExerciseForm extends Component{
         let { title, description} = this.state
 
         return (
+            <div>
+
           <MuiThemeProvider muiTheme={ThemeDefault}>  
             <Paper style={background.mediumFrame}>
 
@@ -107,6 +122,46 @@ class CreateExerciseForm extends Component{
            </Paper>
   
          </MuiThemeProvider>
+
+
+            <Modal
+            show={this.state.show}
+            bsSize="small"
+          >  
+
+                     <Modal.Header >
+                      <Modal.Title>Sugerencia</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >
+                          <p >
+                            Desea ingresar otro enunciado?
+                          </p>
+                     </Modal.Body>
+                      <Modal.Footer>
+                        <Button  floated= {'left'} 
+                                    color='red' 
+                                    type='Negation'
+                                    onClick={() => {
+                                     this.props.history.push('/unpublished_exercises_teacher')
+                                      }}
+                                    >
+                                    No
+                          </Button>
+                            <Button  floated= {'right'} 
+                                    color='blue' 
+                                    type='Positive'
+                                    onClick={this.emptyFields}
+                                    >
+                                    Si
+                            </Button>
+                             
+                           
+                            
+                          
+                        </Modal.Footer>
+
+             </Modal>
+            </div>
   
      );
         
@@ -146,7 +201,7 @@ class CreateExerciseForm extends Component{
               Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/1',newExercise,axiosConfig)
                     .then((res) => {
                         console.log("RESPONSE RECEIVED: ", res);
-                        alert('Enunciado agregado ' + this.state.title);
+                        this.handleShow();
                     })
                     .catch((err) => {
                         console.log("AXIOS ERROR: ", err);

@@ -123,7 +123,11 @@ class ExerciseListPublishedTeacher extends Component {
     }
     getExercises(){
       var _this = this;
-      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/published')
+
+      //GET formal es con id del usuario
+     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser.toString()+'/published')
+     //Get por ahora es con id 1 
+     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/published')
       .then(response => {
             console.log("soy los ejercicios")
             console.log(response.data)
@@ -134,7 +138,7 @@ class ExerciseListPublishedTeacher extends Component {
             })
       .catch(function(error) {
            console.log(error)
-     })
+      })
     }
     componentWillMount () {
       this.getExercises();
