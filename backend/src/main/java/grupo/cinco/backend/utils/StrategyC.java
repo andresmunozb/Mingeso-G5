@@ -13,7 +13,7 @@ public class StrategyC implements Strategy{
         try {
             url = new URL("https://run.glot.io/languages/c");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         String input = "{\"files\": [{\"name\" : \"main.c\", \"content\": \"" + code +"\"}]}";
         return ApiCode.executeCode(url,input);

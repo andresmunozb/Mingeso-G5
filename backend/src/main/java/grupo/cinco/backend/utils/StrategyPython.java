@@ -13,7 +13,7 @@ public class StrategyPython implements Strategy {
         try {
             url = new URL("https://run.glot.io/languages/python/2");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         String input = "{\"files\": [{\"name\" : \"main.py\", \"content\": \"" + code +"\"}]}";
         return ApiCode.executeCode(url,input);
