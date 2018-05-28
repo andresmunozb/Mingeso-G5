@@ -20,10 +20,10 @@ public class ExerciseControllerTests {
         exercise.setFunctionName("invertir");
         exercise.setPublished(false);
         exercise.setUser(new User());
-        List<Solution> solutionList = new ArrayList<Solution>();
+        List<Solution> solutionList = new ArrayList<>();
         solutionList.add(new Solution());
         exercise.setSolutions(solutionList);
-        List<TestCase> testCaseList = new ArrayList<TestCase>();
+        List<TestCase> testCaseList = new ArrayList<>();
         testCaseList.add(new TestCase());
         exercise.setTestCases(testCaseList);
         Assert.assertNotNull(exercise);

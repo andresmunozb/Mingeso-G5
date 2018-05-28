@@ -16,7 +16,7 @@ public class RolControllerTests {
         Role rol = new Role();
         rol.setId(1);
         rol.setName("Administrador");
-        List<User> listUsers = new ArrayList<User>();
+        List<User> listUsers = new ArrayList<>();
         listUsers.add(new User());
         rol.setUsers(listUsers);
         Assert.assertNotNull(rol);

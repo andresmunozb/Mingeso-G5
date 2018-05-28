@@ -14,7 +14,7 @@ public class ClassControllerTests {
         Class clase = new Class();
         clase.setId(1);
         clase.setName("A-1");
-        List<User> listUsers = new ArrayList<User>();
+        List<User> listUsers = new ArrayList<>();
         listUsers.add(new User());
         clase.setUsers(listUsers);
         Assert.assertNotNull(clase);

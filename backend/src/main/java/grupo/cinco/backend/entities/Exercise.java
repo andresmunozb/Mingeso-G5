@@ -1,7 +1,6 @@
 package grupo.cinco.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.aspectj.weaver.ast.Test;
 
 import javax.persistence.*;
 import java.util.List;

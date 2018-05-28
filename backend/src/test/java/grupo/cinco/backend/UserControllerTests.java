@@ -18,10 +18,10 @@ public class UserControllerTests {
         user.setRole(new Role());
         user.setCareer(new Career());
         user.setClase(new Class());
-        List<Exercise> exercisesList = new ArrayList<Exercise>();
+        List<Exercise> exercisesList = new ArrayList<>();
         exercisesList.add(new Exercise());
         user.setExercises(exercisesList);
-        List<Solution> solutionList = new ArrayList<Solution>();
+        List<Solution> solutionList = new ArrayList<>();
         solutionList.add(new Solution());
         user.setSolutions(solutionList);
         Assert.assertNotNull(user);

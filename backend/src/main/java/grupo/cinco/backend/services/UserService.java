@@ -52,18 +52,18 @@ public class UserService {
 
     @RequestMapping(value = "/class/{id_class}", method = RequestMethod.PUT)
     @ResponseBody
-    public User updateClass(@PathVariable("id_class") Integer id_class, @RequestBody User resource)
+    public User updateClass(@PathVariable("id_class") Integer idClass, @RequestBody User resource)
     {
-        Class clase = classRepository.findById(id_class).get();
+        Class clase = classRepository.findById(idClass).get();
         resource.setClase(clase);
         return userRepository.save(resource);
     }
 
     @RequestMapping(value = "/career/{id_career}", method = RequestMethod.PUT)
     @ResponseBody
-    public User updateCareer(@PathVariable("id_career") Integer id_career, @RequestBody User resource)
+    public User updateCareer(@PathVariable("id_career") Integer idCareer, @RequestBody User resource)
     {
-        Career career = careerRepository.findById(id_career).get();
+        Career career = careerRepository.findById(idCareer).get();
         resource.setCareer(career);
         return userRepository.save(resource);
     }
@@ -71,16 +71,16 @@ public class UserService {
 
     @RequestMapping(value = "/role/{id_role}", method = RequestMethod.PUT)
     @ResponseBody
-    public User updateRole(@PathVariable("id_role") Integer id_role, @RequestBody User resource)
+    public User updateRole(@PathVariable("id_role") Integer idRole, @RequestBody User resource)
     {
-        Role role = roleRepository.findById(id_role).get();
+        Role role = roleRepository.findById(idRole).get();
         resource.setRole(role);
         return userRepository.save(resource);
     }
 
-    @RequestMapping(value = "{id_user}/role/{mail}", method = RequestMethod.GET)
+    @RequestMapping(value = "{mail}/role", method = RequestMethod.GET)
     @ResponseBody
-    public Role getRoleUser(@PathVariable("id_user") Integer id_user,@PathVariable("mail") String mail)
+    public Role getRoleUser(@PathVariable("mail") String mail)
     {
         User user = userRepository.findUserByEmailEquals(mail);
         return user.getRole();
