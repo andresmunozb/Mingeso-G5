@@ -1,7 +1,6 @@
 package grupo.cinco.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 
 import javax.persistence.*;
 import java.util.List;
