@@ -1,13 +1,14 @@
 package grupo.cinco.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jdk.nashorn.internal.runtime.regexp.joni.Syntax;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "classes")
-public class Class {
+public class Class extends Characteristic {
 
     @Id
     @Column(name = "id")
@@ -20,27 +21,5 @@ public class Class {
     @JsonIgnore
     private List<User> users;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 }
