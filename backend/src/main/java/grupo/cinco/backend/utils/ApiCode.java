@@ -14,6 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ApiCode {
+    
+    private ApiCode() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static JSONObject executeCode(URL url, String input)
     {
@@ -27,7 +31,6 @@ public class ApiCode {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("authorization", "Token 2e2f1102-0e6c-46dc-9d3a-ce7456eb0ecd");
 
-            System.out.println("Conexión exitosa :)");
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(input.getBytes());
@@ -41,10 +44,8 @@ public class ApiCode {
             bufferedReader = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
 
-            System.out.printf("Output from GLOT");
             String output = bufferedReader.readLine();
             json  = (JSONObject) parser.parse(output);
-            System.out.println(json);
             connection.disconnect();
 
         } catch (IOException | ParseException e) {

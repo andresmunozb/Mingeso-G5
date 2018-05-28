@@ -1,6 +1,5 @@
 package grupo.cinco.backend;
 
-import grupo.cinco.backend.entities.Class;
 import grupo.cinco.backend.entities.Role;
 import grupo.cinco.backend.entities.User;
 import org.junit.Assert;

@@ -13,7 +13,6 @@ public class StrategyJava implements Strategy {
         try {
             url = new URL("https://run.glot.io/languages/java");
         } catch (MalformedURLException e) {
-            //e.printStackTrace();
         }
         String input = "{\"files\": [{\"name\" : \"Main.java\", \"content\": \"" + code +"\"}]}";
         return ApiCode.executeCode(url,input);
