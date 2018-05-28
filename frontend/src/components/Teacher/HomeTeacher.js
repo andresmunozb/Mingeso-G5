@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 
 class HomeTeacher extends Component {
-    constructor () {
-      super()
+    constructor (props) {
+      super(props)
       this.funcion = this.funcion.bind(this)
     }
   
@@ -12,7 +12,6 @@ class HomeTeacher extends Component {
     }
   
     componentWillMount () {
-     
     }
   
     funcion () {

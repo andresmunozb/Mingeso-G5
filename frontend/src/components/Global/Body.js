@@ -8,15 +8,16 @@ import HomeAdmin from '../Admin/HomeAdmin'
 
 //Student
 import HomeStudent from '../Student/HomeStudent';
-import Solution from '../Student/Solution';
+import Solution from '../Student/FormFolder/Solution';
+import ViewExerciseFormStudent from '../Student/FormFolder/ViewExerciseFormStudent'
+
 import ExerciseListStudent from '../Student/ExerciseListFolder/ExerciseListStudent'
-import ViewExerciseFormStudent from '../Student/ViewExerciseFormStudent'
 
 //Teacher
 import HomeTeacher from '../Teacher/HomeTeacher'
-import CreateExerciseForm from '../Teacher/CreateExerciseForm'
-import EditExerciseForm from '../Teacher/EditExerciseForm'
-import ViewExerciseFormTeacher from '../Teacher/ViewExerciseFormTeacher'
+import CreateExerciseForm from '../Teacher/FormFolder/CreateExerciseForm'
+import EditExerciseForm from '../Teacher/FormFolder/EditExerciseForm'
+import ViewExerciseFormTeacher from '../Teacher/FormFolder/ViewExerciseFormTeacher'
 
 import ExerciseListPublishedTeacher from '../Teacher/ExerciseListFolder/ExerciseListPublishedTeacher'
 import ExerciseItemUnpublishedTeacher from '../Teacher/ExerciseListFolder/ExerciseListUnpublishedTeacher'
