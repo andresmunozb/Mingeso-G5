@@ -1,0 +1,22 @@
+package grupo.cinco.backend;
+
+import grupo.cinco.backend.entities.User;
+import org.junit.Assert;
+import org.junit.Test;
+import grupo.cinco.backend.entities.Class;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClassControllerTests {
+    @Test
+    public void newClass()  {
+        Class clase = new Class();
+        clase.setId(1);
+        clase.setName("A-1");
+        List<User> listUsers = new ArrayList<User>();
+        listUsers.add(new User());
+        clase.setUsers(listUsers);
+        Assert.assertNotNull(clase);
+    }
+}
