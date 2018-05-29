@@ -42,11 +42,15 @@ public class UserService {
         return user.getExercises();
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create/{id_class}/{id_career}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public User create(@RequestBody User resource)
+    public User create(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
     {
+        Class clase = classRepository.findById(idClass).get();
+        Career career = careerRepository.findById(idCareer).get();
+        resource.setClase(clase);
+        resource.setCareer(career);
         return userRepository.save(resource);
     }
 
