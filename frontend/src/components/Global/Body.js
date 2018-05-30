@@ -5,6 +5,8 @@ import { Switch, Route,Redirect} from 'react-router-dom';
 
 //Admin
 import HomeAdmin from '../Admin/HomeAdmin'
+import ClassList from '../Admin/ClassList'
+import CareerList from '../Admin/CareerList'
 
 //Student
 import HomeStudent from '../Student/HomeStudent';
@@ -76,6 +78,8 @@ class Body extends Component{
             {this.state.typeOfUser === 'admin' && 
               <Switch>
                     <Route path='/home_admin' exact={true} render={props => (<HomeAdmin {...props} />)}></Route>
+                    <Route path='/class_list' exact={true} render={props => (<ClassList {...props} />)}></Route>
+                    <Route path='/career_list' exact={true} render={props => (<CareerList {...props} />)}></Route>
                     <Redirect to='/home_admin' from= '/'/>
             </Switch>
             }
