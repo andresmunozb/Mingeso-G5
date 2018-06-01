@@ -11,29 +11,29 @@ public class Class  {
 
     @Id
     @Column(name = "id")
-    private int id;
+    private int idClass;
 
     @Column(name = "name")
-    private String name;
+    private String nameClass;
 
     @OneToMany(mappedBy = "clase")
     @JsonIgnore
     private List<User> users;
 
-    public int getId() {
-        return id;
+    public int getIdClass() {
+        return idClass;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdClass(int idClass) {
+        this.idClass = idClass;
     }
 
-    public String getName() {
-        return name;
+    public String getNameClass() {
+        return nameClass;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
     }
 
     public List<User> getUsers() {
