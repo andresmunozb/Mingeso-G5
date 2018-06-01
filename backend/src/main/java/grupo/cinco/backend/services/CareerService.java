@@ -42,7 +42,7 @@ public class CareerService {
     public void update(@PathVariable("id") Integer id, @RequestBody Career resource)
     {
         Career career = careerRepository.findById(id).get();
-        career.setName(resource.getName());
+        career.setNameCareer(resource.getNameCareer());
         careerRepository.save(career);
     }
     @DeleteMapping(value = "{id}/delete")

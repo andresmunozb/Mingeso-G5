@@ -12,8 +12,8 @@ public class ClassControllerTests {
     @Test
     public void newClass()  {
         Class clase = new Class();
-        clase.setId(1);
-        clase.setName("A-1");
+        clase.setIdClass(1);
+        clase.setNameClass("A-1");
         List<User> listUsers = new ArrayList<>();
         listUsers.add(new User());
         clase.setUsers(listUsers);

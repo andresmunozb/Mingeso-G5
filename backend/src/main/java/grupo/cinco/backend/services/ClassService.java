@@ -43,7 +43,7 @@ public class ClassService {
     public void update(@PathVariable("id") Integer id, @RequestBody Class resource)
     {
         Class clase = classRepository.findById(id).get();
-        clase.setName(resource.getName());
+        clase.setNameClass(resource.getNameClass());
         classRepository.save(clase);
     }
     @DeleteMapping(value = "{id}/delete")

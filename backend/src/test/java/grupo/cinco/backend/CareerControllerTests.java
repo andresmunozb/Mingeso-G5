@@ -13,8 +13,8 @@ public class CareerControllerTests {
     @Test
     public void newCareer()  {
         Career career = new Career();
-        career.setId(1);
-        career.setName("Ingeniería Civil Informática");
+        career.setIdCareer(1);
+        career.setNameCareer("Ingeniería Civil Informática");
         List<User> listUsers = new ArrayList<>();
         listUsers.add(new User());
         career.setUsers(listUsers);

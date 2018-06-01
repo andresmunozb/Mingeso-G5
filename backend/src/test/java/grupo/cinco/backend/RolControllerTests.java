@@ -13,8 +13,8 @@ public class RolControllerTests {
     @Test
     public void newRol()  {
         Role rol = new Role();
-        rol.setId(1);
-        rol.setName("Administrador");
+        rol.setIdRol(1);
+        rol.setNameRol("Administrador");
         List<User> listUsers = new ArrayList<>();
         listUsers.add(new User());
         rol.setUsers(listUsers);
