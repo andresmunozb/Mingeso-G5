@@ -1,35 +1,41 @@
 import React , {Component} from 'react'
-import {Grid,Panel,Table} from 'react-bootstrap';
+import {Grid,Panel,Table, Button} from 'react-bootstrap';
 import Axios from 'axios'
 
 class ClassList extends Component{
-    /*constructor(props) {
+    constructor(props) {
         super(props);
+        this.state = {
+            classes: [],
+        }
 
-    }*/
-    state ={
-        data:[]
     }
-    getClasses(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/published')
-        .then(response => {
-            console.log(response.data)
-            this.setState({ data: response.data });
-            setTimeout(5);
-            })
-        .catch(function(error) {
-           console.log(error)
-            })
+
+
+    componentWillMount(){
+        console.log(this.state);
+        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/')
+        .then( res => {
+            const classes = res.data;
+            this.setState({classes});
+            console.log(this.state);
+        })
+        
+
     }
     render(){
         return(
+            
             <Grid>
                 <Panel bsStyle="primary">
                     <Panel.Heading>
-                        <Panel.Title componentClass="h3">Panel heading</Panel.Title>
+                        <Panel.Title componentClass="h3">
+                            Panel heading 
+                            <Button>Add</Button>
+                        </Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>
-                    <Table striped bordered condensed hover responsive>
+                    <Table  bordered condensed hover responsive>
                         <thead>
                             <tr>
                             <th>#</th>
@@ -39,11 +45,15 @@ class ClassList extends Component{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Mark</td>
-                            </tr>                            
+                            
+                            {this.state.classes && this.state.classes.map((clase,key)=>
+                                <tr key={key}>
+                                    <th>{clase.id}</th>
+                                    <th>{clase.email}</th>
+                                    <th>Mark</th>
+                                </tr>                            
+                            )}
+                            
                         </tbody>
                     </Table>
                     </Panel.Body>
