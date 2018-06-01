@@ -10,8 +10,8 @@ import AppBar from 'material-ui/AppBar';
 import { white } from 'material-ui/styles/colors';
 import AceEditor from 'react-ace';
 
-import python from 'brace/mode/python';
-import monokai from 'brace/theme/monokai';
+//import python from 'brace/mode/python';
+//import monokai from 'brace/theme/monokai';
 const background = {
   bigFrame:{
     padding: 30,

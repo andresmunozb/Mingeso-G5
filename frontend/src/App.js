@@ -16,7 +16,7 @@ class App extends Component {
   //DEFAULT POR MIENTRAS
   state = {
     user: null,
-    rol: "student",
+    rol: "admin",
     routes: routes,
     routesFiltered:[],
   }
