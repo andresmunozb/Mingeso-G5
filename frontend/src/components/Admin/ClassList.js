@@ -1,5 +1,5 @@
 import React , {Component} from 'react'
-import {Grid,Panel,Table, Button, Row, Col,Modal} from 'react-bootstrap';
+import {Grid,Panel,Table, Button, Row, Col,Modal, Form, FormGroup,FormControl,ControlLabel} from 'react-bootstrap';
 import axios from 'axios'
 
 
@@ -37,39 +37,17 @@ class ClassList extends Component{
         this.showNewCareer = this.showNewCareer.bind(this);
         this.showNewClass = this.showNewClass.bind(this);
 
-    }
+        this.updateNameNewCareer = this.updateNameNewCareer.bind(this);
+        this.createCareer = this.createCareer.bind(this);
 
-
-    closeNewClass() {
-        this.setState({ showNewClass: false });
     }
-    
-    showNewClass() {
-        this.setState({ showNewClass: true });
-    }
-    closeNewCareer() {
-        this.setState({ showNewCareer: false });
-    }
-    
-    showNewCareer() {
-        this.setState({ showNewCareer: true });
-    }
-    getClasses(){
-        console.log(this.state);
-        axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
-        .then( res => {
-            const classes = res.data;
-            this.setState({classes});
-            console.log(this.state);
-        })
-    }
+    //Career
 
     getCareers(){
         axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
         .then( res => {
             const careers = res.data;
             this.setState({careers});
-            console.log(this.state);
         })
     }
 
@@ -82,6 +60,51 @@ class ClassList extends Component{
         });
         
     }
+    
+    createCareer(){
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "@crossorigin",
+            }
+          };
+        const newCareer = {nameCareer:this.state.nameNewCareer}
+        axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/create',newCareer,axiosConfig)
+        .then( res => {
+            this.getCareers();
+           
+        })
+        this.setState({nameNewCareer:''})
+        this.closeNewCareer();
+        
+    }
+    updateNameNewCareer(event){
+        this.setState({
+            nameNewCareer:event.target.value,
+        })
+        console.log(this.state.nameNewCareer)
+    }
+
+    closeNewCareer() {
+        this.setState({ showNewCareer: false });
+    }
+    
+    showNewCareer() {
+        this.setState({ showNewCareer: true });
+    }
+
+    
+
+    //Class
+    getClasses(){
+        console.log(this.state);
+        axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
+        .then( res => {
+            const classes = res.data;
+            this.setState({classes});
+            console.log(this.state);
+        })
+    }
 
     deleteClass(id){
         const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/'.concat(id).concat('/delete');
@@ -92,13 +115,42 @@ class ClassList extends Component{
         });
 
     }
+
+    closeNewClass() {
+        this.setState({ showNewClass: false });
+    }
+    
+    showNewClass() {
+        this.setState({ showNewClass: true });
+    }
+    
+    
+
+
     componentWillMount(){
         this.getClasses();
         this.getCareers();
     }
 
    
-
+    /*<Form horizontal>
+                                    
+                                    <FormGroup bsSize="small"  controlId="formHorizontalEmail">
+                                        <Col xs={12} sm={2}>
+                                            Sección
+                                        </Col>
+                                        <Col xs={12} sm={7}>
+                                            <FormControl 
+                                                type="text" 
+                                                placeholder="Buscar sección" 
+                                                value={this.state.nameNewCareer} 
+                                                />
+                                        </Col>
+                                        <Col xs={12} sm={3  }>
+                                            <Button className="pull-right" bsStyle="success" bsSize="small" onClick={this.showNewClass}>Add</Button>
+                                        </Col>
+                                        </FormGroup>
+                                    </Form>*/
     
     render(){
         return(
@@ -110,9 +162,10 @@ class ClassList extends Component{
                         <Panel bsStyle="primary">
                             <Panel.Heading>
                                 <Panel.Title componentClass="h3">
-                                    Secciones
-                                    <Button className="pull-right" bsStyle="success" bsSize="small" onClick={this.showNewClass}>Add</Button>
-                                </Panel.Title>
+                                    
+                                Sección
+                                <Button className="pull-right" bsStyle="success" bsSize="small" onClick={this.showNewClass}>Add</Button>
+                                    </Panel.Title>
                             </Panel.Heading>
                             <Panel.Body>
                             
@@ -197,13 +250,31 @@ class ClassList extends Component{
                     <Modal.Header closeButton>
                         <Modal.Title>Nueva Carrera</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                        
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.closeNewCareer}>Close</Button>
-                        <Button onClick={this.closeNewCareer}>Close</Button>
-                    </Modal.Footer>
+                    <Form horizontal>
+                        <Modal.Body>
+
+                            
+                            <FormGroup controlId="formHorizontalEmail">
+                            
+                            <Col xs={12}>
+                                <FormControl 
+                                    type="text" 
+                                    placeholder="Nombre de la carrera" 
+                                    value={this.state.nameNewCareer}
+                                    onChange={this.updateNameNewCareer} 
+                                    />
+                            </Col>
+                            </FormGroup>
+
+                            
+                            
+                            
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button  bsStyle="danger" onClick={this.closeNewCareer}>Cancelar</Button>
+                            <Button  bsStyle="primary" onClick={this.createCareer}>Guardar</Button>
+                        </Modal.Footer>
+                    </Form>
                     </Modal>
             </Grid>
         );
