@@ -9,9 +9,11 @@ import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import { white } from 'material-ui/styles/colors';
 import AceEditor from 'react-ace';
+import Axios from 'axios'
+import 'brace/theme/monokai';
+import 'brace/mode/python';
+import 'brace/mode/java';
 
-//import python from 'brace/mode/python';
-//import monokai from 'brace/theme/monokai';
 const background = {
   bigFrame:{
     padding: 30,
@@ -39,10 +41,14 @@ class Solution extends Component {
         title: null,
         description: null,
         isSafeToRender: false,
-        sideMenu:false
+        sideMenu:false,
+        code:"",
+        reply: ""
       }
       this.handleToggle = this.handleToggle.bind(this)
       this.function = this.function.bind(this)
+      this.updateCode = this.updateCode.bind(this)
+      this.executeCode = this.executeCode.bind(this)
 
     }
   handleToggle(){
@@ -50,6 +56,22 @@ class Solution extends Component {
   }
   function(){
     return <p style={{color: white}}>AQUI VA ALGO DINAMICO</p>
+  }
+  executeCode(){
+    console.log(this.state.code)
+    let codeToExecute = {
+      language:"python",
+      script: this.state.code
+    }
+    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute)
+    .then((response) => {
+        console.log("RESPONSE RECEIVED: ", response);
+        this.setState({reply: response.data.stdout})
+    })
+    .catch((err) => {
+        console.log("AXIOS ERROR: ", err);
+    })
+
   }
 
 
@@ -63,11 +85,17 @@ class Solution extends Component {
         this.setState({  
           title:this.state.exercise.viewAExercise.title,
           description: this.state.exercise.viewAExercise.description,
+          code: "",
           isSafeToRender: true
 
         })
     }
   }
+
+    updateCode(event){
+    this.setState({ code: event })
+
+    }
 
 
   render() {
@@ -87,6 +115,8 @@ class Solution extends Component {
                                   <input  placeholder='Title' 
                                           value= {title} 
                                           style={background.titleStyle}  
+                                          readOnly={true}
+
                                         />
                               </Form.Field>
                               <label>Descripcion</label>
@@ -94,6 +124,8 @@ class Solution extends Component {
                                 <TextArea placeholder='Descripcion'
                                           style={background.textAreaStyle}  
                                           value= {description} 
+                                          readOnly={true}
+
                                         />  
                             </div>
                             <Divider />
@@ -118,24 +150,25 @@ class Solution extends Component {
                                 showPrintMargin={true}
                                 showGutter={true}
                                 highlightActiveLine={true}
-                                value={""}
+                                value={this.state.code}
+                                onChange={this.updateCode}
                                 setOptions={{
-                                    enableBasicAutocompletion: true,
-                                    enableLiveAutocompletion: true,
-                                    enableSnippets: true,
-                                    showLineNumbers: true,
-                                    tabSize: 2,
+                                  enableBasicAutocompletion: false,
+                                  enableLiveAutocompletion: false,
+                                  enableSnippets: false,
+                                  showLineNumbers: true,
+                                  tabSize: 2,
                                 }}/>
                 
                           </Col>
                           <Col lg={1}>
                               <Row className="show-grid">
                               <div style={{padding:30}}></div>
-                              <Link to={{ pathname: '/exercises_student' }}>
-                                    <Button primary={true} type='Back'>
+                                    <Button   primary={true} 
+                                              type='Back'
+                                              onClick= {this.executeCode}>
                                               Ejecutar
                                       </Button>
-                              </Link>
                               </Row>
 
                               <Row className="show-grid">
@@ -151,23 +184,23 @@ class Solution extends Component {
 
                           </Col>
                           <Col lg={5}>
-                          <label>Descripcion</label>
-                                  <TextArea   placeholder='Descripcion'
-                                              value= {this.state.description} 
+                          <label>Resultado</label>
+                                  <TextArea   
+                                              value= {this.state.reply} 
                                               style={background.textAreaStyle2}  
                                               />  
                           </Col>
                          
                           </Row>
                         </Grid>
+                            <Drawer width={400} style = {{backgroundColor: white}}
+                                  openSecondary={true} open={this.state.sideMenu} >
+                            <AppBar title="AppBar"    
+                                  />
+                                  {this.function()}
+                          </Drawer>
                      </Paper>
-                     <Drawer width={400} style = {{backgroundColor: white}}
-                              openSecondary={true} open={this.state.sideMenu} >
-                        <AppBar title="AppBar"    
-                                iconElementLeft={false}
-                              />
-                              {this.function()}
-                      </Drawer>
+                   
 
                 </MuiThemeProvider>
           
