@@ -12,11 +12,15 @@ public class Context {
         this.strategy = strategy;
     }
     public JSONObject executeCode(String code){
-        if(code.contains("\"") || code.contains("\\n"))
+        if(code.contains("\""))
         {
             String middleInput = code.replace("\"","\\\"");
-            String finalInput = middleInput.replace("\\n", "\\\\n");
-            return this.strategy.executeCode(finalInput);
+            if(middleInput.contains("\\n"))
+            {
+                String finalInput = middleInput.replace("\\n", "\\\\n");
+                return this.strategy.executeCode(finalInput);
+            }
+            else return this.strategy.executeCode(middleInput);
         }
         return this.strategy.executeCode(code);
     }
