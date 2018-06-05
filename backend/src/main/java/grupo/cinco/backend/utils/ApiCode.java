@@ -19,22 +19,23 @@ public class ApiCode {
         throw new IllegalStateException("Utility class");
     }
 
-    public static JSONObject executeCode(URL url, String input)
+    public static String executeCode(URL url, String input)
     {
-        JSONParser parser = new JSONParser();
-        JSONObject json = null;
+        //JSONParser parser = new JSONParser();
+        //JSONObject json = null;
         try {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("authorization", "Token 2e2f1102-0e6c-46dc-9d3a-ce7456eb0ecd");
+            connection.setRequestProperty("authorization", "Token d5a563f4-d2b4-4a1e-b974-25d880169f1e");
 
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(input.getBytes());
             outputStream.flush();
+            //System.out.println("Pasó");
 
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new RuntimeException("Please check your inputs : HTTP error code : " + connection.getResponseCode());
@@ -45,12 +46,13 @@ public class ApiCode {
                     (connection.getInputStream())));
 
             String output = bufferedReader.readLine();
-            json  = (JSONObject) parser.parse(output);
+            //json  = (JSONObject) parser.parse(output);
             connection.disconnect();
+            return output;
 
-        } catch (IOException | ParseException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
+            return e.getMessage();
         }
-        return json;
     }
 }

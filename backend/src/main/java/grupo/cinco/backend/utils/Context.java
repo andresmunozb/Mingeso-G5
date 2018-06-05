@@ -11,16 +11,14 @@ public class Context {
     public void setStrategy(Strategy strategy){
         this.strategy = strategy;
     }
-    public JSONObject executeCode(String code){
-        if(code.contains("\""))
+    public String executeCode(String code){
+        System.out.println("Estoy en context");
+        if(code.contains("\"") || code.contains("\\n"))
         {
-            String middleInput = code.replace("\"","\\\"");
-            if(middleInput.contains("\\n"))
-            {
-                String finalInput = middleInput.replace("\\n", "\\\\n");
-                return this.strategy.executeCode(finalInput);
-            }
-            else return this.strategy.executeCode(middleInput);
+            String middleInput = code.replaceAll("\"","\\\"");
+            String finalInput = middleInput.replaceAll("\\n","\\\\n");
+            System.out.println(finalInput);
+            return this.strategy.executeCode(finalInput);
         }
         return this.strategy.executeCode(code);
     }

@@ -8,7 +8,7 @@ import java.net.URL;
 public class StrategyPython implements Strategy {
 
     @Override
-    public JSONObject executeCode(String code) {
+    public String executeCode(String code) {
         URL url = null;
         try {
             url = new URL("https://run.glot.io/languages/python/2");

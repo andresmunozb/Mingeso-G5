@@ -9,6 +9,8 @@ import grupo.cinco.backend.repositories.UserRepository;
 import grupo.cinco.backend.utils.Context;
 import grupo.cinco.backend.utils.Factory;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,9 +70,19 @@ public class SolutionService {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public JSONObject execute(@RequestBody Solution resource) {
+        JSONParser parser = new JSONParser();
+        JSONObject json = null;
         Factory  factory = new Factory();
+        System.out.println("Lenguaje: "+ resource.getLanguage());
         Context context = new Context(factory.getStrategy(resource.getLanguage()));
-        return context.executeCode(resource.getScript());
+        String output = context.executeCode(resource.getScript());
+        System.out.println(output);
+        try {
+            json = (JSONObject) parser.parse(output);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
 
