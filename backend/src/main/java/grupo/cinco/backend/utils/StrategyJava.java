@@ -11,7 +11,7 @@ public class StrategyJava implements Strategy {
     public String executeCode(String code) {
         URL url = null;
         try {
-            url = new URL("https://run.glot.io/languages/java");
+            url = new URL("https://run.glot.io/languages/java/latest");
         } catch (MalformedURLException e) {
             return null;
         }

@@ -11,7 +11,7 @@ public class StrategyC implements Strategy{
     public String executeCode(String code) {
         URL url = null;
         try {
-            url = new URL("https://run.glot.io/languages/c");
+            url = new URL("https://run.glot.io/languages/c/latest");
         } catch (MalformedURLException e) {
             return null;
         }
