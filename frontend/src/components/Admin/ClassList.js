@@ -1,7 +1,8 @@
 import React , {Component} from 'react'
 import {Grid,Row,Col} from 'react-bootstrap';
 import CareerPanel from './CareerPanel';
-import ClassPanel from './ClassPanel';
+//import ClassPanel from './ClassPanel';
+import NewPanel from './NewPanel';
 
 
 class ClassList extends Component{
@@ -16,12 +17,13 @@ class ClassList extends Component{
             <Grid>
                 <Row>
                     <Col xs={12} sm={12} md={6}>
-                        <ClassPanel/>
+                        <NewPanel/>
                     </Col>
                     <Col xs={12} sm={12} md={6}>
                         <CareerPanel/>
                     </Col> 
                 </Row> 
+
             </Grid>
         );
     }
