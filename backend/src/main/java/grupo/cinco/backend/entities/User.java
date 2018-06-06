@@ -21,7 +21,7 @@ public class User {
     @JsonIgnore
     private Class clase;
 
-    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.REMOVE)
     @JoinColumn(name= "id_career")
     @JsonIgnore
     private Career career;
