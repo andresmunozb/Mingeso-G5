@@ -38,6 +38,7 @@ class NewPanel extends Component {
             search: '',
             carrersFiltered: [],
             nameEdit:'',
+            id:null,
         }
         this.getCareers = this.getCareers.bind(this);
         this.deleteCareer = this.deleteCareer.bind(this);
@@ -54,6 +55,7 @@ class NewPanel extends Component {
         this.closeModalEdit = this.closeModalEdit.bind(this);
         this.showModalEdit = this.showModalEdit.bind(this);
         this.updateNameEdit = this.updateNameEdit.bind(this)
+        this.updateCareer = this.updateCareer.bind(this);
 
 
 
@@ -74,13 +76,24 @@ class NewPanel extends Component {
           let id = this.state.selected[0];
           let career = this.state.careers.find((e)=> e.idCareer === id);
           let nameEdit =  career.nameCareer;
-          this.setState({ modalEdit: true,nameEdit });
+          this.setState({ modalEdit: true,nameEdit,id });
         }
     }
     updateNameEdit(event){
       this.setState({
         nameEdit:event.target.value,
       })
+    }
+    updateCareer(){
+      let jsonEdit = {nameCareer:this.state.nameEdit}
+    
+      Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/'+this.state.id+'/edit',jsonEdit)
+            .then((res) => {
+              console.log("RESPONSE RECEIVED: ", res);
+              this.closeModalEdit();
+              this.getCareers();
+              
+            })
     }
 
     updateSearch(event){
