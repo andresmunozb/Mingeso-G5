@@ -2,7 +2,7 @@ import React , {Component} from 'react';
 import Axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import {Panel,Button,Form,FormControl,FormGroup,Col,Modal} from 'react-bootstrap';
+import {Panel,Button,Form,FormControl,FormGroup,Col,Modal,ButtonGroup} from 'react-bootstrap';
 
 
 const columns = [{
@@ -32,13 +32,16 @@ class NewPanel extends Component {
         this.state = {
             careers: [],
             modal:false,
+            modalEdit:false,
             nameNewCareer:'',
             selected:[],
             search: '',
             carrersFiltered: [],
+            nameEdit:'',
         }
         this.getCareers = this.getCareers.bind(this);
         this.deleteCareer = this.deleteCareer.bind(this);
+        this.deleteCareers = this.deleteCareers.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.showModal = this.showModal.bind(this);
         this.updateNameNewCareer = this.updateNameNewCareer.bind(this);
@@ -48,8 +51,38 @@ class NewPanel extends Component {
         this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
 
+        this.closeModalEdit = this.closeModalEdit.bind(this);
+        this.showModalEdit = this.showModalEdit.bind(this);
+        this.updateNameEdit = this.updateNameEdit.bind(this)
+
+
+
 
     }
+    closeModalEdit() {
+      this.setState({ modalEdit: false });
+    }
+    
+    showModalEdit() {
+        if(this.state.selected.length > 1){
+          alert("Debe solamente seleccionar una carrera")
+        }
+        else if(this.state.selected.length < 1){
+          alert("Debe seleccionar una carrera para editar")
+        }
+        else{
+          let id = this.state.selected[0];
+          let career = this.state.careers.find((e)=> e.idCareer === id);
+          let nameEdit =  career.nameCareer;
+          this.setState({ modalEdit: true,nameEdit });
+        }
+    }
+    updateNameEdit(event){
+      this.setState({
+        nameEdit:event.target.value,
+      })
+    }
+
     updateSearch(event){
 
       var search = event.target.value;
@@ -63,7 +96,6 @@ class NewPanel extends Component {
       this.setState({
           nameNewCareer:event.target.value,
       })
-      console.log(this.state.nameNewCareer)
     }
     closeModal() {
       this.setState({ modal: false });
@@ -77,7 +109,7 @@ class NewPanel extends Component {
         Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
         .then( res => {
             const careers = res.data;
-            this.setState({careers,carrersFiltered:careers});
+            this.setState({careers,search:'',carrersFiltered:careers});
         })
     }
 
@@ -142,7 +174,15 @@ class NewPanel extends Component {
     componentWillMount(){
         this.getCareers();
     }
-    //<Button className="pull-right" bsStyle="success" bsSize="small" onClick={this.showNewCareer} >Add</Button>
+    /*<Col xs={4} >
+                  <Button  bsStyle="success" bsSize="small" onClick={this.showModal} >Nuevo</Button>
+                </Col>
+                <Col xs={4} >
+                  <Button onClick={this.showModalEdit} bsStyle="primary" bsSize="small"  >Editar</Button>
+                </Col>
+                <Col xs={4} >
+                  <Button onClick={this.deleteCareers} bsStyle="danger" bsSize="small"  >Borrar</Button>
+                </Col>*/
     
     render(){
         const selectRow = {
@@ -152,7 +192,7 @@ class NewPanel extends Component {
             onSelect: this.handleOnSelect,
             onSelectAll: this.handleOnSelectAll
           };
-          console.log(this.state.selected);
+          //console.log(this.state.selected);
         return(
 
           <div>
@@ -168,14 +208,14 @@ class NewPanel extends Component {
 
             <Form horizontal>
               <FormGroup>
-              <Col smOffset={2} sm={3}>
-                <Button onClick={() => this.deleteCareers()} bsStyle="danger" bsSize="small"  >
-                  Borrar
-                </Button>
-                </Col>
-                <Col sm={3}>
-
-                </Col>
+              <Col xsOffset={1} xs={11} >
+              <ButtonGroup>
+              <Button  bsStyle="success" bsSize="small" onClick={this.showModal} >Nuevo</Button>
+              <Button onClick={this.showModalEdit} bsStyle="primary" bsSize="small"  >Editar</Button>
+              <Button onClick={this.deleteCareers} bsStyle="danger" bsSize="small"  >Borrar</Button>
+              
+              </ButtonGroup>
+              </Col>
               </FormGroup>
               <FormGroup>
               <Col smOffset={0} sm={12}>
@@ -193,7 +233,7 @@ class NewPanel extends Component {
             
             </Panel.Body>
         </Panel>
-        <Modal backdrop='static' show={this.state.showModal} onHide={this.closeModal}>
+        <Modal backdrop='static' show={this.state.modal} onHide={this.closeModal}>
             <Modal.Header closeButton>
                 <Modal.Title>Nueva Carrera</Modal.Title>
             </Modal.Header>
@@ -212,17 +252,42 @@ class NewPanel extends Component {
                             />
                     </Col>
                     </FormGroup>
-
-                    
-                    
                     
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button  bsStyle="danger" onClick={this.closeNewCareer}>Cancelar</Button>
+                    <Button  bsStyle="danger" onClick={this.closeModal}>Cancelar</Button>
                     <Button  bsStyle="primary" onClick={this.createCareer}>Guardar</Button>
                 </Modal.Footer>
             </Form>
-        </Modal>   
+        </Modal>
+
+        <Modal backdrop='static' show={this.state.modalEdit} onHide={this.closeModalEdit}>
+            <Modal.Header closeButton>
+                <Modal.Title>Editar Carrera</Modal.Title>
+            </Modal.Header>
+            <Form horizontal>
+                <Modal.Body>
+
+                    
+                    <FormGroup controlId="formHorizontalEmail">
+                    
+                    <Col xs={12}>
+                        <FormControl 
+                            type="text" 
+                            placeholder="Nombre de la carrera" 
+                            value={this.state.nameEdit}
+                            onChange={this.updateNameEdit}
+                            />
+                    </Col>
+                    </FormGroup>
+                    
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button  bsStyle="danger" onClick={this.closeModalEdit}>Cancelar</Button>
+                    <Button  bsStyle="primary" onClick={this.updateCareer}>Guardar</Button>
+                </Modal.Footer>
+            </Form>
+        </Modal>
           </div>
 
         );
