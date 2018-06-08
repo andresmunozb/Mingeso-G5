@@ -18,7 +18,7 @@ class App extends Component {
     user: null,
     rol: "student",
     routes: routes,
-    routesFiltered:[],
+    routesFiltered:[]
   }
 
   getRol(){

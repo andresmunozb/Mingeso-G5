@@ -74,6 +74,7 @@ class ViewExerciseFormTeacher extends Component{
                             <input  placeholder='Title' 
                                     readOnly={true}
                                     value= {title} 
+                                    style={{  textAlign:"center"}}
                                     />
                         </Form.Field>
                         <Form.Field>
@@ -81,7 +82,7 @@ class ViewExerciseFormTeacher extends Component{
                             <input  placeholder='Title' 
                                     value= {publicado} 
                                     readOnly={true}
-                                    style={{width: 150}}
+                                    style={{width: 150, textAlign:"center"}}
                                     />
                         </Form.Field>
                         <label>Descripcion</label>
