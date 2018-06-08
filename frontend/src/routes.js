@@ -10,7 +10,7 @@ export default
       },
       {
         title: 'Cursos',
-        path: '/class_list',
+        path: '/class_panel',
         exact: true,
         component:"EditExerciseForm",
         rol:"admin",
@@ -18,7 +18,7 @@ export default
       },
       {
         title: 'Carreras',
-        path: '/career_list',
+        path: '/career_panel',
         exact: true,
         component:"EditExerciseForm",
         rol:"admin",
