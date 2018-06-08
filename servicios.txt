@@ -1,0 +1,17 @@
+get    ->/exercises/
+post   ->/exercises/create/{id_user}
+put    ->/exercises/{id}/edit
+get    ->/exercises/published
+get    ->/exercises/unpublished
+put    ->/exercises/{id}/publish
+delete ->/exercises{id}/delete
+
+
+get    ->/solutions/
+post   ->/solutions/create/{id_user}/{id_exercise}
+put    ->/solutions/{id}/edit
+delete ->/solutions{id}/delete
+
+
+get ->/users/
+get ->/users/{id}/exercises

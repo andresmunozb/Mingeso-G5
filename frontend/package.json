@@ -1,0 +1,31 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@firebase/app-types": "^0.3.1",
+    "@material-ui/core": "^1.0.0",
+    "axios": "^0.18.0",
+    "classnames": "^2.2.5",
+    "firebase": "^5.0.4",
+    "material-ui": "^0.20.1",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-ace": "^6.1.1",
+    "react-bootstrap": "^0.32.1",
+    "react-bootstrap-table-next": "^0.1.13",
+    "react-bootstrap-table2-paginator": "^0.1.4",
+    "react-dom": "^16.3.2",
+    "react-paginate": "^5.2.3",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.4",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.80.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
