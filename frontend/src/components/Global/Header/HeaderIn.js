@@ -9,7 +9,7 @@ class HeaderIn extends Component{
             
             <Nav pullRight>
                 <NavItem >
-                <Button bsStyle="danger" onClick={this.props.onAuth}>Login</Button>
+                <Button bsSize="xs" bsStyle="danger" onClick={this.props.onAuth}>Login</Button>
                 </NavItem>
             </Nav>
         );
