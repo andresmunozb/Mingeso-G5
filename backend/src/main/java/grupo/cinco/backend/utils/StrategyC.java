@@ -8,14 +8,15 @@ import java.net.URL;
 public class StrategyC implements Strategy{
 
     @Override
-    public JSONObject executeCode(String code) {
+    public String executeCode(String code) {
         URL url = null;
         try {
-            url = new URL("https://run.glot.io/languages/c");
+            url = new URL("https://run.glot.io/languages/c/latest");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            return null;
         }
         String input = "{\"files\": [{\"name\" : \"main.c\", \"content\": \"" + code +"\"}]}";
+        System.out.println(input);
         return ApiCode.executeCode(url,input);
     }
 }

@@ -11,29 +11,29 @@ public class Role {
 
     @Id
     @Column(name = "id")
-    private int id;
+    private int idRol;
 
     @Column(name = "name")
-    private String name;
+    private String nameRol;
 
     @OneToMany(mappedBy = "role")
     @JsonIgnore
     private List<User> users;
 
-    public int getId() {
-        return id;
+    public int getIdRol() {
+        return idRol;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
     }
 
-    public String getName() {
-        return name;
+    public String getNameRol() {
+        return nameRol;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameRol(String nameRol) {
+        this.nameRol = nameRol;
     }
 
     public List<User> getUsers() {

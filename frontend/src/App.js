@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './App.css';
-import Header from './Global/Header';
-import Body from './Global/Body';
+import Header from './components/Global/Header/Header';
+import Body from './components/Global/Body';
 import firebase from 'firebase';
 import routes from './routes'
 
@@ -11,18 +10,36 @@ class App extends Component {
     super()
     this.handleAuth = this.handleAuth.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+    this.getRol = this.getRol.bind(this)
+    this.routesFilter = this.routesFilter.bind(this)
+  }
+  //DEFAULT POR MIENTRAS
+  state = {
+    user: null,
+    rol: "student",
+    routes: routes,
+    routesFiltered:[]
   }
 
-  state = {
-    user: null
+  getRol(){
+
+  }
+  routesFilter(rol){
+    let newRoutesFiltered = this.state.routes.filter(function(route){
+      return(route.rol === rol)
+    });
+    this.setState({
+      routesFiltered: newRoutesFiltered,
+    });
   }
 
   componentWillMount () {
     firebase.auth().onAuthStateChanged(user => {
       this.setState({ user });
       console.log(user);
-
     })
+    this.getRol();
+    this.routesFilter(this.state.rol);
   }
 
   handleAuth () {
@@ -49,9 +66,12 @@ class App extends Component {
         <Header
         user={this.state.user}
         onAuth={this.handleAuth}
-        onLogout={this.handleLogout}/>
-        <Body user={this.state.user} routes={routes}/>
+        onLogout={this.handleLogout}
+        routes={this.state.routesFiltered}
+        />
+        <Body /*id= {this.state.id}*/ rol={this.state.rol} routes={this.state.routesFiltered}/>
       </div>
+    
     );
   }
 }

@@ -23,9 +23,9 @@ public class TestCaseService {
     @RequestMapping(value = "create/{id_exercise}",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public TestCase create(@PathVariable("id_exercise") Integer id_exercise, @RequestBody TestCase resource)
+    public TestCase create(@PathVariable("id_exercise") Integer idExercise, @RequestBody TestCase resource)
     {
-        Exercise exercise = exerciseRepository.findById(id_exercise).get();
+        Exercise exercise = exerciseRepository.findById(idExercise).get();
         resource.setExercise(exercise);
         return testCaseRepository.save(resource);
     }

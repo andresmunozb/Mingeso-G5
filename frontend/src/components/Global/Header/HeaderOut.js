@@ -7,10 +7,10 @@ class HeaderOut extends Component{
         return(
             <Nav pullRight>
                 <NavItem >
-                <Image width='32' src={this.props.user.photoURL} circle />
+                <Image width='20' src={this.props.user.photoURL} circle />
                 </NavItem>
                 <NavItem >
-                <Button bsStyle="danger" onClick={this.props.onLogout}>Logout</Button>
+                <Button bsSize="xs" bsStyle="danger" onClick={this.props.onLogout}>Logout</Button>
                 </NavItem>
             </Nav>
         );

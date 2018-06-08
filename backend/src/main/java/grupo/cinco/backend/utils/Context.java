@@ -11,7 +11,15 @@ public class Context {
     public void setStrategy(Strategy strategy){
         this.strategy = strategy;
     }
-    public JSONObject executeCode(String code){
+    public String executeCode(String code){
+        System.out.println("Estoy en context");
+        if(code.contains("\"") || code.contains("\\n"))
+        {
+            String middleInput = code.replace("\"","\\\"");
+            String finalInput = middleInput.replace("\\n","\\\\n");
+            System.out.println(finalInput);
+            return this.strategy.executeCode(finalInput);
+        }
         return this.strategy.executeCode(code);
     }
 }

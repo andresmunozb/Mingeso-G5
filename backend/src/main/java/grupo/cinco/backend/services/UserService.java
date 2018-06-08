@@ -1,10 +1,13 @@
 package grupo.cinco.backend.services;
 
-import grupo.cinco.backend.entities.Exercise;
-import grupo.cinco.backend.entities.Solution;
-import grupo.cinco.backend.entities.User;
+import grupo.cinco.backend.entities.*;
+import grupo.cinco.backend.entities.Class;
+import grupo.cinco.backend.repositories.CareerRepository;
+import grupo.cinco.backend.repositories.ClassRepository;
+import grupo.cinco.backend.repositories.RoleRepository;
 import grupo.cinco.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,15 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
+    private CareerRepository careerRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
@@ -28,6 +40,54 @@ public class UserService {
     public List<Exercise> getAllExercises(@PathVariable("id") Integer id) {
         User user = userRepository.findById(id).get();
         return user.getExercises();
+    }
+
+    @RequestMapping(value = "/create/{id_class}/{id_career}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User create(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
+    {
+        Class clase = classRepository.findById(idClass).get();
+        Career career = careerRepository.findById(idCareer).get();
+        resource.setClase(clase);
+        resource.setCareer(career);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/class/{id_class}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User updateClass(@PathVariable("id_class") Integer idClass, @RequestBody User resource)
+    {
+        Class clase = classRepository.findById(idClass).get();
+        resource.setClase(clase);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/career/{id_career}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User updateCareer(@PathVariable("id_career") Integer idCareer, @RequestBody User resource)
+    {
+        Career career = careerRepository.findById(idCareer).get();
+        resource.setCareer(career);
+        return userRepository.save(resource);
+    }
+
+
+    @RequestMapping(value = "/role/{id_role}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User updateRole(@PathVariable("id_role") Integer idRole, @RequestBody User resource)
+    {
+        Role role = roleRepository.findById(idRole).get();
+        resource.setRole(role);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "{mail}/role", method = RequestMethod.GET)
+    @ResponseBody
+    public Role getRoleUser(@PathVariable("mail") String mail)
+    {
+        User user = userRepository.findUserByEmailEquals(mail);
+        return user.getRole();
     }
 
 }

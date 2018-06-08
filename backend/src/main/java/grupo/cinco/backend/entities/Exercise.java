@@ -1,7 +1,6 @@
 package grupo.cinco.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.aspectj.weaver.ast.Test;
 
 import javax.persistence.*;
 import java.util.List;
@@ -93,5 +92,13 @@ public class Exercise {
 
     public void setSolutions(List<Solution> solutions) {
         this.solutions = solutions;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
     }
 }

@@ -33,8 +33,8 @@ public class ExerciseService {
     @RequestMapping(value = "/create/{id_user}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Exercise create(@PathVariable("id_user") Integer id_user,@RequestBody Exercise resource) {
-        User user = userRepository.findById(id_user).get();
+    public Exercise create(@PathVariable("id_user") Integer idUser,@RequestBody Exercise resource) {
+        User user = userRepository.findById(idUser).get();
         resource.setUser(user);
         return exerciseRepository.save(resource);
     }
@@ -50,18 +50,20 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
-    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_user}/published", method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<Exercise> getPublished()
+    public Iterable<Exercise> getPublished(@PathVariable("id_user") Integer idUser)
     {
-        return exerciseRepository.findExercisesByPublishedEquals(true);
+        User user = userRepository.findById(idUser).get();
+        return exerciseRepository.findExercisesByUserEqualsAndAndPublishedEquals(user,true);
     }
 
-    @RequestMapping(value = "/unpublished", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_user}/unpublished", method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<Exercise> getUnpublished()
+    public Iterable<Exercise> getUnpublished(@PathVariable("id_user") Integer idUser)
     {
-        return exerciseRepository.findExercisesByPublishedEquals(false);
+        User user = userRepository.findById(idUser).get();
+        return exerciseRepository.findExercisesByUserEqualsAndAndPublishedEquals(user,false);
     }
 
     @RequestMapping(value = "/{id}/publish",method = RequestMethod.PUT)

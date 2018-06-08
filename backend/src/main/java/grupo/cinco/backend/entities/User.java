@@ -1,12 +1,7 @@
 package grupo.cinco.backend.entities;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -26,9 +21,8 @@ public class User {
     @JsonIgnore
     private Class clase;
 
-    @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name= "id_career")
-    @JsonIgnore
     private Career career;
 
     @Column (name = "email")
