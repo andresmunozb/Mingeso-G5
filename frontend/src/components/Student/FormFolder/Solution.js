@@ -1,18 +1,16 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Button,Divider } from 'semantic-ui-react'
+import { Form, TextArea,Button,Divider,Dropdown } from 'semantic-ui-react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from '../ThemeList';
 import Paper from 'material-ui/Paper';
 import {Link} from 'react-router-dom';
-import {Grid,Row,Col} from 'react-bootstrap'
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import { white } from 'material-ui/styles/colors';
+import {Row,Col} from 'react-bootstrap'
 import AceEditor from 'react-ace';
 import Axios from 'axios'
 import 'brace/theme/monokai';
 import 'brace/mode/python';
 import 'brace/mode/java';
+import 'brace/mode/c_cpp';
 
 const background = {
   bigFrame:{
@@ -25,8 +23,8 @@ const background = {
 
   },
   textAreaStyle2:{
-    height: 400,
-      width:450
+    minHeight: 500,
+    minWidth:520
   },
   titleStyle:{
     width: 600,
@@ -43,34 +41,54 @@ class Solution extends Component {
         isSafeToRender: false,
         sideMenu:false,
         code:"",
-        reply: ""
+        reply: "",
+        languageOptions: [
+            
+              { key: 'python', value: 'python', text: 'Python' },
+              { key: 'java', value: 'java', text: 'Java' },
+              { key: 'c', value: 'c_cpp', text: 'C' }
+           
+         ],  
+         languageEditor: "",
+         languageCode: ""
+  
+        
       }
       this.handleToggle = this.handleToggle.bind(this)
-      this.function = this.function.bind(this)
       this.updateCode = this.updateCode.bind(this)
       this.executeCode = this.executeCode.bind(this)
+      this.selectLanguages = this.selectLanguages.bind(this)
 
     }
   handleToggle(){
     this.setState({sideMenu: !this.state.sideMenu});
   }
-  function(){
-    return <p style={{color: white}}>AQUI VA ALGO DINAMICO</p>
-  }
   executeCode(){
     console.log(this.state.code)
-    let codeToExecute = {
-      language:"python",
-      script: this.state.code
+    if(this.state.languageCode.length !== 0){
+        let codeToExecute = {
+          language:this.state.languageCode,
+          script: this.state.code
+        };
+        let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "@crossorigin",
+          }
+        };
+
+        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
+        .then((response) => {
+            console.log("RESPONSE RECEIVED: ", response);
+            this.setState({reply: response.data.stdout})
+        })
+        .catch((err) => {
+            console.log("AXIOS ERROR: ", err);
+        })
     }
-    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute)
-    .then((response) => {
-        console.log("RESPONSE RECEIVED: ", response);
-        this.setState({reply: response.data.stdout})
-    })
-    .catch((err) => {
-        console.log("AXIOS ERROR: ", err);
-    })
+    else{
+      alert("Debe elegir un lenguaje de programacion para poder ejecutar o enviar su codigo")
+    }
 
   }
 
@@ -90,6 +108,16 @@ class Solution extends Component {
 
         })
     }
+  }
+  selectLanguages = (e, { value}) => {
+    var actualLenguage;
+    for(let i = 0; i<this.state.languageOptions.length; i++){
+      if(this.state.languageOptions[i].value === value){
+       actualLenguage = this.state.languageOptions[i].key; 
+      }
+    }
+    this.setState({ languageEditor: value, languageCode: actualLenguage})
+
   }
 
     updateCode(event){
@@ -129,21 +157,36 @@ class Solution extends Component {
                                         />  
                             </div>
                             <Divider />
+                            <Row className="show-grid" style={{position:"relative", left: "6%"}}>
+                              <Col  xs={5} sm={5} md={2} style={{position:"relative", left: "10%"}}>
+                                 <label>Lenguaje</label>
 
-                              <Link to={{ pathname: '/exercises_student' }}>
-                                    <Button primary={true} type='Back'>
-                                              Volver
-                                      </Button>
-                              </Link>
+                                <Dropdown placeholder='Seleccionar...' 
+                                          fluid selection options={this.state.languageOptions} 
+                                          onChange = {this.selectLanguages}
+                                          />
+                
+                             </Col>
+                             <Col  xs={12} sm={12} md={6} style={{position:"relative", left: "4%"}}>
+                               <div style={{padding:15}}></div>
+                                   <Link to={{ pathname: '/exercises_student' }}>
+                                       <Button primary={true} type='Back'>
+                                                Volver
+                                        </Button>
+                                  </Link>
 
+                
+                             </Col>
+                           </Row>
+
+                            
                         </Form>
-                        <Grid>
-                        <Row className="show-grid" style={{position:"relative", left: "5%"}}>
-                          <Col lg={5}>
-                          <label>Descripcion</label>
+                        <Row className="show-grid" style={{position:"relative", left: "6%"}}>
+                          <Col  xs={12} sm={12} md={6} lg={5}>
+                          <label>Editor</label>
                           <AceEditor
-                                style = {background.textAreaStyle2}
-                                mode={'python'}
+                                //style = {background.textAreaStyle2}
+                                mode={this.state.languageEditor}
                                 theme={'monokai'}
                                 name="blah2"
                                 fontSize={17}
@@ -161,7 +204,7 @@ class Solution extends Component {
                                 }}/>
                 
                           </Col>
-                          <Col lg={1}>
+                          <Col  xs={5} sm={5} md={4} lg={1}>
                               <Row className="show-grid">
                               <div style={{padding:30}}></div>
                                     <Button   primary={true} 
@@ -183,22 +226,16 @@ class Solution extends Component {
                               </Row>
 
                           </Col>
-                          <Col lg={5}>
-                          <label>Resultado</label>
+                          <Col  xs={12} sm={12} md={6} lg={5}>
+                          <label>Resultado:</label>
                                   <TextArea   
                                               value= {this.state.reply} 
                                               style={background.textAreaStyle2}  
+                                              autoHeight= {true}
                                               />  
                           </Col>
                          
                           </Row>
-                        </Grid>
-                            <Drawer width={400} style = {{backgroundColor: white}}
-                                  openSecondary={true} open={this.state.sideMenu} >
-                            <AppBar title="AppBar"    
-                                  />
-                                  {this.function()}
-                          </Drawer>
                      </Paper>
                    
 
@@ -216,31 +253,3 @@ class Solution extends Component {
   }
   
   export default Solution;
-  /* <AceEditor
-                    mode= {this.state.lenguajeElegido} //escoger lenguaje
-                    theme="terminal"
-                    name="blah2"
-                    //onChange={this.updateCodigoA.bind(this)}
-                    onChange={this.onChange}
-                    fontSize={18}
-                    showPrintMargin={true}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    value = ""
-                    setOptions={{
-                        enableBasicAutocompletion: true,
-                        enableLiveAutocompletion: false,
-                        enableSnippets: false,
-                        showLineNumbers: true,
-                        tabSize: 2,
-                    }}/>
-                </div>
-                
-                  <TextArea   placeholder='Descripcion'
-                                              value= {"Aca va el react-ace"} 
-                                              style={background.textAreaStyle2}  
-                                              />  
-                
-                
-                
-                */

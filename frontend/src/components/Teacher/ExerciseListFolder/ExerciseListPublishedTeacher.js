@@ -10,10 +10,8 @@ import ReactPaginate from 'react-paginate';
 
 const background = {
     bigFrame:{
-      width: 1300,
       padding: 30,
-      position:'relative',
-      left:'5%'
+      position:'relative'
     }
 
 
@@ -119,6 +117,7 @@ class ExerciseListPublishedTeacher extends Component {
       this.getPagination = this.getPagination.bind(this);
       this.updateData = this.updateData.bind(this);
       this.handlePageClick = this.handlePageClick.bind(this);
+      this.isValid = this.isValid.bind(this);
 
     }
     getExercises(){
@@ -144,6 +143,10 @@ class ExerciseListPublishedTeacher extends Component {
       this.getExercises();
 
     }
+    isValid(str){
+      //Si hay alguno de estos caracteres, retornar falso
+      return !/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
+    }
   
     filterList(event) {
       let obj = this.state.publishedItems;
@@ -153,8 +156,10 @@ class ExerciseListPublishedTeacher extends Component {
       });
       
       filteredArray = filteredArray.filter((item) => {
-        return item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
-   
+         //Si el caracter es valido, se puede buscar  
+        return this.isValid(event.target.value) && item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+    
+      
       });
       this.getPagination(filteredArray);
       

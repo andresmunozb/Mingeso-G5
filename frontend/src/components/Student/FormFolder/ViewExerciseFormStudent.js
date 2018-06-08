@@ -64,6 +64,7 @@ class ViewExerciseFormStudent extends Component{
                                     <input  placeholder='Title' 
                                             readOnly={true}
                                             value= {title} 
+                                            style={{  textAlign:"center"}}
                                         />
                                 </Form.Field>
                                 <label>Descripcion</label>
