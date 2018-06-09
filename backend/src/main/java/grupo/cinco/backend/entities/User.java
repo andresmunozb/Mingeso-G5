@@ -13,12 +13,10 @@ public class User {
 
     @ManyToOne(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name= "id_rol", nullable = false)
-    @JsonIgnore
     private Role role;
 
     @ManyToOne
     @JoinColumn(name= "id_class")
-    @JsonIgnore
     private Class clase;
 
     @ManyToOne(fetch= FetchType.EAGER)
