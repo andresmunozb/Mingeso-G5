@@ -42,10 +42,18 @@ public class UserService {
         return user.getExercises();
     }
 
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User create(@RequestBody User resource)
+    {
+        return userRepository.save(resource);
+    }
+
     @RequestMapping(value = "/create/{id_class}/{id_career}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public User create(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
+    public User createWithClassAndCareer(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
     {
         Class clase = classRepository.findById(idClass).get();
         Career career = careerRepository.findById(idCareer).get();
