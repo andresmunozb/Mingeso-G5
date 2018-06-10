@@ -34,10 +34,11 @@ public class ExerciseService {
     @RequestMapping(value = "/create/{id_user}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Exercise create(@PathVariable("id_user") Integer idUser,@RequestBody Exercise resource) {
+    public int create(@PathVariable("id_user") Integer idUser,@RequestBody Exercise resource) {
         User user = userRepository.findById(idUser).get();
         resource.setUser(user);
-        return exerciseRepository.save(resource);
+        Exercise exercise = exerciseRepository.save(resource);
+        return exercise.getId();
     }
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.PUT)

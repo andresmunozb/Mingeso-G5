@@ -29,4 +29,14 @@ public class TestCaseService {
         resource.setExercise(exercise);
         return testCaseRepository.save(resource);
     }
+
+    @RequestMapping(value = "/{id}/edit",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void update(@PathVariable("id") Integer id, @RequestBody TestCase resource)
+    {
+        TestCase testCase = testCaseRepository.findById(id).get();
+        testCase.setInput(resource.getInput());
+        testCase.setOutput(resource.getOutput());
+        testCaseRepository.save(testCase);
+    }
 }
