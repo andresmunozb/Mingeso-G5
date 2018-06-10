@@ -1,6 +1,7 @@
 package grupo.cinco.backend.services;
 
 import grupo.cinco.backend.entities.Exercise;
+import grupo.cinco.backend.entities.TestCase;
 import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.UserRepository;
@@ -74,6 +75,13 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
+    @RequestMapping(value = "/{id}/testcases", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<TestCase> getTestCases(@PathVariable("id") Integer id)
+    {
+        Exercise exercise = exerciseRepository.findById(id).get();
+        return exercise.getTestCases();
+    }
     @DeleteMapping(value = "{id}/delete")
     @ResponseBody
     public void delete(@PathVariable Integer id)
