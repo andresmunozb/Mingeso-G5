@@ -29,7 +29,7 @@ public class Exercise {
     @Column(name = "function_name")
     private String functionName;
 
-    @OneToMany(mappedBy = "exercise")
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TestCase> testCases;
 
