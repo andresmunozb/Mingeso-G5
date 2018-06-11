@@ -1,6 +1,6 @@
 import React,{Component} from 'react'; 
 import Axios from 'axios'; 
-import {Panel, ButtonGroup,Form,FormControl,Button, Grid, Row, Col,FormGroup,Modal} from 'react-bootstrap' 
+import {Panel, ButtonGroup,Form,FormControl,Button, Grid, Row, Col,FormGroup,Modal,ControlLabel} from 'react-bootstrap' 
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
@@ -48,15 +48,23 @@ class UserPanel extends Component{
             usersFiltered: [], 
             modalNew:false, 
             modalEdit:false, 
-            email:'',  
             selected:[], 
             search: '',
+            role:'role', //combobox
+            clase:'class', //Combobox
+            career:'career', //Combobox
+            careers:[],
+            classes:[],
+            email:'',  
+
              
         } 
 
         //Servicios
         this.getUsers = this.getUsers.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
+        this.getClasses = this.getClasses.bind(this);
+        this.getCareers = this.getCareers.bind(this);
 
 
         //abrir y cerrar modales
@@ -67,12 +75,33 @@ class UserPanel extends Component{
 
         //Funciones para inputs
         this.updateEmail = this.updateEmail.bind(this);
+        this.updateRole = this.updateRole.bind(this);
+        this.updateCareer= this.updateCareer.bind(this);
+        this.updateClass = this.updateClass.bind(this);
 
         //Manejo de las tablas
         this.updateSearch = this.updateSearch.bind(this);
         this.handleOnSelect = this.handleOnSelect.bind(this);
         this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
+
+       
     } 
+
+    createUser(){
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "@crossorigin",
+            }
+          };
+        const newUser = {email:this.state.email}
+        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create',newUser,axiosConfig)
+        .then( res => {
+            this.getUsers();
+        })
+        this.setState({nameNewClass:''})
+        this.closeModalNew();
+    }
     
 
     //Servicios
@@ -86,6 +115,26 @@ class UserPanel extends Component{
 
     deleteUsers(){
     }
+
+
+    
+    
+    getClasses(){
+        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
+        .then( res => {
+            const classes = res.data;
+            this.setState({classes});
+        })
+    }
+    getCareers(){
+        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
+        .then( res => {
+            const careers = res.data;
+            this.setState({careers});
+        })
+    }
+
+    
 
 
     //Abrir y cerrar modales
@@ -114,7 +163,21 @@ class UserPanel extends Component{
         this.setState({
             email:event.target.value,
         });
-        console.log(this.state.email);
+    }
+    updateRole(event) {
+        let role = event.target.value;
+        if(role !== 'student'){
+            this.setState({role,career:'career',clase:'class'});
+        }
+        else{
+            this.setState({role});
+        }
+    }
+    updateCareer(event){
+        this.setState({career:event.target.value});
+    }
+    updateClass(event){
+        this.setState({class:event.target.value});
     }
 
     //Manejo de tablas
@@ -168,6 +231,8 @@ class UserPanel extends Component{
     //Acciones que se hacen antes de redenderizar el componente
     componentWillMount(){
         this.getUsers();
+        this.getCareers();
+        this.getClasses();
     }
 
  
@@ -179,7 +244,9 @@ class UserPanel extends Component{
             onSelect: this.handleOnSelect,
             onSelectAll: this.handleOnSelectAll
         };
-        console.log(this.state.users);  
+        console.log(this.state.email);
+        console.log(this.state.role);
+        //console.log(this.state.users);  
         return( 
             <div> 
                 <Grid> 
@@ -204,10 +271,16 @@ class UserPanel extends Component{
                                     </FormGroup> 
                                     <FormGroup> 
                                         <Col smOffset={0} sm={12}> 
-                                            <FormControl type="text" placeholder="Buscar" value={this.state.search} onChange={this.updateSearch} /> 
+                                            <FormControl type="text" 
+                                            placeholder="Buscar" 
+                                            value={this.state.search} 
+                                            onChange={this.updateSearch} 
+                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}/> 
                                         </Col> 
                                     </FormGroup> 
-                                </Form> 
+                                    
+                                </Form>
+                                
                                 <BootstrapTable keyField="id"
                                 data={ this.state.usersFiltered }  
                                 columns={ columns }  
@@ -228,7 +301,8 @@ class UserPanel extends Component{
                     <Form horizontal>
                         <Modal.Body>
                             <FormGroup controlId="formHorizontalEmail">
-                            <Col xs={12}>
+                            <Col xs={6}>
+                                <ControlLabel>Email</ControlLabel>
                                 <FormControl 
                                     type="email" 
                                     placeholder="Email" 
@@ -237,7 +311,35 @@ class UserPanel extends Component{
                                     onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                                     />
                             </Col>
+                            <Col xs={6}>
+                                <ControlLabel>Rol</ControlLabel>
+                                <FormControl value={this.state.role} onChange={this.updateRole} componentClass="select" placeholder="Rol">
+                                    <option value="role">Seleccione un rol  </option>
+                                    <option value="admin">Admin</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="student">Student</option>
+                                </FormControl>
+                                </Col>
+                            
+                            {this.state.role === 'student' ?<div>
+                            <Col xs={6}>
+                                <ControlLabel>Carrera</ControlLabel>
+                                <FormControl value={this.state.career} onChange={this.updateCareer} componentClass="select">
+                                    <option value="career">Seleccione una carrera</option>
+                                    {this.state.careers.map((career,key)=> <option key={key} value={career.idCareer}> {career.nameCareer} </option>)}
+                                </FormControl>
+                                </Col>
+                            <Col xs={6}>
+                                <ControlLabel>Curso</ControlLabel>
+                                <FormControl value={this.state.class} onChange={this.updateClass} componentClass="select" >
+                                    <option value="class">Seleccione un curso</option>
+                                    {this.state.classes.map((clase,key)=><option key={key} value={clase.idClass}>{clase.nameClass}</option>)}
+                                </FormControl>
+                                </Col>
+                            </div>:null
+                            }
                             </FormGroup>
+
                         </Modal.Body>
                         <Modal.Footer>
                             <Button  bsStyle="danger" onClick={this.closeModalNew}>Cancelar</Button>

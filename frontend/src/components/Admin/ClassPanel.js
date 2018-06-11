@@ -241,7 +241,7 @@ class ClassPanel extends Component {
               </FormGroup>
               <FormGroup>
               <Col smOffset={0} sm={12}>
-                  <FormControl type="text" placeholder="Buscar" value={this.state.search} onChange={this.updateSearch} />
+                  <FormControl type="text" placeholder="Buscar" value={this.state.search} onChange={this.updateSearch} onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}} />
                 </Col>
               </FormGroup>
             </Form>
@@ -275,6 +275,7 @@ class ClassPanel extends Component {
                             placeholder="Nombre del curso" 
                             value={this.state.nameNewClass}
                             onChange={this.updateNameNewClass} 
+                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                             />
                     </Col>
                     </FormGroup>
@@ -303,6 +304,7 @@ class ClassPanel extends Component {
                             placeholder="Nombre del curso" 
                             value={this.state.nameEdit}
                             onChange={this.updateNameEdit}
+                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                             />
                     </Col>
                     </FormGroup>
