@@ -31,6 +31,13 @@ public class ExerciseService {
         return exerciseRepository.findAll();
     }
 
+    @RequestMapping(value = "/{title}", method = RequestMethod.GET)
+    @ResponseBody
+    public Exercise getExercise(@PathVariable("title") String title)
+    {
+        return exerciseRepository.findExercisesByTitleEquals(title);
+    }
+
     @RequestMapping(value = "/create/{id_user}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

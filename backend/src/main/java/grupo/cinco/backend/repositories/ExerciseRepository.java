@@ -7,4 +7,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface ExerciseRepository extends PagingAndSortingRepository<Exercise, Integer> {
     
     Iterable<Exercise> findExercisesByUserEqualsAndAndPublishedEquals(User user, boolean published);
+    Exercise findExercisesByTitleEquals(String title);
 }
