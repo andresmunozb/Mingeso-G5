@@ -14,6 +14,13 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Role> getAll() {
+        return roleRepository.findAll();
+    }
+    
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
