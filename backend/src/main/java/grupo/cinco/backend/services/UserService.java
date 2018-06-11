@@ -50,13 +50,50 @@ public class UserService {
         return userRepository.save(resource);
     }
 
-    @RequestMapping(value = "/create/{id_class}/{id_career}", method = RequestMethod.POST)
+    @RequestMapping(value = "/create/{id_role}/{id_class}/{id_career}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public User createWithClassAndCareer(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
+    public User createWithRCC(@PathVariable("id_role") Integer idRole,@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
     {
         Class clase = classRepository.findById(idClass).get();
         Career career = careerRepository.findById(idCareer).get();
+        Role role = roleRepository.findById(idRole).get();
+        resource.setClase(clase);
+        resource.setCareer(career);
+        resource.setRole(role);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/create/{id_role}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User createWithR(@PathVariable("id_role") Integer idRole,@RequestBody User resource)
+    {
+        Role role = roleRepository.findById(idRole).get();
+        resource.setRole(role);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/update/{id_role}/{id_class}/{id_career}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User update(@PathVariable("id_role") Integer idRole,@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer, @RequestBody User resource)
+    {
+        Career career;
+        Class clase;
+        Role role = roleRepository.findById(idRole).get();
+        if(idClass==-1){
+            clase = null;
+        }
+        else{
+            clase = classRepository.findById(idClass).get();
+        }
+        if(idCareer == -1){
+            career = null;
+        }
+        else{
+            career = careerRepository.findById(idCareer).get();
+        }
+        resource.setRole(role);
         resource.setClase(clase);
         resource.setCareer(career);
         return userRepository.save(resource);
