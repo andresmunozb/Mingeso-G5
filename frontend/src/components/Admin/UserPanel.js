@@ -55,16 +55,19 @@ class UserPanel extends Component{
             career:'career', //Combobox
             careers:[],
             classes:[],
+            roles:[],
             email:'',  
 
              
         } 
 
         //Servicios
+        this.createUser = this.createUser.bind(this);
         this.getUsers = this.getUsers.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
         this.getClasses = this.getClasses.bind(this);
         this.getCareers = this.getCareers.bind(this);
+        this.getRoles = this.getRoles.bind(this);
 
 
         //abrir y cerrar modales
@@ -84,9 +87,36 @@ class UserPanel extends Component{
         this.handleOnSelect = this.handleOnSelect.bind(this);
         this.handleOnSelectAll = this.handleOnSelectAll.bind(this);
 
+        //Extra
+        this.validateStudent = this.validateStudent.bind(this);
+        this.validaUser = this.validaUser.bind(this);
+
        
     } 
-
+    validateStudent(){
+        if(this.state.clase === 'class'){
+            return false;
+        }
+        else if(this.state.career==='career'){
+            return false;
+        }
+        else if(this.state.email === ''){
+            return false;
+        }
+        else if(this.state.role ==='role'){
+            return false;
+        }
+        return true;
+    }
+    validaUser(){
+        if(this.state.email === ''){
+            return false;
+        }
+        else if(this.state.role ==='role'){
+            return false;
+        }
+        return true;
+    }
     createUser(){
         const axiosConfig = {
             headers: {
@@ -95,12 +125,40 @@ class UserPanel extends Component{
             }
           };
         const newUser = {email:this.state.email}
-        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create',newUser,axiosConfig)
-        .then( res => {
-            this.getUsers();
-        })
-        this.setState({nameNewClass:''})
-        this.closeModalNew();
+        if(this.state.role ==="3"){
+            if(!this.validateStudent()){
+                alert("Debe rellenar todos los campos")
+            }
+            else{
+                Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create/'+
+                this.state.role+'/'+
+                this.state.clase+'/'+
+                this.state.career,
+                newUser,axiosConfig)
+                .then( res => {
+                    this.getUsers();
+                })
+                this.setState({clase:'class',career:'career',email:'',role:'role'})
+                this.closeModalNew();
+            }
+        }
+        else{
+            if(!this.validaUser()){
+                alert("Debe rellenar todos los campos");
+            }
+            else{
+                Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create/'+this.state.role,
+                newUser,axiosConfig)
+                .then( res => {
+                    this.getUsers();
+                })
+                this.setState({clase:'class',career:'career',email:'',role:'role'})
+                this.closeModalNew();
+            }
+        }
+        
+        
+        
     }
     
 
@@ -118,7 +176,13 @@ class UserPanel extends Component{
 
 
     
-    
+    getRoles(){
+        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/roles/')
+        .then( res => {
+            const roles = res.data;
+            this.setState({roles});
+        })
+    }
     getClasses(){
         Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
         .then( res => {
@@ -166,7 +230,7 @@ class UserPanel extends Component{
     }
     updateRole(event) {
         let role = event.target.value;
-        if(role !== 'student'){
+        if(role !== "3"){
             this.setState({role,career:'career',clase:'class'});
         }
         else{
@@ -177,7 +241,7 @@ class UserPanel extends Component{
         this.setState({career:event.target.value});
     }
     updateClass(event){
-        this.setState({class:event.target.value});
+        this.setState({clase:event.target.value});
     }
 
     //Manejo de tablas
@@ -190,10 +254,10 @@ class UserPanel extends Component{
             else if(element.clase !== null && (element.clase.nameClass.toLowerCase().indexOf(search.toLowerCase()) !== -1)){
                 return true;
             }
-            else if(element.email.toLowerCase().indexOf(search.toLowerCase()) !== -1){
+            else if(element.email !== null && element.email.toLowerCase().indexOf(search.toLowerCase()) !== -1){
                 return true;
             }
-            else if(element.role.nameRol.toLowerCase().indexOf(search.toLowerCase()) !== -1){
+            else if(element.role !== null && element.role.nameRol.toLowerCase().indexOf(search.toLowerCase()) !== -1){
                 return true;
             }
             return false;
@@ -233,6 +297,7 @@ class UserPanel extends Component{
         this.getUsers();
         this.getCareers();
         this.getClasses();
+        this.getRoles();
     }
 
  
@@ -244,9 +309,10 @@ class UserPanel extends Component{
             onSelect: this.handleOnSelect,
             onSelectAll: this.handleOnSelectAll
         };
-        console.log(this.state.email);
-        console.log(this.state.role);
-        //console.log(this.state.users);  
+        //console.log(this.state.email);
+        //console.log(this.state.role);
+        //console.log(this.state.users);
+        console.log(this.state)  
         return( 
             <div> 
                 <Grid> 
@@ -315,13 +381,11 @@ class UserPanel extends Component{
                                 <ControlLabel>Rol</ControlLabel>
                                 <FormControl value={this.state.role} onChange={this.updateRole} componentClass="select" placeholder="Rol">
                                     <option value="role">Seleccione un rol  </option>
-                                    <option value="admin">Admin</option>
-                                    <option value="teacher">Teacher</option>
-                                    <option value="student">Student</option>
+                                    {this.state.roles.map((role,key)=> <option key={key} value={role.idRol}>{role.nameRol}</option>)}
                                 </FormControl>
                                 </Col>
                             
-                            {this.state.role === 'student' ?<div>
+                            {this.state.role === "3" ?<div>
                             <Col xs={6}>
                                 <ControlLabel>Carrera</ControlLabel>
                                 <FormControl value={this.state.career} onChange={this.updateCareer} componentClass="select">
