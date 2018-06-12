@@ -118,13 +118,14 @@ class ExerciseListPublishedTeacher extends Component {
       this.updateData = this.updateData.bind(this);
       this.handlePageClick = this.handlePageClick.bind(this);
       this.isValid = this.isValid.bind(this);
+      this.viewExercise = this.viewExercise.bind(this);
 
     }
     getExercises(){
       var _this = this;
 
       //GET formal es con id del usuario
-     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser.toString()+'/published')
+     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/published')
      //Get por ahora es con id 1 
      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/published')
       .then(response => {
@@ -143,9 +144,22 @@ class ExerciseListPublishedTeacher extends Component {
       this.getExercises();
 
     }
+    viewExercise(exercise){
+      var testcases;
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
+      .then(response => {
+            console.log("soy los testcases")
+            testcases = response.data
+            this.props.history.push('view_exercise_teacher',{ viewAExercise: exercise, getTestCases: testcases })
+      })
+      .catch(function(error) {
+           console.log(error)
+      })
+    }
+  
     isValid(str){
       //Si hay alguno de estos caracteres, retornar falso
-      return !/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
+      return /[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
     }
   
     filterList(event) {
@@ -156,9 +170,14 @@ class ExerciseListPublishedTeacher extends Component {
       });
       
       filteredArray = filteredArray.filter((item) => {
-         //Si el caracter es valido, se puede buscar  
-        return this.isValid(event.target.value) && item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
-    
+        if(this.isValid(event.target.value)){
+          var cons = '\\'.concat(event.target.value);
+          return  item.title.search(cons) !== -1;
+        }
+        else{
+          return item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+
+        }
       
       });
       this.getPagination(filteredArray);
@@ -255,7 +274,14 @@ class ExerciseListPublishedTeacher extends Component {
                     <ExerciseIterator 
                                       published= {true} 
                                       /*exercises = { this.state.unpublishedItems }*/
-                                      exercises = { this.state.currentPageItems } />
+                                      exercises = { this.state.currentPageItems } 
+                                       viewExercise = {this.viewExercise}
+                                       />
+
+                 
+
+                   
+                    
 
                     <div className="commentBox" id="react-paginate">
                           <ReactPaginate previousLabel={"Anterior"}

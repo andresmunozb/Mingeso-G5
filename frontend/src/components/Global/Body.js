@@ -19,6 +19,7 @@ import ExerciseListStudent from '../Student/ExerciseListFolder/ExerciseListStude
 //Teacher
 import HomeTeacher from '../Teacher/HomeTeacher'
 import CreateExerciseForm from '../Teacher/FormFolder/CreateExerciseForm'
+import AddTestCasesForm from '../Teacher/FormFolder/AddTestCasesForm'
 import EditExerciseForm from '../Teacher/FormFolder/EditExerciseForm'
 import ViewExerciseFormTeacher from '../Teacher/FormFolder/ViewExerciseFormTeacher'
 import ExerciseListPublishedTeacher from '../Teacher/ExerciseListFolder/ExerciseListPublishedTeacher'
@@ -40,7 +41,7 @@ class Body extends Component{
               
             {this.props.rol === 'student' && 
               <Switch>
-                    <Route path='/home_student' exact={true} render={props => (<HomeStudent {...props} />)}></Route>
+                    <Route path='/home_student' exact={true} render={props => (<HomeStudent  {...props}  />)}></Route>
                     <Route path='/solution' exact={true} render={props => (<Solution {...props} />)}></Route>
                     <Route path='/exercises_student' exact={true} render={props => (<ExerciseListStudent {...props} />)}></Route>            
                     <Route path='/view_exercise_student' exact={true} render={props => (<ViewExerciseFormStudent {...props} />)}></Route>
@@ -54,13 +55,14 @@ class Body extends Component{
             {this.props.rol === 'teacher' && 
               <Switch>
                     <Route path='/home_teacher' exact={true} render={props => (<HomeTeacher {...props} />)}></Route>
-                    <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm {...props} />)}></Route>
+                    <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm /*idUser= {this.props.id}*/ {...props} />)}></Route>
+                    <Route path='/create_exercise_testcases' exact={true} render={props => (<AddTestCasesForm  {...props} />)}></Route>
                     <Route path='/view_exercise_teacher' exact={true} render={props => (<ViewExerciseFormTeacher {...props} />)}></Route>
-                    <Route path='/published_exercises_teacher' exact={true} render={props => (<ExerciseListPublishedTeacher {...props} />)}></Route>
-                    <Route path='/unpublished_exercises_teacher' exact={true} render={props => (<ExerciseItemUnpublishedTeacher {...props} />)}></Route>
+                    <Route path='/published_exercises_teacher' exact={true} render={props => (<ExerciseListPublishedTeacher /*idUser= {this.props.id}*/ {...props} />)}></Route>
+                    <Route path='/unpublished_exercises_teacher' exact={true} render={props => (<ExerciseItemUnpublishedTeacher /*idUser= {this.props.id}*/ {...props} />)}></Route>
                     <Route path='/edit_exercise' exact={true} render={props => (<EditExerciseForm {...props} />)}></Route>
                     <Redirect to='/home_teacher' from= '/' />
-
+                    
              </Switch>
         
         

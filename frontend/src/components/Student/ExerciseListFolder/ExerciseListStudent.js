@@ -13,6 +13,7 @@ const background = {
       padding: 30,
       position:'relative'
     }
+    
 
 
 
@@ -147,7 +148,7 @@ class ExerciseListStudent extends Component {
   
     isValid(str){
       //Si hay alguno de estos caracteres, retornar falso
-      return !/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
+      return /[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
     }
     filterList(event) {
       let obj = this.state.publishedItems;
@@ -158,9 +159,15 @@ class ExerciseListStudent extends Component {
       });
       
       filteredArray = filteredArray.filter((item) => {  
-        //Si el caracter es valido, se puede buscar  
-        return this.isValid(event.target.value) && item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
-   
+        if(this.isValid(event.target.value)){
+          var cons = '\\'.concat(event.target.value);
+          return  item.title.search(cons) !== -1;
+        }
+        else{
+          return item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+
+        }
+      
       });
       
       this.getPagination(filteredArray);

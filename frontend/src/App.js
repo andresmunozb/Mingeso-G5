@@ -19,16 +19,19 @@ class App extends Component {
     user: null,
     rol: "none",
     routes: routes,
-    routesFiltered:[]
+    routesFiltered:[],
+  //id: -1
   }
 
   getRol(email){
     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
         .then( res => {
             const rol = res.data.nameRol;
+            //const id = res.data.id
             if(rol === 'admin' || rol === 'teacher' || rol === 'student'){
               this.routesFilter(rol);
               this.setState({rol});
+              //this.setState({id});
             }
             else{
               this.setState({rol:'none'})
@@ -70,7 +73,7 @@ class App extends Component {
 
 
     firebase.auth().signInWithPopup(provider)
-      .then(result => console.log(`${result.user} ha iniciado sesión`))
+      .then(result => console.log(`${result.user.displayName} ha iniciado sesión`))
       .catch(error => console.log(`Error ${error.code}: ${error.message}`))
   }
 

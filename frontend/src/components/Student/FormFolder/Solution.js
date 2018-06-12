@@ -17,6 +17,14 @@ const background = {
     padding: 30,
     position:'relative'
   },
+  mediumFrame:{
+    width: "40%",
+    height: "60%",
+    padding:"2%",
+    position:'relative',
+    left:"30%",
+    border: "1px solid lightblue"
+  },
 
   textAreaStyle:{
     height: 300
@@ -27,7 +35,6 @@ const background = {
     minWidth:520
   },
   titleStyle:{
-    width: 600,
     textAlign:"center"
   }
 }
@@ -36,8 +43,10 @@ class Solution extends Component {
       super(props); 
       this.state = {
         exercise: props.location.state,
+        id:null,
         title: null,
         description: null,
+        functionName: null,
         isSafeToRender: false,
         sideMenu:false,
         code:"",
@@ -100,9 +109,11 @@ class Solution extends Component {
         this.props.history.goBack();
     }
     else{
-        this.setState({  
+        this.setState({
+          id: this.state.exercise.viewAExercise.id,  
           title:this.state.exercise.viewAExercise.title,
           description: this.state.exercise.viewAExercise.description,
+          functionName: this.state.exercise.viewAExercise.functionName,
           code: "",
           isSafeToRender: true
 
@@ -127,7 +138,7 @@ class Solution extends Component {
 
 
   render() {
-    let { title, description} = this.state
+    let { title, description,functionName} = this.state
         return (
           <div>
             {this.state.isSafeToRender &&
@@ -137,16 +148,23 @@ class Solution extends Component {
 
                         <Form style={{textAlign:"center"}}>
                             <h1>Area de practica</h1>
-                            <div style ={{width: '50%', position: 'relative', left:'25%'}}>
+                            <div style ={{width: '40%', position: 'relative', left:'30%'}}>
                               <Form.Field>
-                              <label>Titulo del enunciado</label>
-                                  <input  placeholder='Title' 
-                                          value= {title} 
-                                          style={background.titleStyle}  
-                                          readOnly={true}
-
+                                <label>Titulo del enunciado</label>
+                                    <input  placeholder='Title' 
+                                            readOnly={true}
+                                            value= {title} 
+                                            style={{  textAlign:"center"}}
                                         />
                               </Form.Field>
+                              <Form.Field>
+                                <label>Nombre de la funcion principal</label>
+                                    <input  placeholder='Function' 
+                                            readOnly={true}
+                                            value= {functionName} 
+                                            style={{  textAlign:"center"}}
+                                        />
+                                </Form.Field>
                               <label>Descripcion</label>
                             
                                 <TextArea placeholder='Descripcion'
