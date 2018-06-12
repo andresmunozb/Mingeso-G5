@@ -50,6 +50,7 @@ class UserPanel extends Component{
             modalEdit:false, 
             selected:[], 
             search: '',
+            id:null,
             role:'role', //combobox
             clase:'class', //Combobox
             career:'career', //Combobox
@@ -63,6 +64,7 @@ class UserPanel extends Component{
 
         //Servicios
         this.createUser = this.createUser.bind(this);
+        this.updateUser = this.updateUser.bind(this);
         this.getUsers = this.getUsers.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
         this.getClasses = this.getClasses.bind(this);
@@ -157,11 +159,57 @@ class UserPanel extends Component{
             }
         }
         
-        
-        
     }
     
 
+    updateUser(){
+        const json = {email:this.state.email}
+
+        if(this.state.role ==="3"){
+            if(!this.validateStudent()){
+                alert("Debe rellenar todos los campos")
+                
+            }
+            else{
+                console.log('Estoy aqui')
+                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+
+                            this.state.id+
+                            '/update/'+
+                            this.state.role + '/' +
+                            this.state.clase + '/' +
+                            this.state.career 
+                            ,json)
+                .then((res) => {
+                    console.log("RESPONSE RECEIVED: ", res);
+                    this.setState({role:'role',clase:'class',career:'career',email:''})
+                    this.closeModalEdit();
+                    this.getUsers();
+                    
+                })
+            }
+        }
+        else{
+            if(!this.validaUser()){
+                alert("Debe rellenar todos los campos");
+            }
+            else{
+                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+
+                            this.state.id+
+                            '/update/'+
+                            this.state.role
+                            ,json)
+                .then((res) => {
+                    console.log("RESPONSE RECEIVED: ", res);
+                    this.setState({role:'role',clase:'class',career:'career',email:''})
+                    this.closeModalEdit();
+                    this.getUsers();
+                    
+                })
+            }
+        }
+        
+
+    }
     //Servicios
     getUsers(){
         Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/')
@@ -205,6 +253,11 @@ class UserPanel extends Component{
     showModalNew(){
         this.setState({
             modalNew:true,
+            id:null,
+            email:'',
+            clase:'class',
+            career:'career',
+            role:'role',
         });
     }
     closeModalNew(){
@@ -213,9 +266,23 @@ class UserPanel extends Component{
         });
     }
     showModalEdit(){
-        this.setState({
-            modalEdit:true,
-        });
+        if(this.state.selected.length > 1){
+            alert("Debe seleccionar solamente un curso")
+        }
+        else if(this.state.selected.length < 1){
+            alert("Debe seleccionar un curso para editar")
+        }
+        else{
+            const id = this.state.selected[0];
+            const user = this.state.users.find((e)=> e.id === id);
+            const email =  user.email;
+            const role = user.role.idRol.toString();
+            let clase;
+            let career;
+            user.clase ? clase=user.clase.idClass.toString():clase='class';
+            user.career ? career=user.career.idCareer.toString():career='career';  
+            this.setState({ modalEdit: true,email,id,role,clase,career });
+        }
     }
     closeModalEdit(){
         this.setState({
@@ -387,19 +454,20 @@ class UserPanel extends Component{
                             
                             {this.state.role === "3" ?<div>
                             <Col xs={6}>
+                                <ControlLabel>Curso</ControlLabel>
+                                <FormControl value={this.state.clase} onChange={this.updateClass} componentClass="select" >
+                                    <option value="class">Seleccione un curso</option>
+                                    {this.state.classes.map((clase,key)=><option key={key} value={clase.idClass}>{clase.nameClass}</option>)}
+                                </FormControl>
+                                </Col>
+                            <Col xs={6}>
                                 <ControlLabel>Carrera</ControlLabel>
                                 <FormControl value={this.state.career} onChange={this.updateCareer} componentClass="select">
                                     <option value="career">Seleccione una carrera</option>
                                     {this.state.careers.map((career,key)=> <option key={key} value={career.idCareer}> {career.nameCareer} </option>)}
                                 </FormControl>
                                 </Col>
-                            <Col xs={6}>
-                                <ControlLabel>Curso</ControlLabel>
-                                <FormControl value={this.state.class} onChange={this.updateClass} componentClass="select" >
-                                    <option value="class">Seleccione un curso</option>
-                                    {this.state.classes.map((clase,key)=><option key={key} value={clase.idClass}>{clase.nameClass}</option>)}
-                                </FormControl>
-                                </Col>
+                            
                             </div>:null
                             }
                             </FormGroup>
@@ -408,6 +476,58 @@ class UserPanel extends Component{
                         <Modal.Footer>
                             <Button  bsStyle="danger" onClick={this.closeModalNew}>Cancelar</Button>
                             <Button  bsStyle="primary" onClick={this.createUser}>Guardar</Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
+                <Modal backdrop='static' show={this.state.modalEdit} onHide={this.closeModalEdit}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Editar Usuario</Modal.Title>
+                    </Modal.Header>
+                    <Form horizontal>
+                        <Modal.Body>
+                            <FormGroup controlId="formHorizontalEmail">
+                            <Col xs={6}>
+                                <ControlLabel>Email</ControlLabel>
+                                <FormControl 
+                                    type="email" 
+                                    placeholder="Email" 
+                                    value={this.state.email}
+                                    onChange={this.updateEmail} 
+                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                                    />
+                            </Col>
+                            <Col xs={6}>
+                                <ControlLabel>Rol</ControlLabel>
+                                <FormControl value={this.state.role} onChange={this.updateRole} componentClass="select" placeholder="Rol">
+                                    <option value="role">Seleccione un rol  </option>
+                                    {this.state.roles.map((role,key)=> <option key={key} value={role.idRol}>{role.nameRol}</option>)}
+                                </FormControl>
+                                </Col>
+                            
+                            {this.state.role === "3" ?<div>
+                            
+                            <Col xs={6}>
+                                <ControlLabel>Curso</ControlLabel>
+                                <FormControl value={this.state.clase} onChange={this.updateClass} componentClass="select" >
+                                    <option value="class">Seleccione un curso</option>
+                                    {this.state.classes.map((clase,key)=><option key={key} value={clase.idClass}>{clase.nameClass}</option>)}
+                                </FormControl>
+                                </Col>
+                            <Col xs={6}>
+                                <ControlLabel>Carrera</ControlLabel>
+                                <FormControl value={this.state.career} onChange={this.updateCareer} componentClass="select">
+                                    <option value="career">Seleccione una carrera</option>
+                                    {this.state.careers.map((career,key)=> <option key={key} value={career.idCareer}> {career.nameCareer} </option>)}
+                                </FormControl>
+                                </Col>
+                            </div>:null
+                            }
+                            </FormGroup>
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button  bsStyle="danger" onClick={this.closeModalEdit}>Cancelar</Button>
+                            <Button  bsStyle="primary" onClick={this.updateUser}>Guardar</Button>
                         </Modal.Footer>
                     </Form>
                 </Modal>
