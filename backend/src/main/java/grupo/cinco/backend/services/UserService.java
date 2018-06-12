@@ -74,10 +74,15 @@ public class UserService {
         return userRepository.save(resource);
     }
 
-    @RequestMapping(value = "/update/{id_role}/{id_class}/{id_career}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id_user}/update/{id_role}/{id_class}/{id_career}", method = RequestMethod.PUT)
     @ResponseBody
-    public User update(@PathVariable("id_role") Integer idRole,@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer, @RequestBody User resource)
+    public User update(@PathVariable("id_user") Integer idUser,
+                       @PathVariable("id_role") Integer idRole,
+                       @PathVariable("id_class") Integer idClass,
+                       @PathVariable("id_career") Integer idCareer,
+                       @RequestBody User resource)
     {
+        User user = userRepository.findById(idUser).get();
         Career career;
         Class clase;
         Role role = roleRepository.findById(idRole).get();
@@ -93,10 +98,10 @@ public class UserService {
         else{
             career = careerRepository.findById(idCareer).get();
         }
-        resource.setRole(role);
-        resource.setClase(clase);
-        resource.setCareer(career);
-        return userRepository.save(resource);
+        user.setRole(role);
+        user.setClase(clase);
+        user.setCareer(career);
+        return userRepository.save(user);
     }
 
     @RequestMapping(value = "/class/{id_class}", method = RequestMethod.PUT)
