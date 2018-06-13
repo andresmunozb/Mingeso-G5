@@ -16,7 +16,7 @@ public class Career {
     @Column(name = "name")
     private String nameCareer;
 
-    @OneToMany(mappedBy = "career",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "career")
     @JsonIgnore
     private List<User> users;
 

@@ -101,6 +101,7 @@ public class UserService {
         user.setRole(role);
         user.setClase(clase);
         user.setCareer(career);
+        user.setEmail(resource.getEmail());
         return userRepository.save(user);
     }
 
