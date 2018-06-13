@@ -40,6 +40,8 @@ const columns = [{
 ];
 
 
+
+
 class UserPanel extends Component{ 
     constructor(props) {     
         super(props); 
@@ -220,12 +222,12 @@ class UserPanel extends Component{
         })
     }
     deleteUser(id){
-        /*const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/'.concat(id).concat('/delete');
+        const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'.concat(id).concat('/delete');
         console.log(url)
         Axios.delete(url)
         .then( res => {
-            this.getClasses();
-        });*/
+            this.getUsers();
+        });
     }
 
     deleteUsers(){
