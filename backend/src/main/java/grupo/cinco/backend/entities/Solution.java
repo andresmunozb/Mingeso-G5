@@ -9,7 +9,8 @@ import javax.persistence.*;
 public class Solution {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int id;
 
     @ManyToOne
