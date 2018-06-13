@@ -66,6 +66,7 @@ class UserPanel extends Component{
         this.createUser = this.createUser.bind(this);
         this.updateUser = this.updateUser.bind(this);
         this.getUsers = this.getUsers.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
         this.getClasses = this.getClasses.bind(this);
         this.getCareers = this.getCareers.bind(this);
@@ -218,9 +219,22 @@ class UserPanel extends Component{
             this.setState({users,search:'', usersFiltered :users});
         })
     }
+    deleteUser(id){
+        /*const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/'.concat(id).concat('/delete');
+        console.log(url)
+        Axios.delete(url)
+        .then( res => {
+            this.getClasses();
+        });*/
+    }
 
     deleteUsers(){
+        
+        this.state.selected.map((id)=>this.deleteUser(id));
+        this.setState({selected:[]});
     }
+
+
 
 
     
