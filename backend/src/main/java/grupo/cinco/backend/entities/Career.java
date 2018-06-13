@@ -17,7 +17,7 @@ public class Career {
     @Column(name = "name")
     private String nameCareer;
 
-    @OneToMany(mappedBy = "career",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "career")
     @JsonIgnore
     private List<User> users;
 
