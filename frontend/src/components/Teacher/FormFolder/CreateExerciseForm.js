@@ -272,7 +272,7 @@ class CreateExerciseForm extends Component{
                                     >  
 
                                     <Modal.Header >
-                                    <Modal.Title>Sugerencia</Modal.Title>
+                                    <Modal.Title style= {{textAlign: 'center'}}>Sugerencia</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body >
                                         <p >

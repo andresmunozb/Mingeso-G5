@@ -5,7 +5,7 @@ export default
         path: '/home_admin',
         exact: true,
         component: "HomeAdmin",
-        rol:"admin",
+        rol:"administrator",
         enable:true,
       },
       {
@@ -13,7 +13,7 @@ export default
         path: '/class_panel',
         exact: true,
         component:"EditExerciseForm",
-        rol:"admin",
+        rol:"administrator",
         enable:true,
       },
       {
@@ -21,7 +21,7 @@ export default
         path: '/career_panel',
         exact: true,
         component:"EditExerciseForm",
-        rol:"admin",
+        rol:"administrator",
         enable:true,
       },
       {
@@ -29,7 +29,7 @@ export default
         path: '/user_panel',
         exact: true,
         component:"EditExerciseForm",
-        rol:"admin",
+        rol:"administrator",
         enable:true,
       },
       {

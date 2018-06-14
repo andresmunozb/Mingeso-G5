@@ -34,6 +34,8 @@ class EditExerciseForm extends Component{
 
         this.refInputs = new Map();
         this.refOutputs = new Map();
+        this.keys1 = 0;
+        this.keys2 = 0;
         console.log("soy los props")
         console.log(props.location.state);
         
@@ -987,7 +989,7 @@ class EditExerciseForm extends Component{
                                                     
                                                           {this.state.inputs.map((input, idx) => (
                                                                                               
-                                                              <div className="input" >
+                                                              <div className="input" key = {this.keys1++}>
                                                                   <div style={{padding:10}}></div>
                                                                   <input style= {{border: "1px solid lightblue", width: "80%"}}
                                                                           type= "text"
@@ -1011,7 +1013,7 @@ class EditExerciseForm extends Component{
                                                   <Col  xs={12} sm={12} md={6}>
                                                       <h2 style={{position: "relative", right: "10%", textAlign:"center"}} >Salida</h2>
                                                       {this.state.outputs.map((output, idx) => (
-                                                                 <div>
+                                                                 <div key = {this.keys2++}>
                                                                  <Row>
                                                                       <div style={{padding:10}}></div>
                                                                           <input style= {{border: "1px solid lightblue", width: "70%"}}

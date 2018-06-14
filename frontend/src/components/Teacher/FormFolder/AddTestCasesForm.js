@@ -28,6 +28,8 @@ class AddTestCasesForm extends Component{
         //ARREGLO DE INPUTS Y OUTPUTS
         this.refInputs = new Map();
         this.refOutputs = new Map();
+        this.keys1 = 0;
+        this.keys2 = 0;
 
         //TESTCASE ACTIONS
         this.handleAddTestCase= this.handleAddTestCase.bind(this);
@@ -39,6 +41,10 @@ class AddTestCasesForm extends Component{
 
         //TESTCASE CHECKING
         this.checkTestCases = this.checkTestCases.bind(this);
+        this.checkTestCasesGoBack = this.checkTestCasesGoBack.bind(this);
+        this.postTestCasesPriorChecking = this.postTestCasesPriorChecking.bind(this);
+        //TESTCASE CHECKING
+
 
         //TESTCASE FORMAT
         this.formatTestCases = this.formatTestCases.bind(this);
@@ -46,6 +52,13 @@ class AddTestCasesForm extends Component{
         //MODALS
         this.handleShowNewExercise = this.handleShowNewExercise.bind(this);
         this.handleHideNewExercise = this.handleHideNewExercise.bind(this);
+
+        this.handleShowWarning = this.handleShowWarning.bind(this);
+        this.handleHideWarning = this.handleHideWarning.bind(this);
+
+
+        this.handleShowWarningGoBack = this.handleShowWarningGoBack.bind(this);
+        this.handleHideWarningGoBack = this.handleHideWarningGoBack.bind(this);
         //MODALS
 
         //ADD TEST CASES    
@@ -61,6 +74,8 @@ class AddTestCasesForm extends Component{
         nameOutput: '',
         outputs: [{ nameOutput: '' }],
         showNewExercise: false,
+        showWarning:  false,
+        showWarningGoBack:  false,
         toggle:false
         
     }
@@ -116,10 +131,23 @@ class AddTestCasesForm extends Component{
 
     handleShowNewExercise() {
         this.setState({ showNewExercise: true });
-      }
-      handleHideNewExercise() {
+    }
+    handleHideNewExercise() {
         this.setState({ showNewExercise: false });
-      }
+    }
+    handleShowWarning() {
+        this.setState({ showWarning: true });
+    }
+    handleHideWarning() {
+        this.setState({ showWarning: false });
+    }
+    handleShowWarningGoBack() {
+        this.setState({ showWarningGoBack: true });
+    }
+    handleHideWarningGoBack() {
+        this.setState({ showWarningGoBack: false });
+    }
+
 
  
     
@@ -196,7 +224,7 @@ class AddTestCasesForm extends Component{
                                             
                                                     {this.state.inputs.map((input, idx) => (
                                                                                         
-                                                        <div className="input">
+                                                        <div className="input" key = {this.keys1++}>
                                                             <div style={{padding:10}}></div>
                                                             <input style= {{border: "1px solid lightblue", width: "80%"}}
                                                                     type= "text"
@@ -204,6 +232,7 @@ class AddTestCasesForm extends Component{
                                                                     placeholder={`Input #${idx + 1} name`}
                                                                     value={input.nameInput}
                                                                     onChange={this.handleTestCaseNameChange(idx)}
+                                                                    
                                                             />
                                                             {this.state.toggle && this.checkFields(input.nameInput, "input",idx)}
                                                             
@@ -220,7 +249,7 @@ class AddTestCasesForm extends Component{
                                                 <h2 style={{position: "relative", right: "10%", textAlign:"center"}} >Salida</h2>
                                                 {this.state.outputs.map((output, idx) => (
                                                     
-                                                        <div>
+                                                        <div key = {this.keys2++}>
                                                         <Row>
                                                                 <div style={{padding:10}}></div>
                                                                     <input style= {{border: "1px solid lightblue", width: "70%"}}
@@ -229,6 +258,7 @@ class AddTestCasesForm extends Component{
                                                                             placeholder={`Output #${idx + 1} name`}
                                                                             value={output.nameOutput}
                                                                             onChange={this.handleTestCaseNameChange2(idx)}
+                                                                            
                                                                     />
                                                                 <Button   style= {{position: "relative", left: "5%"}}
                                                                         circular color='red' icon='delete'
@@ -252,10 +282,24 @@ class AddTestCasesForm extends Component{
                                             </Col>
                                         </Row>
                                         <Divider/>
-                                        <Button   color='blue' 
+                                        <Button   floated={'left'}
+                                                  color='blue' 
                                                   type='Void'
                                                   onClick={() => {
-                                                      this.postTestCases();
+                                                      this.checkTestCasesGoBack();
+                                                   
+                                                    }}
+                                                  >
+
+                                                 Volver
+                                                 
+                                        </Button>
+                                        
+                                        <Button   floated={'right'}
+                                                  color='yellow' 
+                                                  type='Void'
+                                                  onClick={() => {
+                                                      this.postTestCasesPriorChecking();
                                                    
                                                     }}
                                                   >
@@ -263,6 +307,8 @@ class AddTestCasesForm extends Component{
                                                  Asociar al enunciado
                                                  
                                         </Button>
+                                        <div style={{padding:6}}></div>
+                                        
                                     
 
                                     </Form>
@@ -281,7 +327,7 @@ class AddTestCasesForm extends Component{
                         bsSize="small"
                         >  
                         <Modal.Header >
-                        <Modal.Title>Sugerencia</Modal.Title>
+                        <Modal.Title style= {{textAlign: 'center'}}>Sugerencia</Modal.Title>
                         </Modal.Header>
                         <Modal.Body >
                             <p >
@@ -310,6 +356,79 @@ class AddTestCasesForm extends Component{
                             </Modal.Footer>
 
                 </Modal>
+                <Modal show={this.state.showWarning}
+                        bsSize="small"
+                        >  
+                        <Modal.Header >
+                        <Modal.Title style= {{textAlign: 'center'}}>Precaucion</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body >
+                            <p >
+                                Esta seguro de asociar estos casos de prueba al enunciado?
+                            </p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button  floated= {'left'} 
+                                        color='red' 
+                                        type='Negation'
+                                        onClick={() => {
+                                        this.handleHideWarning();
+                                        }}
+                                        >
+                                        No
+                            </Button>
+                                <Button  floated= {'right'} 
+                                        color='blue' 
+                                        type='Positive'   
+                                        onClick={() => {
+                                            this.handleHideWarning();
+                                            this.postTestCases();
+                                        }}
+                                        >
+                                        Si
+                                </Button>
+                            </Modal.Footer>
+
+                </Modal>
+                <Modal show={this.state.showWarningGoBack}
+                        bsSize="small"
+                        >  
+                        <Modal.Header >
+                        <Modal.Title style= {{textAlign: 'center'}} >Precaucion</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body >
+                            <p >
+                                Los casos de prueba ya escritos no seran asociados al enunciado.
+                                
+                            </p>
+                            <p>
+                                 Esta seguro que no quiere asociarlos?
+                            </p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button  floated= {'left'} 
+                                        color='red' 
+                                        type='Negation'
+                                        onClick={() => {
+                                        this.handleHideWarningGoBack();
+                                        }}
+                                        >
+                                        No
+                            </Button>
+                                <Button  floated= {'right'} 
+                                        color='blue' 
+                                        type='Positive'   
+                                        onClick={() => {
+                                            this.handleHideWarningGoBack();
+                                            this.props.history.push('/create_exercise')
+                                        }}
+                                        >
+                                        Si
+                                </Button>
+                            </Modal.Footer>
+
+                </Modal>
+            
             
             </div>
 
@@ -319,6 +438,21 @@ class AddTestCasesForm extends Component{
   
      );
         
+    }
+    checkTestCasesGoBack(){
+        //Volver sin problemas
+        console.log("estoy aqui!!! y ", this.state.inputs.length)
+       
+        for(let i= 0;i<this.state.inputs.length;i++){
+            if(this.state.inputs[i].nameInput.length !== 0 || this.state.outputs[i].nameOutput.length !== 0){
+                    this.handleShowWarningGoBack();
+                    return;
+            }
+        }
+        this.props.history.push('/create_exercise');
+
+        
+
     }
     checkTestCases(){
         console.log("aquivan")
@@ -393,8 +527,7 @@ class AddTestCasesForm extends Component{
     
     }
 
-
-    postTestCases(){
+    postTestCasesPriorChecking(){
         var checking = this.checkTestCases();
         if(checking === 0){
             alert('Debe agregar por lo menos un caso de prueba al enunciado')
@@ -425,6 +558,12 @@ class AddTestCasesForm extends Component{
             
         }
         else if(checking === 7){
+            this.handleShowWarning();
+
+                
+        }
+    }
+    postTestCases(){
             let axiosConfig = {
                  headers: {
                    'Content-Type': 'application/json;charset=UTF-8',
@@ -440,16 +579,19 @@ class AddTestCasesForm extends Component{
                 Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.exerciseId.toString()),newTestCase,axiosConfig)
                 .then((res) => {
                         console.log("RESPONSE RECEIVED: ", res);
+                        //Ultima iteracion
+                        if(i  === this.state.inputs.length - 1){
+                            this.handleShowNewExercise();
+                        }
                 })
                     .catch((err) => {
                         console.log("AXIOS ERROR: ", err);
                 }) 
 
             }
-            this.handleShowNewExercise();
 
                 
-        }
+        
     }
 }
 

@@ -11,6 +11,8 @@ import 'brace/theme/monokai';
 import 'brace/mode/python';
 import 'brace/mode/java';
 import 'brace/mode/c_cpp';
+import 'brace/ext/language_tools';
+
 
 const background = {
   bigFrame:{
@@ -43,7 +45,7 @@ class Solution extends Component {
       super(props); 
       this.state = {
         exercise: props.location.state,
-        id:null,
+        idExercise:null,
         title: null,
         description: null,
         functionName: null,
@@ -51,6 +53,7 @@ class Solution extends Component {
         sideMenu:false,
         code:"",
         reply: "",
+        testCases: null,
         languageOptions: [
             
               { key: 'python', value: 'python', text: 'Python' },
@@ -66,6 +69,7 @@ class Solution extends Component {
       this.handleToggle = this.handleToggle.bind(this)
       this.updateCode = this.updateCode.bind(this)
       this.executeCode = this.executeCode.bind(this)
+      this.sendCodeRevision = this.sendCodeRevision.bind(this)
       this.selectLanguages = this.selectLanguages.bind(this)
 
     }
@@ -96,9 +100,42 @@ class Solution extends Component {
         })
     }
     else{
-      alert("Debe elegir un lenguaje de programacion para poder ejecutar o enviar su codigo")
+      alert("Debe elegir un lenguaje de programacion para poder ejecutar su codigo")
     }
 
+  }
+  sendCodeRevision(){
+    console.log(this.state.code)
+    /*if(this.state.languageCode.length !== 0){
+        for(let i = 0; i<this.state.testCases.length;i++){
+
+          let codeToTest = {
+            language:this.state.languageCode,
+            script: this.state.code,
+            input: this.state.testCases[0].input,
+            output: this.state.testCases[0].output,
+          };
+          
+          let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "@crossorigin",
+            }
+          };
+  
+          Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/executeTestCase',codeToExecute,axiosConfig)
+          .then((response) => {
+              console.log("RESPONSE RECEIVED: ", response);
+              this.setState({reply: response.data.stdout})
+          })
+          .catch((err) => {
+              console.log("AXIOS ERROR: ", err);
+          })
+        }
+    }
+    else{
+     alert("Debe elegir un lenguaje de programacion para poder enviar su codigo")
+    }*/
   }
 
 
@@ -109,15 +146,26 @@ class Solution extends Component {
         this.props.history.goBack();
     }
     else{
-        this.setState({
-          id: this.state.exercise.viewAExercise.id,  
-          title:this.state.exercise.viewAExercise.title,
-          description: this.state.exercise.viewAExercise.description,
-          functionName: this.state.exercise.viewAExercise.functionName,
-          code: "",
-          isSafeToRender: true
-
+        var testcases;
+        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.exercise.viewAExercise.id+'/testcases')
+        .then(response => {
+              console.log("soy los testcases")
+              testcases = response.data
+              this.setState({
+                idExercise: this.state.exercise.viewAExercise.id,  
+                title:this.state.exercise.viewAExercise.title,
+                description: this.state.exercise.viewAExercise.description,
+                functionName: this.state.exercise.viewAExercise.functionName,
+                code: "",
+                testCases: testcases,
+                isSafeToRender: true
+      
+              })
         })
+        .catch(function(error) {
+             console.log(error)
+        })
+       
     }
   }
   selectLanguages = (e, { value}) => {
@@ -237,7 +285,7 @@ class Solution extends Component {
                               <div style={{padding:30}}></div>
                              
                                     <Button primary={true} type='Back'
-                                            onClick={this.handleToggle}
+                                            onClick={this.sendCodeRevision}
                                             >
                                               Enviar
                                       </Button>

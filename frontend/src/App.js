@@ -3,7 +3,7 @@ import Header from './components/Global/Header/Header';
 import Body from './components/Global/Body';
 import firebase from 'firebase';
 import routes from './routes'
-import Axios from 'axios';
+import Axios from 'axios'
 
 
 class App extends Component {
@@ -27,8 +27,9 @@ class App extends Component {
     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
         .then( res => {
             const rol = res.data.nameRol;
+            console.log("este es mi rol: ",rol)
             //const id = res.data.id
-            if(rol === 'admin' || rol === 'teacher' || rol === 'student'){
+            if(rol === 'administrator' || rol === 'teacher' || rol === 'student'){
               this.routesFilter(rol);
               this.setState({rol});
               //this.setState({id});
@@ -40,6 +41,7 @@ class App extends Component {
         .catch((err) => {
           this.setState({rol:'noRegister'})
         })
+        
   }
 
   routesFilter(rol){

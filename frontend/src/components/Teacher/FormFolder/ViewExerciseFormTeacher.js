@@ -33,6 +33,8 @@ class ViewExerciseFormTeacher extends Component{
         super(props);
         console.log("Aqui en alguna parte deberia estar el enunciado")
         console.log(props)
+        this.keys1 = 0;
+        this.keys2 = 0;
         this.state = {
             exercise: props.location.state,
             title: null,
@@ -200,12 +202,12 @@ class ViewExerciseFormTeacher extends Component{
                                     <Divider />
                                     <Row>
                                         <Col  xs={12} sm={12} md={6}>
-                                            <div style ={{position: "relative"}}>
+                                                <div style ={{position: "relative"}}>
                                                     <h2 style={{textAlign:"center"}} >Entrada</h2>
                                                                 
                                                         {this.state.inputs.map((input, idx) => (
                                                                                                         
-                                                            <div className="input" >
+                                                            <div className="input" key = {this.keys1++}>
                                                                 <div style={{padding:10}}></div>
                                                                 <input style= {{border: "1px solid lightblue", width: "80%"}}
                                                                         type= "text"
@@ -220,7 +222,7 @@ class ViewExerciseFormTeacher extends Component{
                                             <Col  xs={12} sm={12} md={6}>
                                                 <h2 style={{position: "relative", right: "10%", textAlign:"center"}} >Salida</h2>
                                                         {this.state.outputs.map((output, idx) => (
-                                                            <div>
+                                                            <div key = {this.keys2++}>
                                                                     <Row>
                                                                         <div style={{padding:10}}></div>
                                                                             <input style= {{border: "1px solid lightblue", width: "80%"}}
