@@ -59,6 +59,13 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Exercise> getAllPublished()
+    {
+        return exerciseRepository.findExercisesByPublished(true);
+    }
+
     @RequestMapping(value = "/{id_user}/published", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Exercise> getPublished(@PathVariable("id_user") Integer idUser)

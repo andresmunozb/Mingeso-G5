@@ -8,4 +8,5 @@ public interface ExerciseRepository extends PagingAndSortingRepository<Exercise,
     
     Iterable<Exercise> findExercisesByUserEqualsAndAndPublishedEquals(User user, boolean published);
     Exercise findExercisesByTitleEquals(String title);
+    Iterable<Exercise> findExercisesByPublished(boolean published);
 }
