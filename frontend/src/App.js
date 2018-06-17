@@ -29,7 +29,7 @@ class App extends Component {
             const rol = res.data.nameRol;
             console.log("este es mi rol: ",rol)
             //const id = res.data.id
-            if(rol === 'administrator' || rol === 'teacher' || rol === 'student'){
+            if(rol === 'admin' || rol === 'teacher' || rol === 'student'){
               this.routesFilter(rol);
               this.setState({rol});
               //this.setState({id});
