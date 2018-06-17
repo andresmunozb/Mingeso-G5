@@ -199,7 +199,8 @@ class UserPanel extends Component{
                 Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+
                             this.state.id+
                             '/update/'+
-                            this.state.role
+                            this.state.role +
+                            '/-1/-1'
                             ,json)
                 .then((res) => {
                     console.log("RESPONSE RECEIVED: ", res);
