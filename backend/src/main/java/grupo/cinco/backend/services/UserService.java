@@ -141,6 +141,15 @@ public class UserService {
         return user.getRole();
     }
 
+    @RequestMapping(value = "{mail}/id", method = RequestMethod.GET)
+    @ResponseBody
+    public int getIdUser(@PathVariable("mail") String mail)
+    {
+        User user = userRepository.findUserByEmailEquals(mail);
+        return user.getId();
+    }
+
+
     @DeleteMapping(value = "{id}/delete")
     @ResponseBody
     public void delete(@PathVariable("id") Integer id)
