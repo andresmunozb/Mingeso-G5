@@ -20,23 +20,31 @@ class App extends Component {
     rol: "none",
     routes: routes,
     routesFiltered:[],
-  //id: -1
+    id: -1
   }
 
   getRol(email){
+    var rol;
+    var id;
     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
-        .then( res => {
-            const rol = res.data.nameRol;
-            console.log("este es mi rol: ",rol)
-            //const id = res.data.id
-            if(rol === 'admin' || rol === 'teacher' || rol === 'student'){
-              this.routesFilter(rol);
-              this.setState({rol});
-              //this.setState({id});
-            }
-            else{
-              this.setState({rol:'none'})
-            }
+        .then( res => {          
+            rol = res.data.nameRol;
+            Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/id')
+            .then( res => {
+                console.log("este es mi rol: ",rol)
+                id = res.data
+                if(rol === 'admin' || rol === 'teacher' || rol === 'student'){
+                  this.routesFilter(rol);
+                  this.setState({rol});
+                  this.setState({id});
+                }
+                else{
+                  this.setState({rol:'none'})
+                }
+            })
+            .catch((err) => {
+              this.setState({rol:'noRegister'})
+            })
         })
         .catch((err) => {
           this.setState({rol:'noRegister'})
@@ -96,7 +104,7 @@ class App extends Component {
         onLogout={this.handleLogout}
         routes={this.state.routesFiltered}
         />
-        <Body /*id= {this.state.id}*/ rol={this.state.rol} routes={this.state.routesFiltered}/>
+        <Body id= {this.state.id} rol={this.state.rol} routes={this.state.routesFiltered}/>
       </div>
     
     );

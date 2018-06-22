@@ -172,7 +172,10 @@ class ExerciseListStudent extends Component {
                       <label>Campo de busqueda</label>
                       <input  placeholder='Buscar ...' 
                               onChange={this.filterList.bind(this)} 
-                              style={{width: 300}}  />
+                              style={{width: 300}}  
+                              onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                              />
                   </Form.Field>
               </div>
               <Divider/>
@@ -192,7 +195,10 @@ class ExerciseListStudent extends Component {
                                   onPageChange={this.handlePageClick}
                                   containerClassName={"pagination"}
                                   subContainerClassName={"pages pagination"}
-                                  activeClassName={"active"} />
+                                  activeClassName={"active"} 
+                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                  />
                </div>
 
              </Form>

@@ -127,7 +127,7 @@ class ExerciseListPublishedTeacher extends Component {
       //GET formal es con id del usuario
      //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/published')
      //Get por ahora es con id 1 
-     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/published')
+     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser+'/published')
       .then(response => {
             console.log("soy los ejercicios")
             console.log(response.data)
@@ -267,7 +267,10 @@ class ExerciseListPublishedTeacher extends Component {
                             <label>Campo de busqueda</label>
                             <input  placeholder='Buscar ...' 
                                     onChange={this.filterList.bind(this)} 
-                                    style={{width: 300}}   />
+                                    style={{width: 300}}   
+                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                    />
                         </Form.Field>
                     </div>
                     <Divider/>
@@ -277,11 +280,6 @@ class ExerciseListPublishedTeacher extends Component {
                                       exercises = { this.state.currentPageItems } 
                                        viewExercise = {this.viewExercise}
                                        />
-
-                 
-
-                   
-                    
 
                     <div className="commentBox" id="react-paginate">
                           <ReactPaginate previousLabel={"Anterior"}
@@ -294,7 +292,10 @@ class ExerciseListPublishedTeacher extends Component {
                                       onPageChange={this.handlePageClick}
                                       containerClassName={"pagination"}
                                       subContainerClassName={"pages pagination"}
-                                      activeClassName={"active"} />
+                                      activeClassName={"active"} 
+                                      onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                      />
                         </div>
 
                   </Form>

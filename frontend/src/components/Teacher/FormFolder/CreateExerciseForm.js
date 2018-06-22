@@ -1,5 +1,5 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Button,Divider} from 'semantic-ui-react'
+import { Form, TextArea,Button,Divider,Dimmer,Loader,Segment } from 'semantic-ui-react'
 import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from '../ThemeList';
@@ -43,14 +43,18 @@ class CreateExerciseForm extends Component{
 
         this.handleShowNewExercise = this.handleShowNewExercise.bind(this);
         this.handleHideNewExercise = this.handleHideNewExercise.bind(this);
+
+
+        this.handleShowErrorMessage = this.handleShowErrorMessage.bind(this);
+        this.handleHideErrorMessage = this.handleHideErrorMessage.bind(this);
         //MODALS
 
         //CREATE EXERCISE
         this.postExercise = this.postExercise.bind(this);
 
-        //DISABLE BUTTONS
-        this.handleDisableButton = this.handleDisableButton.bind(this)
-       
+        //LOADING SCREEN
+        this.handleLoader = this.handleLoader.bind(this)
+
 
       }
     state = {
@@ -60,18 +64,27 @@ class CreateExerciseForm extends Component{
         exerciseId: -1,
         showTestCaseOption:false,
         showNewExercise:false,
-        toggle:false,
-        disableButton: false
+        warningErrorMessage:false,
+        checkErrors:false,        
+        errorMessage: "",
+        loader: false
         
     }
     
     componentWillMount () {
   
     }
-
-    handleDisableButton() {
-        this.setState({ disableButton: !this.state.disableButton });
+    handleLoader(){
+        this.setState({loader: !this.state.loader});
     }
+
+    handleShowErrorMessage() {
+        this.setState({ warningErrorMessage: true });
+    }
+    handleHideErrorMessage() {
+        this.setState({ warningErrorMessage: false });
+    }
+    
 
     handleShowTestCase() {
         this.setState({ showTestCaseOption: true });
@@ -93,7 +106,7 @@ class CreateExerciseForm extends Component{
                 description: "",
                 functionName: "",
                 showNewExercise:false,
-                toggle:false
+                checkErrors:false
             })
      }
      else{
@@ -107,7 +120,7 @@ class CreateExerciseForm extends Component{
     
     updateTitle(event){
         console.log(this.state.title)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.title.style.border = "";
         }
          this.setState({ title: event.target.value })
@@ -115,7 +128,7 @@ class CreateExerciseForm extends Component{
     }
     updateNameFunction(event){
         console.log(this.state.functionName)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.functionName.style.border = "";
         }
         this.setState({ functionName: event.target.value })
@@ -123,7 +136,7 @@ class CreateExerciseForm extends Component{
     }
     updateDescription(event){
         console.log(this.state.description)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.description.ref.style.border = "";
         }        
         this.setState({ description: event.target.value })
@@ -154,81 +167,94 @@ class CreateExerciseForm extends Component{
         let { title, description,functionName} = this.state
         
         return (
-            <div className= "WholeComponent">
+                <Segment>
+
+                    <Dimmer active={this.state.loader} inverted>
+                        <Loader inverted content='Creando enunciado...' />
+                    </Dimmer>
+
                     <MuiThemeProvider muiTheme={ThemeDefault}>  
-                        <div className= "Form">
-                            <h1 style={{textAlign:"center"}} >Nuevo Enunciado</h1>
-                            <div style={{padding:10}}></div>
-                                        <Paper style={background.mediumFrame}>
-                                            <Form error style={{textAlign:"center"}}>
-                                            <h1 style={{textAlign:"center"}} >Contenido</h1>
-                                                <Form.Field>
-                                                <label>Titulo del enunciado</label>
-                                                    <input  placeholder='Titulo' 
-                                                            value= {title} 
-                                                            ref = "title"
-                                                            onChange={this.updateTitle} 
-                                                            style={{  textAlign:"center"}}/>
-                                                {this.state.toggle && this.checkFields(title, "title")}
+
+                        <div className= "WholeComponent">
+                        <h1 style={{textAlign:"center"}} >Nuevo Enunciado</h1>
+
+                            <Paper style={background.mediumFrame}>
+                                    <Form error style={{textAlign:"center"}}>
+                                    <h1 style={{textAlign:"center"}} >Contenido</h1>
+
+                                        <Form.Field>
+                                        <label>Titulo del enunciado</label>
+                                            <input  placeholder='Titulo' 
+                                                    value= {title} 
+                                                    ref = "title"
+                                                    onChange={this.updateTitle} 
+                                                    style={{  textAlign:"center"}}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                    />
+                                        {this.state.checkErrors && this.checkFields(title, "title")}
                                                         
-                                                </Form.Field>
-                                                <Form.Field>
-                                                <label>Nombre de la funcion principal:</label>
-                                                    <input  placeholder='Funcion' 
-                                                            value= {functionName} 
-                                                            ref = "functionName"
-                                                            onChange={this.updateNameFunction} 
-                                                            style={{  textAlign:"center"}}/>
-                                                {this.state.toggle && this.checkFields(functionName, "functionName")}
-                                                </Form.Field>
-                                                <label>Descripcion</label>
-                                                <TextArea placeholder='Descripcion'
-                                                            ref = "description"
-                                                            style={{minHeight: 300,maxHeight: 300}} 
-                                                            value= {description} 
-                                                            
-                                                            onChange={this.updateDescription}/>  
-                                                {this.state.toggle && this.checkFields(description, "description")}
-                                                <Divider />
+                                        </Form.Field>
+                                        <Form.Field>
+                                        <label>Nombre de la funcion principal:</label>
+                                            <input  placeholder='Funcion' 
+                                                    value= {functionName} 
+                                                    ref = "functionName"
+                                                    onChange={this.updateNameFunction} 
+                                                    style={{  textAlign:"center"}}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                                                    
+                                                    />
+                                        {this.state.checkErrors && this.checkFields(functionName, "functionName")}
 
-                                                <Button  floated= {'left'} 
-                                                            color='red' 
-                                                            type='Void'
-                                                            onClick={this.emptyFields}  
 
-                                                            disabled={this.state.disableButton}
-                                                            >
+                                        </Form.Field>
+                                         <label>Descripcion</label>
+                                        <TextArea   placeholder='Descripcion'
+                                                    ref = "description"
+                                                    style={{minHeight: 300,maxHeight: 300}} 
+                                                    value= {description}                                                           
+                                                    onChange={this.updateDescription}
+                                                    />  
 
-                                                            Vaciar campos
-                                                </Button>
+                                        {this.state.checkErrors && this.checkFields(description, "description")}
 
-                                                <Button floated= {'right'} 
-                                                        primary={true} 
-                                                        type='Create'  
-                                                        onClick={() => {
-                                                            this.handleDisableButton();
+
+                                        <Divider />
+
+                                        <Button     floated= {'left'} 
+                                                    color='red' 
+                                                    type='Void'
+                                                    onClick={this.emptyFields}  
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                                                     >
+
+                                                    Vaciar campos
+                                        </Button>
+
+                                        <Button     floated= {'right'} 
+                                                    primary={true} 
+                                                    type='Create'  
+                                                    onClick={() => {
+                                                        this.handleLoader();
+                                                        setTimeout(() => {                                                                
                                                             this.postExercise();
-                                                        }}
-                                                        disabled={this.state.disableButton}
-                                                        >
+                                                        }, 1);
+                                                    }}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
 
-                                                        Crear Enunciado
-                                                </Button>
-                                                <div style={{padding:6}}></div>
+                                                    >
+
+                                                    Crear Enunciado
+                                        </Button>
+                                        <div style={{padding:"2%"}}></div>
 
 
-                                            </Form>
-                                        </Paper>
-                        
-                        
-                        </div>
-                                
-                                
-                        </MuiThemeProvider>
-                    
-                    <div className= "Modals"> 
+                                    </Form>
+                            </Paper>
+                            
 
-                        <Modal show={this.state.showTestCaseOption}
+                            <Modal show={this.state.showTestCaseOption}
                                 bsSize="small"
                                     >  
 
@@ -248,6 +274,8 @@ class CreateExerciseForm extends Component{
                                                         this.handleShowNewExercise();
                                                         this.handleHideTestCase();
                                                     }}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
                                                     No
                                         </Button>
@@ -257,6 +285,8 @@ class CreateExerciseForm extends Component{
                                                     onClick={() => {
                                                         this.props.history.push('/create_exercise_testcases', {exerciseId: this.state.exerciseId})
                                                     }}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
                                                     Si
                                             </Button>
@@ -267,7 +297,9 @@ class CreateExerciseForm extends Component{
                                         </Modal.Footer>
 
                             </Modal>
-                        <Modal show={this.state.showNewExercise}
+
+
+                            <Modal show={this.state.showNewExercise}
                                 bsSize="small"
                                     >  
 
@@ -286,6 +318,8 @@ class CreateExerciseForm extends Component{
                                                     onClick={() => {
                                                     this.props.history.push('/unpublished_exercises_teacher')
                                                     }}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
                                                     No
                                         </Button>
@@ -293,9 +327,10 @@ class CreateExerciseForm extends Component{
                                                     color='blue' 
                                                     type='Positive'
                                                     onClick={() => {
-                                                        this.handleDisableButton();
                                                         this.emptyFields()
                                                         }}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
                                                     Si
                                             </Button>
@@ -306,10 +341,39 @@ class CreateExerciseForm extends Component{
                                         </Modal.Footer>
 
                             </Modal>
-                        
-                    </div>
+
+                            <Modal show={this.state.warningErrorMessage}
+                              bsSize="small">  
+
+                                    <Modal.Header >
+                                      <Modal.Title style= {{textAlign: "center"}}>Error casos de prueba</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body >
+                                          <p style= {{textAlign:'center'}} >
+                                            {this.state.errorMessage}
+                                          </p>
+                                      </Modal.Body>
+                                      <Modal.Footer>                                        
+                                                <Button  style={{position:'relative', right: '35%'}}
+                                                        color='blue' 
+                                                        type='Positive'
+                                                        onClick={this.handleHideErrorMessage}
+                                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                        >
+                                                        OK
+                                                </Button>
+                                      </Modal.Footer>
+
+                            </Modal>
+
+
+                        </div>
+                           
+                    </MuiThemeProvider>
+
+                </Segment>
                       
-        </div>
   
      );
         
@@ -322,10 +386,8 @@ class CreateExerciseForm extends Component{
         console.log(this.state.description)
         console.log(this.state.functionName)
         
-        if(this.state.title !== undefined &&
-           this.state.description !== undefined &&  this.state.functionName !== undefined ){
 
-            if(this.state.title.length !== 0 &&
+        if(this.state.title.length !== 0 &&
               this.state.description.length !== 0 && this.state.functionName.length !== 0){
 
                     let axiosConfig = {
@@ -342,16 +404,13 @@ class CreateExerciseForm extends Component{
                         published: false,
                         functionName:this.state.functionName
                       }
-                      //http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/{id}, el id es para un usuario
-                      //en particular.
-                      //Futuro push se cambiara el id dependiendo del usuario
                       Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.title)
                             .then(response => {
 
                                 console.log("RESPONSE RECEIVED: ", response);
                                 //No existe enunciado con ese titulo, es seguro crearlo
                                 if(response.data === ""){
-                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/1',newExercise,axiosConfig)
+                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/'+this.props.idUser,newExercise,axiosConfig)
                                     .then((res) => {
                                         console.log("paso por aqui")
                                         console.log(this.state.title)
@@ -363,45 +422,78 @@ class CreateExerciseForm extends Component{
                                                     exerciseId: response.data.id
                                                 });
                                                 setTimeout(() => {
+                                                    this.handleLoader();
                                                     this.handleShowTestCase();
                                                 }, 1);
                                                 
                                                 
                                             })
                                             .catch((err) => {
+                                                console.log(this.state.loader)
+                                                this.setState({errorMessage:"No se pudo crear el enunciado, porfavor intentelo nuevamente"})
+                                                    
+                                                setTimeout(() => {
+                                                        this.handleLoader();
+                                                        this.handleShowErrorMessage();
+                                                }, 3);
                                                 console.log("AXIOS ERROR: ", err);
                                             }) 
                                     })                                
                                     .catch((err) => {
+                                        console.log(this.state.loader)
+                                        this.setState({errorMessage:"No se pudo crear el enunciado, porfavor intentelo nuevamente"})
+                                        
+                                        setTimeout(() => {
+                                            this.handleLoader();
+                                            this.handleShowErrorMessage();
+                                        }, 3);
                                         console.log("AXIOS ERROR: ", err);
                                     }) 
     
                                 }
                                 else{
-                                    alert("Ya existe un enunciado con ese titulo, porfavor utilice otro")
-                                    this.setState({disableButton: false})
+
+                                    console.log(this.state.loader)
+                                    this.setState({errorMessage:"Ya existe un enunciado con ese titulo, porfavor elija otro"})
+                                    
+                                    setTimeout(() => {
+                                        this.handleLoader();
+                                        this.handleShowErrorMessage();
+                                    }, 3);
                                 }
                                 
                                 
                             })
                             .catch((err) => {
-                                console.log("No se pudo crear el enunciado, porfavor intente de nuevo");
+                                console.log(this.state.loader)
+                                this.setState({errorMessage:"No se pudo crear el enunciado, porfavor intentelo nuevamente"})
+                                
+                                setTimeout(() => {
+                                    this.handleLoader();
+                                    this.handleShowErrorMessage();
+                                    this.setState({checkErrors:true});
+                                }, 3);
 
-                      }) 
+                            }) 
                     
             
               
-            } 
-            else{                
-                 alert('Existen campos obligatorios sin completar, porfavor completelos');
-                 this.setState({toggle:true, disableButton:false});
-            }           
-        }
+        } 
         else{
+            console.log(this.state.loader)
+            this.setState({errorMessage:'Existen campos obligatorios sin completar, porfavor completelos'})
+            
+            setTimeout(() => {
+                this.handleLoader();
+                this.handleShowErrorMessage();
+                this.setState({checkErrors:true});
+            }, 3);
+           
 
-            alert('Existen campos obligatorios sin completar, porfavor completelos');
-            this.setState({toggle:true});
-        }
+            
+                 
+        }           
+        
     }
 }
 

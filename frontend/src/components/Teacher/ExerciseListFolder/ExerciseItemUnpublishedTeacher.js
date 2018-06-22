@@ -52,7 +52,8 @@ class ExerciseItemUnpublishedTeacher extends Component {
                 <Card>
                   <Card.Content>
                 
-                        <Card.Header onClick={this.viewItem}>
+                        <Card.Header onClick={this.viewItem}  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+>
                         <Title>{this.props.exercise.title}</Title>
                         </Card.Header>
                     
@@ -64,13 +65,19 @@ class ExerciseItemUnpublishedTeacher extends Component {
                   <Card.Content extra>
                      
                           <Button color='yellow'
-                                  onClick = {this.editItem}>
+                                  onClick = {this.editItem}
+                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                  >
                                   Editar
                           </Button>
                     
 
                       <Button color='red'
-                              onClick={this.deleteItem}>
+                              onClick={this.deleteItem}
+                              onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                              >
                                Borrar
                       </Button>
 

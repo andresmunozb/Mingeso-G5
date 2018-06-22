@@ -38,7 +38,8 @@ class ExerciseItemPublishedTeacher extends Component {
       return (               
         
       
-                <Card onClick={this.viewItem}>
+                <Card onClick={this.viewItem}  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                >
                   <Card.Content> 
                   <Card.Header>
                        <Title>{this.props.exercise.title} </Title>

@@ -68,6 +68,8 @@ class ViewExerciseFormStudent extends Component{
                                             readOnly={true}
                                             value= {title} 
                                             style={{  textAlign:"center"}}
+                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                         />
                                 </Form.Field>
                                 <Form.Field>
@@ -76,6 +78,8 @@ class ViewExerciseFormStudent extends Component{
                                             readOnly={true}
                                             value= {functionName} 
                                             style={{  textAlign:"center"}}
+                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                         />
                                 </Form.Field>
                                 <label>Descripcion</label>
@@ -83,12 +87,18 @@ class ViewExerciseFormStudent extends Component{
                                         style={background.textAreaStyle}  
                                         value= {description} 
                                         readOnly={true}
+                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
 
                                         />  
                                 <Divider />
 
                                 <Link to={{ pathname: '/exercises_student' }}>
-                                        <Button primary={true} type='Back'>
+                                        <Button primary={true} 
+                                                type='Back'
+                                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                >
                                                 Volver
                                         </Button>
                                 </Link>

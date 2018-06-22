@@ -146,6 +146,8 @@ class ViewExerciseFormTeacher extends Component{
                                                 value= {publicado} 
                                                 readOnly={true}
                                                 style={{width: 150, textAlign:"center"}}
+                                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                 />
                                     </Form.Field>
                                     <Form.Field>
@@ -154,6 +156,8 @@ class ViewExerciseFormTeacher extends Component{
                                                 readOnly={true}
                                                 value= {title} 
                                                 style={{  textAlign:"center"}}
+                                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                 />
                                     </Form.Field>
                                     <Form.Field>
@@ -162,21 +166,30 @@ class ViewExerciseFormTeacher extends Component{
                                             value= {functionName}
                                             readOnly={true}
                                             onChange={this.updateNameFunction} 
-                                            style={{  textAlign:"center"}}/>
+                                            style={{  textAlign:"center"}}
+                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                            />
                                     </Form.Field>
                                 
                                     <label>Descripcion</label>
                                     <TextArea placeholder='Descripcion'
-                                                    style={{minHeight: 300,maxHeight: 300}}
+                                                style={{minHeight: 300,maxHeight: 300}}
                                                 readOnly={true}
                                                 value= {description} 
+                                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                             />  
                                     <Divider />
                                     {published &&
                                                 <Link to={{
                                                     pathname: '/published_exercises_teacher'
                                                 }}>
-                                                    <Button primary={true} type='Back'>
+                                                    <Button primary={true} 
+                                                            type='Back'
+                                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                            >
                                                             Volver
                                                     </Button>
                                                 </Link>
@@ -185,7 +198,11 @@ class ViewExerciseFormTeacher extends Component{
                                                 <Link to={{
                                                     pathname: '/unpublished_exercises_teacher'
                                                 }}>
-                                                    <Button primary={true} type='Back'>
+                                                    <Button primary={true} 
+                                                            type='Back'
+                                                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                            >
                                                             Volver
                                                     </Button>
                                                 </Link>
@@ -213,6 +230,8 @@ class ViewExerciseFormTeacher extends Component{
                                                                         type= "text"
                                                                         readOnly={true}
                                                                         value={input.nameInput}
+                                                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                                         />
                                                             </div>
                                                         ))}
@@ -229,6 +248,8 @@ class ViewExerciseFormTeacher extends Component{
                                                                                     type= "text"
                                                                                     readOnly={true}
                                                                                     value={output.nameOutput}
+                                                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                                             />
                                                                     </Row>
             

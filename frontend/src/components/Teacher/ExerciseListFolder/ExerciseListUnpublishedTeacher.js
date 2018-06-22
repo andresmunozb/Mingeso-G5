@@ -47,7 +47,7 @@ class ExerciseListUnpublishedTeacher extends Component {
       //GET formal es con id del usuario
      //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/unpublished')
      //Get por ahora es con id 1 
-     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/unpublished')
+     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser+'/unpublished')
       .then(response => {
           console.log("soy los ejercicios")
            console.log(response.data)
@@ -281,7 +281,10 @@ class ExerciseListUnpublishedTeacher extends Component {
                         <label >Campo de busqueda</label>
                         <input  placeholder='Buscar ...' 
                                 onChange={this.filterList.bind(this)}
-                                style={{width: 300}}  />
+                                style={{width: 300}}  
+                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                />
                     </Form.Field>
                 <Divider/>
                 <ExerciseIterator deleteExercise = {this.deleteExercise} 
@@ -303,7 +306,10 @@ class ExerciseListUnpublishedTeacher extends Component {
                                   onPageChange={this.handlePageClick}
                                   containerClassName={"pagination"}
                                   subContainerClassName={"pages pagination"}
-                                  activeClassName={"active"} />
+                                  activeClassName={"active"}
+                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                  />
                     </div>
 
           </Form>

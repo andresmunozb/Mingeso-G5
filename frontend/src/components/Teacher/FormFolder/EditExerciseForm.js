@@ -1,11 +1,11 @@
 import React ,{Component} from 'react';
-import { Form, TextArea,Button,Divider} from 'semantic-ui-react'
+import { Form, TextArea,Button,Divider,Dimmer,Loader,Segment,Icon} from 'semantic-ui-react'
 import Axios from 'axios'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ThemeDefault from '../ThemeList';
 import Paper from 'material-ui/Paper';
 import {Link} from 'react-router-dom';
-import {Modal,Row,Col} from 'react-bootstrap'
+import {Modal,Row,Col,Popover,OverlayTrigger} from 'react-bootstrap'
 const background = {
    mediumFrame1:{
       width: "80%",
@@ -34,13 +34,13 @@ class EditExerciseForm extends Component{
 
         this.refInputs = new Map();
         this.refOutputs = new Map();
-        this.keys1 = 0;
-        this.keys2 = 0;
         console.log("soy los props")
         console.log(props.location.state);
         
         //EDIT OR PUBLISH EXERCISE
-        this.editExercise = this.editExercise.bind(this);
+        this.editExerciseChecking = this.editExerciseChecking.bind(this);
+        this.editExerciseChecked = this.editExerciseChecked.bind(this);
+
         this.publishExercise = this.publishExercise.bind(this);
         //EDIT OR PUBLISH EXERCISE
 
@@ -63,22 +63,30 @@ class EditExerciseForm extends Component{
         this.saveTestCasesIds = this.saveTestCasesIds.bind(this);
         //INITIATION
 
-
         //FIELDS ACTIONS
         this.emptyFields = this.emptyFields.bind(this);
         this.checkFields = this.checkFields.bind(this);
         //FIELDS ACTIONS
 
         //MODALS
-        this.handleShow = this.handleShow.bind(this);
-        this.handleHide = this.handleHide.bind(this);
+        this.handleShowPublish = this.handleShowPublish.bind(this);
+        this.handleHidePublish = this.handleHidePublish.bind(this);
 
         this.handleShowConfirmation = this.handleShowConfirmation.bind(this);
         this.handleHideConfirmation = this.handleHideConfirmation.bind(this);
+
+
+        this.handleShowErrorMessage = this.handleShowErrorMessage.bind(this);
+        this.handleHideErrorMessage = this.handleHideErrorMessage.bind(this);
         //MODALS
 
-        //DISABLE BUTTONS
-        this.handleDisableButton = this.handleDisableButton.bind(this);
+        //LOADING SCREEN
+        this.handleLoader = this.handleLoader.bind(this)
+
+        //FORMAT FOR CODE
+        this.popoverHoverFocus = this.popoverHoverFocus.bind(this)
+        //FORMAT FOR CODE
+
       }
       state = {
         exercise: this.props.location.state,
@@ -94,9 +102,11 @@ class EditExerciseForm extends Component{
         testCasesIds: [],
         modalPublish:false,
         modalConfirmation:false,
+        warningErrorMessage:false,
         isSafeToRender: false,
-        toggle:false,
-        disableButton: false
+        checkErrors:false,
+        errorMessage: "",
+        loader:false
 
       }
 
@@ -115,17 +125,11 @@ class EditExerciseForm extends Component{
               inputs: this.formatTestCasesView(0),
               outputs: this.formatTestCasesView(1),
               testCasesIds:  this.saveTestCasesIds(),       
-              isSafeToRender: true,
-              disableButton:false
-
+              isSafeToRender: true
             })
         }
     }
 
-    handleDisableButton() {
-        console.log("el botons: ",this.state.disableButton)
-        this.setState({ disableButton: !this.state.disableButton });
-    }
 
 
     formatTestCasesView(type){
@@ -195,7 +199,6 @@ class EditExerciseForm extends Component{
             return -1;
         }
     }
-
     checkTestCases(){
         console.log("aquivan")
         console.log(this.state.inputs)
@@ -215,10 +218,12 @@ class EditExerciseForm extends Component{
         var output;
         var opt1 = 0;
         var opt2 = 0;
+        var boolean;
         for(let i= 0;i<this.state.inputs.length;i++){
 
             input = this.state.inputs[i].nameInput.split(",");
-
+            console.log("este es el input")
+            console.log(input)
             if(input[0] === "" || input[input.length - 1 ] === ""){
                 opt1 = 4;
                 break;
@@ -226,6 +231,22 @@ class EditExerciseForm extends Component{
             else if(lengthInput !== this.state.inputs[i].nameInput.split(",").length ){
                 return 2;
             }
+            for(let j= 0; j< input.length;j++){
+                //Si no es un numero
+                console.log("Soy un numero?:", input[j])
+                boolean = isNaN(input[j]);
+                if(boolean){
+                    //Debe ser un string
+                    //Ver si tiene comillas al principio
+                    console.log()
+                    if(input[j][0] !== '"'){
+                        return 8;
+                    }
+                    
+                }
+
+            }
+
         }
         for(let i= 0;i<this.state.outputs.length;i++){
             output = this.state.outputs[i].nameOutput.split(",");
@@ -237,15 +258,32 @@ class EditExerciseForm extends Component{
             else if(lengthOutput !== this.state.outputs[i].nameOutput.split(",").length ){
                 return 3;
             }
+            for(let j= 0; j< output.length;j++){
+                //Si no es un numero
+                console.log("Soy un numero?:", output[j])
+                boolean = isNaN(output[j]);
+                if(boolean){
+                    //Debe ser un string
+                    //Ver si tiene comillas al principio
+                    console.log()
+                    if(output[j][0] === '"'){
+                        return 9;
+                    }
+                    
+                }
+
+            }
         }
-        if(opt1 !== 0 && opt1 !== 0){
+        if(opt1 !== 0 && opt2 !== 0){
+            console.log(opt1)
+            console.log(opt2)
             return 6;
         }
         else if(opt1 !== 0){
-            return opt1;
+            return 4;
         }
         else if(opt2 !== 0){
-            return opt2;
+            return 5;
         }
         return 7;
     }
@@ -254,7 +292,7 @@ class EditExerciseForm extends Component{
       const newInputs = this.state.inputs.map((input, sidx) => {
         if (idx !== sidx) return input;
         else {
-            if(this.state.toggle && evt.target.value.length !== 0){
+            if(this.state.checkErrors && evt.target.value.length !== 0){
                 this.refInputs.get(sidx).style.border = "";
             }
             return { ...input, nameInput: evt.target.value };
@@ -264,12 +302,12 @@ class EditExerciseForm extends Component{
           inputs: newInputs
        });
       }
-      handleTestCaseNameChange2 = (idx) => (evt) => {
+    handleTestCaseNameChange2 = (idx) => (evt) => {
           
           const newOutputs = this.state.outputs.map((output, sidx) => {
               if (idx !== sidx) return output;
               else {
-                if(this.state.toggle && evt.target.value.length !== 0){
+                if(this.state.checkErrors && evt.target.value.length !== 0){
                     this.refOutputs.get(sidx).style.border = "";
                 }
                 return { ...output, nameOutput: evt.target.value };
@@ -279,102 +317,325 @@ class EditExerciseForm extends Component{
           this.setState({ 
               outputs: newOutputs
           });
-      }
+    }
         
-      handleAddTestCase = () => {
+    handleAddTestCase = () => {
           this.setState({ 
               inputs: this.state.inputs.concat([{ nameInput: '' }]),
               outputs: this.state.outputs.concat([{ nameOutput: '' }])
           });
-      }
+    }
         
-      handleRemoveTestCase = (idx) => () => {
+    handleRemoveTestCase = (idx) => () => {
           this.setState({ 
               inputs: this.state.inputs.filter((s, sidx) => idx !== sidx) ,
               outputs: this.state.outputs.filter((s, sidx) => idx !== sidx) 
           });
-      }
+    }
       
+    handleLoader(){
+        this.setState({loader: !this.state.loader});
+    }
 
-        handleShow() {
-          this.setState({ modalPublish: true });
-        }
+    handleShowPublish() {
+        this.setState({ modalPublish: true });
+    }
 
-        handleHide() {
-          this.setState({ modalPublish: false });
-        }
+    handleHidePublish() {
+        this.setState({ modalPublish: false });
+    }
 
-        handleShowConfirmation() {
-            this.setState({ modalConfirmation: true });
-          }
+
+
+    handleShowConfirmation() {
+        this.setState({ modalConfirmation: true });
+    }
   
-          handleHideConfirmation() {
-            this.setState({ modalConfirmation: false });
-          }
+    handleHideConfirmation() {
+        this.setState({ modalConfirmation: false });
+    }
 
 
-      editExercise(){
-        console.log("este es el boton: ",this.state.disableButton)
-        if(this.state.title.length !== 0 &&
-            this.state.description.length !== 0 &&
-                this.state.functionName.length !== 0){
-                        var checking = this.checkTestCases();
+    handleShowErrorMessage() {
+        this.setState({ warningErrorMessage: true });
+    }
+    handleHideErrorMessage() {
+        this.setState({ warningErrorMessage: false });
+    }
+    popoverHoverFocus(){
+        return <Popover id="popover-trigger-focus">
+                  <div>
+                    <p>Cada entrada o salida debe estar separado por comas</p>
+                    <p>{"\n"}</p>
+                    <p>Si es un numero decimal, utilice punto para designar los decimales</p>
+                    <p>Ej de entrada: 5,3.9</p>
+                    <p>{"\n"}</p>
+                    <p>Si alguna de sus entradas es de tipo string,debe escribirlo entre comillas dobles ("") </p>
+                    <p>Ej de entrada: "palindromo","insertar"</p>
+                    <p>{"\n"}</p>
+                    <p>Si alguna de sus salidas es de tipo string, se debe escribir sin utilizar comillas dobles ("") </p>
+                    <p>Ej de salida: No</p>
+                </div> 
+              </Popover>
+      
+      
+    }
+
+
+    editExerciseChecked(){
+        console.log("este es el estado del loader ahora")
+        console.log(this.state.loader)
+        let jsonEditar = {
+            title:this.state.title,
+            description: this.state.description,
+            functionName: this.state.functionName
+        }
+        
+        var jsonEditarTestcases;
+          
+        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonEditar)
+            .then((res) => {
+                console.log("RESPONSE RECEIVED: ", res);                             
+                //Si no habian casos de prueba al inicio, entonces hay que crearlos
+                console.log("los testcases son:")
+                console.log(this.state.testCasesIds)
+                if(this.state.testCasesIds === -1){
+                    for(let i = 0; i<this.state.inputs.length;i++){
+                        let newTestCase = {
+                            input: this.state.inputs[i].nameInput,
+                            output:this.state.outputs[i].nameOutput,
+                        }
+                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
+                            .then((res) => {
+                                console.log("RESPONSE RECEIVED: ", res);
+                                if(i === this.state.inputs.length -1){
+
+                                    Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                    .then(response => {
+                                        console.log(response.data)
+                                        console.log("estos son los id news")
+                                        var testCasesArray = [];
+                                        for(let i = 0; i< response.data.length; i++){
+                                            testCasesArray.push(response.data[i].id)
+                                        }
+                                        this.setState({
+                                            testCasesIds: testCasesArray
+                                        });
+                                        this.handleLoader();
+                                        setTimeout(() => {
+                                            this.handleShowConfirmation();      
+
+                                        }, 5);
+
+                                        
+                                    })
+                                    .catch((err) => {
+                                        this.handleLoader();
+                                        this.setState({errorMessage:"No se pudieron crear correctamente los casos de prueba, intente mas tarde"});
+                                        setTimeout(() => {
+                                            this.handleShowErrorMessage();
+                                            return;
+                                        }, 5);
+                                    });
+                                }
+                            })
+                            .catch((err) => {
+                                this.handleLoader();
+                                this.setState({errorMessage:"No se pudieron crear correctamente los casos de prueba, intente mas tarde"});
+                                setTimeout(() => {
+                                    this.handleShowErrorMessage();
+                                    return;
+                                    
+                                }, 5);
+                            }) 
+        
+                    }
+                    
+                }
+                // Se modifican los existentes casos de prueba
+                else if(this.state.inputs.length === this.state.testCasesIds.length){
+
+                    for(let i= 0; i<this.state.inputs.length;i++){
+
+                        jsonEditarTestcases ={
+                            input: this.state.inputs[i].nameInput,
+                            output: this.state.outputs[i].nameOutput    
+                        }
+                            
+                        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                        .then((res) => {
+                            console.log("RESPONSE RECEIVED: ", res);
+                            if(i === this.state.inputs.length -1){
+
+                                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                    .then(response => {
+                                        console.log(response.data)
+                                        console.log("estos son los id news")
+                                        var testCasesArray = [];
+                                        for(let i = 0; i< response.data.length; i++){
+                                            testCasesArray.push(response.data[i].id)
+                                        }
+                                        this.setState({
+                                            testCasesIds: testCasesArray
+                                        });
+                                        this.handleLoader();
+                                        setTimeout(() => {
+                                            this.handleShowConfirmation();      
+
+                                        }, 5);
+                                                                                    
+                                        
+                                        
+                                    })
+                                    .catch((err) => {
+                                        this.handleLoader();
+                                        this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                        setTimeout(() => {
+                                            this.handleShowErrorMessage();
+                                            return;
+                                        }, 5);
+                                    });
+                            }
+                                                            
+
+                        })
+                        .catch((err) => {
+                            this.handleLoader();
+                            this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                            setTimeout(() => {
+                                this.handleShowErrorMessage();
+                                return;
+                            }, 5);
+                        });
+
+                    }
+
+
+                }
+
+                //Se agregaron mas casos de pruebas que los que habian 
+                else if(this.state.inputs.length > this.state.testCasesIds.length){
+                    for(let i= 0; i<this.state.inputs.length;i++){
+
                         
-                        if(checking === 1){
-                            alert('Existe o existen casos de pruebas con entradas o salidas vacias, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            this.setState({toggle:true, disableButton: false});
-                        }
-                        else if(checking === 2){
-                            alert('Existe o existen casos de pruebas con diferente numero de entradas, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            
-                            this.setState({ disableButton: false});
-                        }
-                        else if(checking === 3){
-                            alert('Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            
-                            this.setState({ disableButton: false});
-                        }
-                        else if(checking === 4){
-                            alert('Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            
-                            this.setState({ disableButton: false});
-                        }
-                        else if(checking === 5){
-                            alert('Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            
-                            this.setState({ disableButton: false});
-                        }
-                        else if(checking === 6){
-                            alert('Existe o existen casos de pruebas con entradas y salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
-                            
-                            this.setState({ disableButton: false});
-                        }
-                        else if(checking === 0 || checking === 7){
-                              let jsonAgregar = {
-                                title:this.state.title,
-                                description: this.state.description,
-                                functionName: this.state.functionName
+                            if(i<this.state.testCasesIds.length){
+                                jsonEditarTestcases ={
+                                    input: this.state.inputs[i].nameInput,
+                                    output: this.state.outputs[i].nameOutput    
+                                }
+                                console.log("va a ingresarsss");
+                                console.log(jsonEditarTestcases)
+                                    
+                                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                    .then((res) => {
+                                        console.log("RESPONSE RECEIVED: ", res);
+                                        
+                                                                        
+
+                                    })
+                                    .catch((err) => {
+                                        this.handleLoader();
+                                        this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                        setTimeout(() => {
+                                            this.handleShowErrorMessage();
+                                            return;
+                                        }, 5);
+                                    });
+
+                                }
+                            else{
+                                    jsonEditarTestcases ={
+                                        input: this.state.inputs[i].nameInput,
+                                        output: this.state.outputs[i].nameOutput    
+                                    }
+                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
+                                    .then((res) => {
+                                            console.log("RESPONSE RECEIVED: ", res);
+                                            if(i === this.state.inputs.length -1){
+
+                                                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                                .then(response => {
+                                                    console.log(response.data)
+                                                    console.log("estos son los id news")
+                                                    var testCasesArray = [];
+                                                    for(let i = 0; i< response.data.length; i++){
+                                                        testCasesArray.push(response.data[i].id)
+                                                    }
+                                                    this.setState({
+                                                        testCasesIds: testCasesArray
+                                                    });
+                                                    this.handleLoader();
+                                                    setTimeout(() => {
+                                                        this.handleShowConfirmation();      
             
-                              }
-                            
-                              var jsonEditarTestcases;
-                              
-                              Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregar)
-                              .then((res) => {
-                                    console.log("RESPONSE RECEIVED: ", res);                             
-                                    //Si no habian casos de prueba al inicio, entonces hay que crearlos
-                                    console.log("los testcases son:")
-                                    console.log(this.state.testCasesIds)
-                                    if(this.state.testCasesIds === -1){
-                                        for(let i = 0; i<this.state.inputs.length;i++){
-                                            let newTestCase = {
-                                                input: this.state.inputs[i].nameInput,
-                                                output:this.state.outputs[i].nameOutput,
+                                                    }, 5);
+                                                                                                
+                                                    
+                                                    
+                                                })
+                                                .catch((err) => {
+                                                    this.handleLoader();
+                                                    this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                                    setTimeout(() => {
+                                                        this.handleShowErrorMessage();
+                                                        return;
+                                                    }, 5);
+                                                });
                                             }
-                                            Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
-                                            .then((res) => {
+                                    })
+                                        .catch((err) => {
+                                            this.handleLoader();
+                                            this.setState({errorMessage:"No se pudieron crear correctamente los casos de prueba, intente mas tarde"});
+                                            setTimeout(() => {
+                                                this.handleShowErrorMessage();
+                                                return;
+                                            }, 5);
+                                    }) 
+
+                            }
+                        
+                    }
+                }
+                //Se borraron casos de prueba pero se dejo por lo menos 1
+                else if(this.state.inputs.length !== 0 &&  
+                        this.state.inputs.length < this.state.testCasesIds.length){
+                                console.log("estos son los inputs ahora:")
+                                console.log(this.state.inputs);
+                                console.log("estos son los testcasesids antiguos")
+                                console.log(this.state.testCasesIds)
+
+                            
+                                for(let i= 0; i<this.state.testCasesIds.length;i++){
+                                        //Se ha eliminado uno o mas casos de prueba en comparacion al original
+                                    
+                                        if(i<this.state.inputs.length){
+                                            jsonEditarTestcases ={
+                                                input: this.state.inputs[i].nameInput,
+                                                output: this.state.outputs[i].nameOutput    
+                                            }
+                                            console.log("va a ingresar");
+                                            console.log(jsonEditarTestcases)
+                                                
+                                            Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                                .then((res) => {
                                                     console.log("RESPONSE RECEIVED: ", res);
-                                                    if(i === this.state.inputs.length -1){
+                                        
+                                                })
+                                                .catch((err) => {
+                                                    this.handleLoader();
+                                                    this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                                    setTimeout(() => {
+                                                        this.handleShowErrorMessage();
+                                                        return;
+                                                    }, 5);
+                                                });
+                                        }
+                                        else{
+                                                
+                                            Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
+                                                .then((res) => {
+                                                    console.log("RESPONSE RECEIVED: ", res);
+                                                    if(i === this.state.testCasesIds.length -1){
 
                                                         Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
                                                         .then(response => {
@@ -387,213 +648,163 @@ class EditExerciseForm extends Component{
                                                             this.setState({
                                                                 testCasesIds: testCasesArray
                                                             });
-                                                            this.handleShowConfirmation();      
-                                                            this.setState({ disableButton: false});      
-
-                                                            
-                                                        })
-                                                        .catch((err) => {
-                                                            console.log("AXIOS ERROR: ", err);
-                                                        });
-                                                    }
-                                            })
-                                                .catch((err) => {
-                                                    console.log("AXIOS ERROR: ", err);
-                                            }) 
-                            
-                                        }
-                                        
-                                    }
-                                    //Se agregaron mas casos de pruebas que los que habian || se modifica solo uno
-                                    else if(this.state.inputs.length >= this.state.testCasesIds.length){
-                                        for(let i= 0; i<this.state.inputs.length;i++){
-
-                                            
-                                                if(i<this.state.testCasesIds.length){
-                                                    jsonEditarTestcases ={
-                                                        input: this.state.inputs[i].nameInput,
-                                                        output: this.state.outputs[i].nameOutput    
-                                                    }
-                                                    console.log("va a ingresarsss");
-                                                    console.log(jsonEditarTestcases)
-                                                        
-                                                    Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
-                                                        .then((res) => {
-                                                            console.log("RESPONSE RECEIVED: ", res);
-                                                            this.handleShowConfirmation();
-                                                                                            
-                                                            this.setState({ disableButton: false});      
-
-                                                        })
-                                                        .catch((err) => {
-                                                            console.log("AXIOS ERROR: ", err);
-                                                        });
-                
-                                                    }
-                                                else{
-                                                        jsonEditarTestcases ={
-                                                            input: this.state.inputs[i].nameInput,
-                                                            output: this.state.outputs[i].nameOutput    
-                                                        }
-                                                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
-                                                        .then((res) => {
-                                                                console.log("RESPONSE RECEIVED: ", res);
-                                                                if(i === this.state.inputs.length -1){
-
-                                                                    Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
-                                                                    .then(response => {
-                                                                        console.log(response.data)
-                                                                        console.log("estos son los id news")
-                                                                        var testCasesArray = [];
-                                                                        for(let i = 0; i< response.data.length; i++){
-                                                                            testCasesArray.push(response.data[i].id)
-                                                                        }
-                                                                        this.setState({
-                                                                            testCasesIds: testCasesArray
-                                                                        });
-                                                                        this.handleShowConfirmation();    
-                                                                                                                    
-                                                                        this.setState({ disableButton: false}); 
-                                                                        
-                                                                        
-                                                                    })
-                                                                    .catch((err) => {
-                                                                        console.log("AXIOS ERROR: ", err);
-                                                                    });
-                                                                }
-                                                        })
-                                                            .catch((err) => {
-                                                                console.log("AXIOS ERROR: ", err);
-                                                        }) 
-
-                                                }
-                                            
-                                        }
-                                    }
-                                    //Se borraron casos de prueba pero se dejo por lo menos 1
-                                    else if(this.state.inputs.length !== 0 &&  
-                                            this.state.inputs.length < this.state.testCasesIds.length){
-                                                console.log("estos son los inputs ahora:")
-                                                console.log(this.state.inputs);
-                                                console.log("estos son los testcasesids antiguos")
-                                                console.log(this.state.testCasesIds)
-
-                                                
-                                                    for(let i= 0; i<this.state.testCasesIds.length;i++){
-                                                            //Se ha eliminado uno o mas casos de prueba en comparacion al original
-                                                        
-                                                            if(i<this.state.inputs.length){
-                                                                jsonEditarTestcases ={
-                                                                    input: this.state.inputs[i].nameInput,
-                                                                    output: this.state.outputs[i].nameOutput    
-                                                                }
-                                                                console.log("va a ingresar");
-                                                                console.log(jsonEditarTestcases)
-                                                                    
-                                                                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
-                                                                    .then((res) => {
-                                                                        console.log("RESPONSE RECEIVED: ", res);
-                                                            
-                                                                    })
-                                                                    .catch((err) => {
-                                                                        console.log("AXIOS ERROR: ", err);
-                                                                    });
-                                                            }
-                                                            else{
-                                                                    
-                                                                Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
-                                                                    .then((res) => {
-                                                                        console.log("RESPONSE RECEIVED: ", res);
-                                                                        if(i === this.state.testCasesIds.length -1){
-
-                                                                            Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
-                                                                            .then(response => {
-                                                                                console.log(response.data)
-                                                                                console.log("estos son los id news")
-                                                                                var testCasesArray = [];
-                                                                                for(let i = 0; i< response.data.length; i++){
-                                                                                    testCasesArray.push(response.data[i].id)
-                                                                                }
-                                                                                this.setState({
-                                                                                    testCasesIds: testCasesArray
-                                                                                });
-                                                                                this.handleShowConfirmation();     
-                                                                                                                                    
-                                                                                this.setState({ disableButton: false}); 
-                                                                                
-                                                                                
-                                                                            })
-                                                                            .catch((err) => {
-                                                                                console.log("AXIOS ERROR: ", err);
-                                                                            });
-                                                                        }
-                                                            
-                                                                    })
-                                                                    .catch((err) => {
-                                                                        console.log("AXIOS ERROR: ", err);
-                                                                    });
-                                                                    
-                                                            }
-                                                                    
-                                                            
-                        
-                                                    }
-
-                                    
-                                    }
-                                    //Habian casos de prueba pero se borraron todos
-                                    else if(this.state.inputs.length === 0){
-                                        for(let i= 0; i<this.state.testCasesIds.length;i++){
-                                            
-                                                Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
-                                                    .then((res) => {
-                                                        console.log("RESPONSE RECEIVED: ", res);
-                                                        if(i === this.state.testCasesIds.length -1){
-
-                                                                this.setState({
-                                                                    testCasesIds: []
-                                                                });
+                                                            this.handleLoader();
+                                                            setTimeout(() => {
                                                                 this.handleShowConfirmation();      
 
-                                                                this.setState({ disableButton: false});
-                                                                
-                                                        
-                                                        }
+                                                            }, 5);    
+                                                                                                                
+                                                            
+                                                            
+                                                        })
+                                                        .catch((err) => {
+                                                            this.handleLoader();
+                                                            this.setState({errorMessage:"No se pudieron eliminar correctamente los casos de prueba, intente mas tarde"});
+                                                            setTimeout(() => {
+                                                                this.handleShowErrorMessage();
+                                                                return;
+                                                            }, 5);
+                                                        });
+                                                    }
+                                        
+                                                })
+                                                .catch((err) => {
+                                                    this.handleLoader();
+                                                    this.setState({errorMessage:"No se pudieron eliminar correctamente los casos de prueba, intente mas tarde"});
+                                                    setTimeout(() => {
+                                                        this.handleShowErrorMessage();
+                                                        return;
+                                                    }, 5);
+                                                });
                                                 
-                                                    })
-                                                    .catch((err) => {
-                                                        console.log("AXIOS ERROR: ", err);
-                                                    });
-                                                    
                                         }
+                                                
+                                        
+    
+                                }
 
+                
+                }
+                //Habian casos de prueba pero se borraron todos
+                else if(this.state.inputs.length === 0){
+                    for(let i= 0; i<this.state.testCasesIds.length;i++){
+                        
+                            Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
+                                .then((res) => {
+                                    console.log("RESPONSE RECEIVED: ", res);
+                                    if(i === this.state.testCasesIds.length -1){
+
+                                            this.setState({
+                                                testCasesIds: []
+                                            });
+                                            this.handleLoader();
+                                            setTimeout(() => {
+                                                this.handleShowConfirmation();      
+
+                                            }, 5);   
+
+                                            
                                     
-
                                     }
-                                    //Si existe algun caso de prueba, se editan
-                    
-                                    })
-                                .catch((err) => {
-                                    console.log("AXIOS ERROR: ", err);
-                                    alert("No se pudo editar correctamente el enunciado, intente mas tarde")
-                    
+                            
                                 })
+                                .catch((err) => {
+                                    this.handleLoader();
+                                    this.setState({errorMessage:"No se pudieron eliminar correctamente los casos de prueba, intente mas tarde"});
+                                    setTimeout(() => {
+                                        this.handleShowErrorMessage();
+                                        return;
+                                    }, 5);
+                                });
+                                
+                    }
+
+                
+
+                }
+                //Si existe algun caso de prueba, se editan
+
+            })
+            .catch((err) => {
+                console.log("AXIOS ERROR: ", err);
+                this.handleLoader();
+                this.setState({errorMessage:"No se pudo editar correctamente el contenido del enunciado, intente mas tarde"});
+                setTimeout(() => {
+                    this.handleShowErrorMessage();
+                }, 5);
+
+            })
+                
+    }
+
+    editExerciseChecking(){
+        if(this.state.title.length !== 0 &&
+            this.state.description.length !== 0 &&
+                this.state.functionName.length !== 0){
+                        var checking = this.checkTestCases();
+                        
+                        if(checking === 1){
+                            this.setState({checkErrors:true, errorMessage:'Existe o existen casos de pruebas con entradas o salidas vacias, por favor completar o eliminar el/los casos de prueba correspondientes'});
+                        }
+                        else if(checking === 2){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de entradas, por favor completar o eliminar el/los casos de prueba correspondientes'});
+
+                        }
+                        else if(checking === 3){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes'});
+
+                            
+                        }
+                        else if(checking === 4){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
+
+                        }
+                        else if(checking === 5){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
+
+                        }
+                        else if(checking === 6){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con entradas y salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
+                            
+                        }
+                        else if(checking === 0 || checking === 7){
+                            this.handleLoader()
+                            setTimeout(() => {
+                                this.editExerciseChecked();
+                            }, 5);
                                     
                                     
-                            }
+                        }
+
+                        else if(checking === 8){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor ajustar o eliminar el/las entradas correspondientes'});
+
+                        }
+                        else if(checking === 9){
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor ajustar o eliminar el/las salidas correspondientes'});
+    
+                        }
+                        if(checking !== 7 && checking !== 0){
+                            this.handleShowErrorMessage();
+                           
+                        }
                   
               
-                        }
-              else{
-                alert('Existen campos obligatorios sin completar, porfavor completelos');
-                this.setState({toggle:true, disableButton: false});
+            }
+            else{
+                this.setState({checkErrors:true, errorMessage:'Existen campos obligatorios sin completar, porfavor completelos'});
+                setTimeout(() => {
+                    this.handleShowErrorMessage();
+                }, 5);
+                        
             
-              }
+            }
           
-      }
+    }
+    
 
 
-      publishExercise =  () => {
+    publishExercise =  () => {
         let jsonAgregarPublish = {
           published:true
         }
@@ -607,34 +818,43 @@ class EditExerciseForm extends Component{
               this.state.description.length !== 0 && 
                  this.state.functionName.length !== 0){
                     var checking = this.checkTestCases();
-                    if(checking === 0){                        
-                        alert('Debe agregar por lo menos un caso de prueba al enunciado para poder publicarlo')
-                        this.handleHide();
-                        this.setState({toggle:true});
+                    if(checking === 0){  
+                        this.handleHidePublish();      
+                        this.setState({checkErrors:true, errorMessage:'Debe agregar por lo menos un caso de prueba al enunciado para poder publicarlo'});
+                
                     }    
                     else if(checking === 1){
-                        alert('Existe o existen casos de pruebas con entradas o salidas vacias, por favor completar o eliminar el/los casos de prueba correspondientes')
-                        this.setState({toggle:true});
+                        this.setState({checkErrors:true, errorMessage:'Existe o existen casos de pruebas con entradas o salidas vacias, por favor completar o eliminar el/los casos de prueba correspondientes'});
+
                     }
                     else if(checking === 2){
-                        alert('Existe o existen casos de pruebas con diferente numero de entradas, por favor completar o eliminar el/los casos de prueba correspondientes')
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de entradas, por favor completar o eliminar el/los casos de prueba correspondientes'});
 
                     }
                     else if(checking === 3){
-                        alert('Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes')
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes'});
 
                     }
                     else if(checking === 4){
-                        alert('Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
 
                     }
                     else if(checking === 5){
-                        alert('Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
 
                     }
                     else if(checking === 6){
-                        alert('Existe o existen casos de pruebas con entradas y salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes')
-                       
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con entradas y salidas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
+                    
+                    }
+
+                    else if(checking === 8){
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor ajustar o eliminar el/las entradas correspondientes'});
+
+                    }
+
+                    else if(checking === 9){
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con salidas que no cumplen el formato, por favor ajustar o eliminar el/las salidas correspondientes'});
 
                     }
                     else if(checking === 7){
@@ -655,17 +875,20 @@ class EditExerciseForm extends Component{
                                             output:this.state.outputs[i].nameOutput,
                                         }
                                         Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
-                                        .then((res) => {
+                                            .then((res) => {
                                                 console.log("RESPONSE RECEIVED: ", res);
-                                                if(i === this.state.inputs.length -1){
-                                                    this.handleHide();
-                                                    this.handleShowConfirmation();                            
+                                                if(i === this.state.inputs.length -1){                          
                                                     this.props.history.push('/published_exercises_teacher');
                                                 }
-                                        })
+                                            })
                                             .catch((err) => {
-                                                console.log("AXIOS ERROR: ", err);
-                                        }) 
+                                                this.handleLoader();
+                                                this.setState({errorMessage:"No se pudieron crear correctamente los casos de prueba, intente mas tarde"});
+                                                setTimeout(() => {
+                                                    this.handleShowErrorMessage();
+                                                    return;
+                                                }, 5);
+                                            }) 
                         
                                     }
     
@@ -688,15 +911,19 @@ class EditExerciseForm extends Component{
                                                     Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                                                         .then((res) => {
                                                                 console.log("RESPONSE RECEIVED: ", res);
-                                                                if(this.state.inputs.length === this.state.testCasesIds){
-                                                                    this.handleHide();
-                                                                    this.handleShowConfirmation();                            
+                                                                if(this.state.inputs.length === this.state.testCasesIds.length){
+                                                                                           
                                                                     this.props.history.push('/published_exercises_teacher');
                                                                 }
-                                                            })
+                                                        })
                                                         .catch((err) => {
-                                                                console.log("AXIOS ERROR: ", err);
-                                                            });
+                                                            this.handleLoader();
+                                                            this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                                            setTimeout(() => {
+                                                                this.handleShowErrorMessage();
+                                                                return;
+                                                            }, 5);
+                                                        });
                 
                                             }
                                             else{
@@ -705,18 +932,21 @@ class EditExerciseForm extends Component{
                                                         output: this.state.outputs[i].nameOutput    
                                                     }
                                                     Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
-                                                    .then((res) => {
+                                                        .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
                                                             if(i === this.state.inputs.length -1){
-
-                                                                this.handleHide();
-                                                                this.handleShowConfirmation();                            
+                          
                                                                 this.props.history.push('/published_exercises_teacher');
                                                             }
-                                                    })
+                                                        })
                                                         .catch((err) => {
-                                                            console.log("AXIOS ERROR: ", err);
-                                                    }) 
+                                                            this.handleLoader();
+                                                            this.setState({errorMessage:"No se pudieron crear correctamente los casos de prueba, intente mas tarde"});
+                                                            setTimeout(() => {
+                                                                this.handleShowErrorMessage();
+                                                                return;
+                                                            }, 5);
+                                                        }) 
         
                                             }
                                         
@@ -740,10 +970,15 @@ class EditExerciseForm extends Component{
                                                     .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
                                             
-                                                        })
+                                                    })
                                                     .catch((err) => {
-                                                            console.log("AXIOS ERROR: ", err);
-                                                        });
+                                                            this.handleLoader();
+                                                            this.setState({errorMessage:"No se pudieron editar correctamente los casos de prueba, intente mas tarde"});
+                                                            setTimeout(() => {
+                                                                this.handleShowErrorMessage();
+                                                                return;
+                                                            }, 5);
+                                                    });
                                             }
                                             else{
                                                     
@@ -751,18 +986,19 @@ class EditExerciseForm extends Component{
                                                     .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
 
-                                                            if(i === this.state.testCasesIds.length -1){
-    
-                                                          
-                                                                this.handleHide();
-                                                                this.handleShowConfirmation();                            
+                                                            if(i === this.state.testCasesIds.length -1){               
                                                                 this.props.history.push('/published_exercises_teacher');
                                                              }
                                             
-                                                        })
+                                                    })
                                                     .catch((err) => {
-                                                            console.log("AXIOS ERROR: ", err);
-                                                        });
+                                                            this.handleLoader();
+                                                            this.setState({errorMessage:"No se pudieron eliminar correctamente los casos de prueba, intente mas tarde"});
+                                                            setTimeout(() => {
+                                                                this.handleShowErrorMessage();
+                                                                return;
+                                                            }, 5);
+                                                    });
                                                     
                                             }
                                                         
@@ -775,36 +1011,49 @@ class EditExerciseForm extends Component{
                         
                             })
                             .catch((err) => {
-                                console.log("AXIOS ERROR: ", err);
-                                alert("No se pudo publicar correctamente el enunciado, intente mas tarde")
+                                this.handleLoader();
+                                this.setState({errorMessage:"No se pudo publicar el enunciado correctamente, intente mas tarde"});
+                                setTimeout(() => {
+                                    this.handleShowErrorMessage();
+                                }, 5);
 
                             });
                             
         
                         })
                         .catch((err) => {
-                            console.log("AXIOS ERROR: ", err);
-                            alert("No se pudo editar correctamente el enunciado, intente mas tarde")
+                            this.handleLoader();
+                            this.setState({errorMessage:"No se pudo editar correctamente el contenido del enunciado, intente mas tarde"});
+                            setTimeout(() => {
+                                this.handleShowErrorMessage();
+                            }, 5);
 
                         })
                        
                     }
-                    this.handleHide();
+                    if(checking !== 7){
+
+                        this.handleHidePublish();
+                        setTimeout(() => {
+                            this.handleShowErrorMessage();
+                       }, 1);
+                    }
             
            
         }
         else{
-          this.handleHide();
-          alert('Existen campos obligatorios sin completar, porfavor completelos');
-          this.setState({toggle:true});
+            this.setState({checkErrors:true, errorMessage:'Existen campos obligatorios sin completar, porfavor completelos'});
+            setTimeout(() => {
+                this.handleShowErrorMessage();
+            }, 5);
         }
        
        
-      }
+    }
 
       updateTitle(event){
         console.log(this.state.title)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.title.style.border = "";
         }
          this.setState({ title: event.target.value })
@@ -812,7 +1061,7 @@ class EditExerciseForm extends Component{
     }
     updateNameFunction(event){
         console.log(this.state.functionName)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.functionName.style.border = "";
         }
         this.setState({ functionName: event.target.value })
@@ -820,7 +1069,7 @@ class EditExerciseForm extends Component{
     }
     updateDescription(event){
         console.log(this.state.description)
-        if(this.state.toggle && event.target.value.length !== 0){
+        if(this.state.checkErrors && event.target.value.length !== 0){
             this.refs.description.ref.style.border = "";
         }        
         this.setState({ description: event.target.value })
@@ -834,9 +1083,7 @@ class EditExerciseForm extends Component{
         })
       }
       checkFields(field,fieldName,refNumber){
-        /* var exists = false;
-         if(this.refInputs.get(refNumber) !== undefined &&
-                 this.refInputs.get(refNumber) !== null) exists = true;*/
+       
          if(field.length === 0){
              switch(fieldName) {
                  case "title":
@@ -878,9 +1125,13 @@ class EditExerciseForm extends Component{
 
           {this.state.isSafeToRender &&
               <div className = 'SafeComponent'>
+                    <Segment>
 
-                  
-                      <MuiThemeProvider muiTheme={ThemeDefault}>  
+                        <Dimmer active={this.state.loader} inverted>
+                            <Loader inverted content='Editando enunciado...' />
+                        </Dimmer>
+
+                        <MuiThemeProvider muiTheme={ThemeDefault}>  
                         <div className= "Forms">
                             <h1 style={{textAlign:"center"}} >Edicion Enunciado</h1>
                             <div style={{padding:10}}></div>
@@ -896,17 +1147,22 @@ class EditExerciseForm extends Component{
                                                       ref = "title"
                                                       onChange={this.updateTitle} 
                                                       style={{  textAlign:"center"}}
+                                                      onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                       />
-                                            {this.state.toggle && this.checkFields(title, "title",null)}
+                                            {this.state.checkErrors && this.checkFields(title, "title",null)}
                                             </Form.Field>
+                                           
                                             <Form.Field>
                                             <label>Nombre de la funcion principal:</label>
                                                 <input  placeholder='Funcion' 
                                                         value= {functionName} 
                                                         ref = "functionName"
                                                         onChange={this.updateNameFunction} 
-                                                        style={{  textAlign:"center"}}/>
-                                            {this.state.toggle && this.checkFields(functionName, "functionName",null)}
+                                                        style={{  textAlign:"center"}}
+                                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                                                        />
+                                            {this.state.checkErrors && this.checkFields(functionName, "functionName",null)}
 
                                             </Form.Field>
 
@@ -916,16 +1172,18 @@ class EditExerciseForm extends Component{
                                                         ref = "description"
                                                         value= {description} 
                                                         onChange={this.updateDescription}
+
                                                         />  
-                                            {this.state.toggle && this.checkFields(description, "description",null)}
+                                            {this.state.checkErrors && this.checkFields(description, "description",null)}
 
                                             <Divider />
 
                                             <Button  floated= {'left'} 
                                                     color='red' 
                                                     type='Empty'
-                                                    disabled= {this.state.disableButton}
                                                     onClick={this.emptyFields}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
 
                                                     Vaciar
@@ -935,30 +1193,31 @@ class EditExerciseForm extends Component{
                                             }}>
                                                 <Button floated= {'left'}
                                                         primary={true} 
-                                                        disabled= {this.state.disableButton}
-                                                        type='Back'>
+                                                        type='Back'
+                                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                        
+                                                        >
                                                         Volver
                                                 </Button>
                                             </Link>
                                             <Button floated= {'right'} 
                                                     primary={true} 
                                                     type='Editar'
-                                                    onClick={() => {
-                                                        this.handleDisableButton();
-                                                        setTimeout(() => {                                                            
-                                                          this.editExercise();
-                                                        }, 1);
+                                                    onClick={() => {                                  
+                                                        this.editExerciseChecking();
                                                     }}
-                                                    disabled= {this.state.disableButton}
+                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                     >
                                                     Modificar
                                             </Button>
                                             <Button  floated= {'right'} 
                                                       color='yellow' 
                                                       type='Publish'
-                                                      onClick= {this.handleShow}
+                                                      onClick= {this.handleShowPublish}
+                                                      onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
 
-                                                    disabled= {this.state.disableButton}
                                                       >
                                                       Publicar
                                             </Button>
@@ -972,15 +1231,46 @@ class EditExerciseForm extends Component{
                                 <Col  xs={12} sm={12} md={6}>
                                     <Paper style={background.mediumFrame2}>
                                           <Form style={{textAlign:"center"}}>
-                                              <h1 style={{textAlign:"center"}} >Casos de prueba</h1>
+                                                <h1 style={{textAlign:"center"}} >Casos de prueba</h1>
+                                               
+                                                <Row className="show-grid" style={{position:"relative", left: "6%"}}>
+                                                        <Col  xs={5} sm={5} md={2} style={{position:"relative", left: "5%"}}>
+                                                            <Button  
+                                                                    color='blue' 
+                                                                    type='Void'
+                                                                    onClick={this.handleAddTestCase}
+                                                                    onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                                    >
+                                                                        Agregar
+                                                            </Button>
+                                                
+                                                        </Col>
+                                                        <Col  xs={7} sm={7} md={5} lg={3} style={{position:"relative", left: "40%"}}>
+
+                                                            <Row>
+                                                                <label  style={{textAlign:"center"}}>Formato:</label>                                                       
+                                                                
+                                                                <OverlayTrigger
+                                                                            trigger={['hover', 'focus']}
+                                                                            placement="right"
+                                                                            overlay={this.popoverHoverFocus()}
+                                                                        >
+                                                                        <Icon name='help circle' 
+                                                                            color='blue' 
+                                                                            size='big' 
+                                                                            style={{position:"relative", left: "10%"}}
+                                                                            />
+                                                                </OverlayTrigger>
+                                                            </Row>
+                                                                    
+
+                                                
+                                                        </Col>
+
+                                                </Row>
                                           
-                                              <Button  
-                                                              color='blue' 
-                                                              type='Void'
-                                                              onClick={this.handleAddTestCase}
-                                                              >
-                                                                  Agregar
-                                              </Button>
+                                                    
                                               <Divider />
                                               <Row>
                                                   <Col  xs={12} sm={12} md={6}>
@@ -989,7 +1279,7 @@ class EditExerciseForm extends Component{
                                                     
                                                           {this.state.inputs.map((input, idx) => (
                                                                                               
-                                                              <div className="input" key = {this.keys1++}>
+                                                              <div className="input" >
                                                                   <div style={{padding:10}}></div>
                                                                   <input style= {{border: "1px solid lightblue", width: "80%"}}
                                                                           type= "text"
@@ -997,8 +1287,10 @@ class EditExerciseForm extends Component{
                                                                           placeholder={`Input #${idx + 1} name`}
                                                                           value={input.nameInput}
                                                                           onChange={this.handleTestCaseNameChange(idx)}
+                                                                          onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                                   />
-                                                                 {this.state.toggle && this.checkFields(input.nameInput, "input",idx)}
+                                                                 {this.state.checkErrors && this.checkFields(input.nameInput, "input",idx)}
 
                                                                   
                                                               </div>
@@ -1013,7 +1305,7 @@ class EditExerciseForm extends Component{
                                                   <Col  xs={12} sm={12} md={6}>
                                                       <h2 style={{position: "relative", right: "10%", textAlign:"center"}} >Salida</h2>
                                                       {this.state.outputs.map((output, idx) => (
-                                                                 <div key = {this.keys2++}>
+                                                                 <div >
                                                                  <Row>
                                                                       <div style={{padding:10}}></div>
                                                                           <input style= {{border: "1px solid lightblue", width: "70%"}}
@@ -1022,6 +1314,8 @@ class EditExerciseForm extends Component{
                                                                                   placeholder={`Output #${idx + 1} name`}
                                                                                   value={output.nameOutput}
                                                                                   onChange={this.handleTestCaseNameChange2(idx)}
+                                                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                                           />
                                                                       <Button   style= {{position: "relative", left: "5%"}}
                                                                               circular color='red' icon='delete'
@@ -1033,7 +1327,7 @@ class EditExerciseForm extends Component{
           
                                                                   </Row>
           
-                                                                    {this.state.toggle && this.checkFields(output.nameOutput, "output",idx)} 
+                                                                    {this.state.checkErrors && this.checkFields(output.nameOutput, "output",idx)} 
                                                               </div>
                                                            
                                                                 
@@ -1056,6 +1350,9 @@ class EditExerciseForm extends Component{
                           
                         
                         </MuiThemeProvider>
+                    </Segment>
+                  
+                     
                       
                     
                     <div className= "UsedModals"> 
@@ -1067,21 +1364,27 @@ class EditExerciseForm extends Component{
                                   </Modal.Header>
                                   <Modal.Body >
                                         <p >
-                                          Esta seguro de publicar este enunciado?
+                                          Esta seguro de publicar este enunciado? 
                                         </p>
                                     </Modal.Body>
                                     <Modal.Footer>
                                       <Button  floated= {'left'} 
                                                   color='red' 
                                                   type='Negation'
-                                                  onClick= {this.handleHide}
+                                                  onClick= {this.handleHidePublish}
+                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                   >
                                                   No
                                         </Button>
                                           <Button  floated= {'right'} 
                                                   color='blue' 
                                                   type='Positive'
-                                                  onClick={this.publishExercise}
+                                                  onClick={() => {                                                        
+                                                    this.publishExercise();
+                                                  }}
+                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                   >
                                                   Si
                                           </Button>
@@ -1089,7 +1392,6 @@ class EditExerciseForm extends Component{
 
                         </Modal>
                         <Modal show={this.state.modalConfirmation}
-                            onHide={this.handleHideConfirmation}
                             bsSize="small">  
 
                                   <Modal.Header >
@@ -1097,7 +1399,7 @@ class EditExerciseForm extends Component{
                                   </Modal.Header>
                                   <Modal.Body >
                                         <p >
-                                        Se ha modificado sadisfactoriamente el enunciado
+                                        Se ha modificado sadisfactoriamente el enunciado 
                                         </p>
                                     </Modal.Body>
                                     <Modal.Footer>
@@ -1105,10 +1407,36 @@ class EditExerciseForm extends Component{
                                                   color='blue' 
                                                   type='Positive'
                                                   onClick={this.handleHideConfirmation}
+                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
                                                   >
                                                   OK
                                           </Button>
                                     </Modal.Footer>
+
+                        </Modal>
+                        <Modal show={this.state.warningErrorMessage}
+                              bsSize="small">  
+
+                                    <Modal.Header >
+                                      <Modal.Title style= {{textAlign: "center"}}>Error casos de prueba</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body >
+                                          <p style= {{textAlign:'center'}} >
+                                            {this.state.errorMessage}
+                                          </p>
+                                      </Modal.Body>
+                                      <Modal.Footer>                                        
+                                                <Button  style={{position:'relative', right: '35%'}}
+                                                        color='blue' 
+                                                        type='Positive'
+                                                        onClick={this.handleHideErrorMessage}
+                                                        onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                        >
+                                                        OK
+                                                </Button>
+                                      </Modal.Footer>
 
                         </Modal>
                      </div>
