@@ -63,6 +63,7 @@ public class SolutionService {
             statistic.setSpendTime(resource.getSpendTime());
             statistic.setDate(new Date());
             statistic.setSolutions(1);
+            statistic.setUser(user);
             statisticRepository.save(statistic);
         }
         else{
