@@ -6,6 +6,7 @@ import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.SolutionRepository;
 import grupo.cinco.backend.repositories.UserRepository;
+import grupo.cinco.backend.utils.Analyzer;
 import grupo.cinco.backend.utils.Context;
 import grupo.cinco.backend.utils.Factory;
 import org.json.simple.JSONObject;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -93,5 +96,11 @@ public class SolutionService {
         return json;
     }
 
-
+    @RequestMapping(value = "/analyze", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,String> analyzeCode(@RequestBody Solution resource)
+    {
+        Analyzer analyzer = new Analyzer();
+        return analyzer.totalAnalyze(resource.getScript(),resource.getLanguage());
+    }
 }

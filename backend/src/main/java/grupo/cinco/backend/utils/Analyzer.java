@@ -1,13 +1,10 @@
 package grupo.cinco.backend.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
 import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang3.StringUtils.countMatches;
-import static org.apache.commons.lang3.StringUtils.deleteWhitespace;
-import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class Analyzer {
 
@@ -201,6 +198,33 @@ public class Analyzer {
             return true;
         }
         else return false;
+    }
+
+    public Map<String,String> totalAnalyze(String code, String language)
+    {
+        Map<String,String> result = new HashMap<String,String>();
+        if (verifyIndentation(code)==true)
+        {
+            result.put("verifyIndentation","Cumples con el porcentaje de indentación");
+        }
+        else result.put("verifyIndentation","Debes preocuparte de indentar tu código, tienes menos del 30%");
+
+        if (detectOrganization(code,language)==true)
+        {
+            result.put("detectOrganization", "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA");
+        }
+        else result.put("detectOrganization","Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA");
+
+        if (functionsComments(code,language)==true)
+        {
+            result.put("functionComments","La definición de tus funciones están bien comentadas");
+        }
+        else result.put("functionComments","Todas tus funciones deben estar comentadas con su entrada, salida y descripción");
+
+        List<String> invalidVariables = representativeVariables(code,language);
+        String invalidVariablesString = join(invalidVariables,",");
+        result.put("invalidVariables",invalidVariablesString);
+        return result;
     }
 
 
