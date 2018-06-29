@@ -23,7 +23,7 @@ public class Solution {
     @JsonIgnore
     private Exercise exercise;
 
-    @Column(name = "script")
+    @Column(name = "script", length = 5000)
     private String script;
 
     @Column (name ="language" )
