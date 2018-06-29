@@ -33,7 +33,7 @@ class ExerciseItemStudent extends Component {
                       pathname: '/view_exercise_student',
                       state: { viewAExercise: this.state.myProps.exercise}
                     }}>
-                        <Card.Header>
+                        <Card.Header  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}>
                         {this.props.exercise.title}
                         </Card.Header>
                     </Link>
@@ -46,7 +46,10 @@ class ExerciseItemStudent extends Component {
                       pathname: '/solution',
                       state: { viewAExercise: this.state.myProps.exercise}
                     }}>
-                      <Button  color='blue'>
+                      <Button  color='blue'
+                               onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                >
                                 Realizar
                       </Button>
 

@@ -66,6 +66,7 @@ class ExerciseIterator extends Component {
                   <ExerciseItemPublishedTeacher
                       key={this.getKey()} 
                       exercise={exercise}
+                      viewExercise = {this.props.viewExercise}
                   />
   
   
@@ -79,6 +80,8 @@ class ExerciseIterator extends Component {
                   
                   <ExerciseItemUnpublishedTeacher
                       deleteExercise = {this.props.deleteExercise}
+                      editExercise = {this.props.editExercise}
+                      viewExercise = {this.props.viewExercise}
                       key={this.getKey()} 
                       exercise={exercise}
 
@@ -95,7 +98,7 @@ class ExerciseIterator extends Component {
      render() {
         return (
 
-            <Card.Group /*itemsPerRow={4}*/ stackable= {true}>
+            <Card.Group itemsPerRow={4} stackable= {true}>
 
                  {this.createListExercises()}
             </Card.Group>

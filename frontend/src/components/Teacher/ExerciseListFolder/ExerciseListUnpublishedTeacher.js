@@ -22,7 +22,8 @@ class ExerciseListUnpublishedTeacher extends Component {
       super(props);
       this.deleteExercise = this.deleteExercise.bind(this);
       this.deleteFromList = this.deleteFromList.bind(this);
-
+      this.editExercise = this.editExercise.bind(this);
+      this.viewExercise = this.viewExercise.bind(this);
       this.getExercises = this.getExercises.bind(this);
       this.getPagination = this.getPagination.bind(this);
       this.updateData = this.updateData.bind(this);
@@ -38,212 +39,15 @@ class ExerciseListUnpublishedTeacher extends Component {
       offers :{},
       filterOffers: {},
       currentPageItems: [],
-      jsons: [{
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false,"id":251
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":252
-
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":264
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":278
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":279
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":280
-
-              },
-                {
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false, "id":290
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":295
-
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":296
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":298
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":300
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":301
-
-                },
-                {
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false, "id":302
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":303
-
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":304
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":306
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":305
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":310
-
-              },
-              {
-                "title": "Chela",
-                "description": "ojala nunca",
-                "published": false, "id":315
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":316
-
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":317
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":318
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":320
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":321
-
-              },
-                {
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false, "id":322
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":333
-
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":334
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":335
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":336
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":338
-
-                },
-                {
-                  "title": "Chela",
-                  "description": "ojala nunca",
-                  "published": false, "id":340
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":356
-              },
-              {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":357                    
-
-              },
-              {
-                  "title": "agua",
-                  "description": "ojala nuncax4 ",
-                  "published": false, "id":358
-              },
-                {
-                  "title": "vaso plastico",
-                  "description": "ojala nuncax2",
-                  "published": false, "id":360
-              },
-              {
-                "title": "vaso plastico",
-                "description": "ojala nuncax2",
-                "published": false, "id":361
-
-              }
-          ]
+      filtered:""
           
     }
     getExercises(){
       var _this = this;
       //GET formal es con id del usuario
-     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser.toString()+'/unpublished')
+     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/unpublished')
      //Get por ahora es con id 1 
-     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/unpublished')
+     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser+'/unpublished')
       .then(response => {
           console.log("soy los ejercicios")
            console.log(response.data)
@@ -281,8 +85,43 @@ class ExerciseListUnpublishedTeacher extends Component {
           unpublishedItems: unpublishedItemsNew
       });
       setTimeout(() => {
-        _this.getPagination(null)
+          console.log("soy el evento filtrado");
+          console.log(_this.state.filtered)
+          
+          if(_this.state.filtered.length !== 0){
+                _this.filterList(_this.state.filtered)
+              }
+          else{
+                _this.setState({filtered:""})
+                setTimeout(() => {
+                _this.getPagination(null)
+                }, 1);
+          }
      }, 1);
+    }
+    editExercise(exercise){
+      var testcases;
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
+      .then(response => {
+            console.log("soy los testcases")
+            testcases = response.data
+            this.props.history.push('edit_exercise',{ editAExercise: exercise, getTestCases: testcases })
+      })
+      .catch(function(error) {
+           console.log(error)
+      })
+    }
+    viewExercise(exercise){
+      var testcases;
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
+      .then(response => {
+            console.log("soy los testcases")
+            testcases = response.data
+            this.props.history.push('view_exercise_teacher',{ viewAExercise: exercise, getTestCases: testcases })
+      })
+      .catch(function(error) {
+           console.log(error)
+      })
     }
   
     deleteExercise (exercise) {
@@ -310,7 +149,7 @@ class ExerciseListUnpublishedTeacher extends Component {
     }
     isValid(str){
         //Si hay alguno de estos caracteres, retornar falso
-        return !/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
+        return /[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
     }
     filterList(event) {
       let obj = this.state.unpublishedItems;
@@ -319,13 +158,38 @@ class ExerciseListUnpublishedTeacher extends Component {
       Object.keys(obj).forEach(function (key) {
         filteredArray.push(obj[key]);
       });
-      
-      filteredArray = filteredArray.filter((item) => {
-        //Si el caracter es valido, se puede buscar  
-        return this.isValid(event.target.value) && item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
-      });
-      
-      this.getPagination(filteredArray);
+      if(event.constructor === String){
+        filteredArray = filteredArray.filter((item) => {
+            if(this.isValid(event)){
+              var cons = '\\'.concat(event);
+              return  item.title.search(cons) !== -1;
+            }
+            else{
+              return item.title.toLowerCase().search(event.toLowerCase()) !== -1;
+  
+            }
+          //Si el caracter es valido, se puede buscar  
+        });
+          this.setState({filtered:event})
+      }
+      else{
+        filteredArray = filteredArray.filter((item) => {
+            if(this.isValid(event.target.value)){
+              var cons = '\\'.concat(event.target.value);
+              return  item.title.search(cons) !== -1;
+            }
+            else{
+              return item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+  
+            }
+          //Si el caracter es valido, se puede buscar  
+        });
+         this.setState({filtered:event.target.value})
+
+      }
+      setTimeout(() => {        
+        this.getPagination(filteredArray);
+     }, 1);
       
       
     }
@@ -417,13 +281,19 @@ class ExerciseListUnpublishedTeacher extends Component {
                         <label >Campo de busqueda</label>
                         <input  placeholder='Buscar ...' 
                                 onChange={this.filterList.bind(this)}
-                                style={{width: 300}}  />
+                                style={{width: 300}}  
+                                onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                />
                     </Form.Field>
                 <Divider/>
                 <ExerciseIterator deleteExercise = {this.deleteExercise} 
                                   published= {false} 
                                   /*exercises = { this.state.unpublishedItems }*/
-                                  exercises = { this.state.currentPageItems } />
+                                  exercises = { this.state.currentPageItems } 
+                                  editExercise = {this.editExercise}
+                                  viewExercise = {this.viewExercise}
+                                  />
 
                 <div className="commentBox" id="react-paginate">
                       <ReactPaginate previousLabel={"Anterior"}
@@ -436,7 +306,10 @@ class ExerciseListUnpublishedTeacher extends Component {
                                   onPageChange={this.handlePageClick}
                                   containerClassName={"pagination"}
                                   subContainerClassName={"pages pagination"}
-                                  activeClassName={"active"} />
+                                  activeClassName={"active"}
+                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                  />
                     </div>
 
           </Form>

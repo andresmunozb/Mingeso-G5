@@ -42,8 +42,16 @@ public class SolutionService {
     public Solution create(@PathVariable("id_user") Integer idUser,@PathVariable("id_exercise") Integer idExercise,@RequestBody Solution resource) {
         User user = userRepository.findById(idUser).get();
         Exercise exercise = exerciseRepository.findById(idExercise).get();
+        String output = null;
+        if(resource.getScript().contains("\"") || resource.getScript().contains("\\n"))
+        {
+            String middleInput = resource.getScript().replace("\"","\\\"");
+            output = middleInput.replace("\\n","\\\\n");
+            System.out.println(output);
+        }
         resource.setExercise(exercise);
         resource.setUser(user);
+        resource.setScript(output);
         return solutionRepository.save(resource);
     }
 

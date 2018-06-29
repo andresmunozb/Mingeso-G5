@@ -90,6 +90,7 @@ public class Analyzer {
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
         boolean answer = false;
+        String variable = null;
         ArrayList<String> invalid = new ArrayList<>();
         if(language.equals("python"))
         {
@@ -97,7 +98,7 @@ public class Analyzer {
             {
                 if(line.contains("="))
                 {
-                    String variable = substringBefore(deleteWhitespace(line),"=");
+                    variable = substringBefore(deleteWhitespace(line),"=");
                     if(variable.length() < 4)
                     {
                         invalid.add(variable);
@@ -109,9 +110,33 @@ public class Analyzer {
         {
             for(String line:codeList)
             {
-                if (line.contains("int ") || line.contains("float ") || line.contains("double ") || line.contains("char ") && line.endsWith(";"))
+                if (line.contains("int ") && line.endsWith(";"))
                 {
-                    String variable = substringBefore(deleteWhitespace(line.replace("int","").replace(";","")),"=");
+                    variable = substringBefore(deleteWhitespace(line.replace("int","").replace(";","")),"=");
+                    if(variable.length() < 4)
+                    {
+                        invalid.add(variable);
+                    }
+                }
+                else if (line.contains("float ") && line.endsWith(";"))
+                {
+                    variable = substringBefore(deleteWhitespace(line.replace("float","").replace(";","")),"=");
+                    if(variable.length() < 4)
+                    {
+                        invalid.add(variable);
+                    }
+                }
+                else if (line.contains("double ") && line.endsWith(";"))
+                {
+                    variable = substringBefore(deleteWhitespace(line.replace("double","").replace(";","")),"=");
+                    if(variable.length() < 4)
+                    {
+                        invalid.add(variable);
+                    }
+                }
+                else if (line.contains("char ") && line.endsWith(";"))
+                {
+                    variable = substringBefore(deleteWhitespace(line.replace("char","").replace(";","")),"=");
                     if(variable.length() < 4)
                     {
                         invalid.add(variable);
