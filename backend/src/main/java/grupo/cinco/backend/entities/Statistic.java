@@ -29,4 +29,44 @@ public class Statistic {
     @OneToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getSolutions() {
+        return solutions;
+    }
+
+    public void setSolutions(int solutions) {
+        this.solutions = solutions;
+    }
+
+    public long getSpendTime() {
+        return spendTime;
+    }
+
+    public void setSpendTime(long spendTime) {
+        this.spendTime = spendTime;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

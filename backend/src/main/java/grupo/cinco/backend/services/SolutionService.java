@@ -2,11 +2,14 @@ package grupo.cinco.backend.services;
 
 import grupo.cinco.backend.entities.Exercise;
 import grupo.cinco.backend.entities.Solution;
+import grupo.cinco.backend.entities.Statistic;
 import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.SolutionRepository;
+import grupo.cinco.backend.repositories.StatisticRepository;
 import grupo.cinco.backend.repositories.UserRepository;
 import grupo.cinco.backend.utils.Context;
+import grupo.cinco.backend.utils.DTO;
 import grupo.cinco.backend.utils.Factory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -30,6 +36,9 @@ public class SolutionService {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
+    @Autowired
+    private StatisticRepository statisticRepository;
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Solution> getAllProducts() {
@@ -39,21 +48,29 @@ public class SolutionService {
     @RequestMapping(value = "/create/{id_user}/{id_exercise}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Solution create(@PathVariable("id_user") Integer idUser,@PathVariable("id_exercise") Integer idExercise,@RequestBody Solution resource) {
+    public Solution create(@PathVariable("id_user") Integer idUser,@PathVariable("id_exercise") Integer idExercise,@RequestBody DTO resource) {
         User user = userRepository.findById(idUser).get();
         Exercise exercise = exerciseRepository.findById(idExercise).get();
-        String output = null;
-        if(resource.getScript().contains("\"") || resource.getScript().contains("\\n"))
-        {
-            String middleInput = resource.getScript().replace("\"","\\\"");
-            output = middleInput.replace("\\n","\\\\n");
-            System.out.println(output);
+        resource.getSolution().setExercise(exercise);
+        resource.getSolution().setUser(user);
+        Statistic statistic = statisticRepository.findStatisticByUser(user);
+        if(statistic == null){
+            System.out.println("no existe estadistica");
+            statistic = new Statistic();
+            statistic.setSpendTime(resource.getSpendTime());
+            statistic.setDate(new Date());
+            statistic.setSolutions(1);
+            statisticRepository.save(statistic);
         }
-        resource.setExercise(exercise);
-        resource.setUser(user);
-        resource.setScript(output);
-        return solutionRepository.save(resource);
+        else{
+            System.out.println("Existe stadistica (hacer update)");
+            statistic.setSpendTime(resource.getSpendTime()+statistic.getSpendTime());
+            statistic.setSolutions(statistic.getSolutions()+1);
+            statisticRepository.save(statistic);
+        }
+        return solutionRepository.save(resource.getSolution());
     }
+
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.PUT)
     @ResponseBody
@@ -64,7 +81,6 @@ public class SolutionService {
         solution.setLanguage(resource.getLanguage());
         solutionRepository.save(solution);
     }
-
 
     @DeleteMapping(value = "{id}/delete")
     @ResponseBody
