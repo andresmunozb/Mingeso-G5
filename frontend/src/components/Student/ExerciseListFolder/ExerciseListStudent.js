@@ -13,6 +13,7 @@ const background = {
       padding: 30,
       position:'relative'
     }
+    
 
 
 
@@ -27,91 +28,8 @@ class ExerciseListStudent extends Component {
         offers :{},
         filterOffers: {},
         currentPageItems: [],
-        jsons: [{
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": true,"id":451
-                },
-                {
-                    "title": "jugo",
-                    "description": "ojala nuncax4 ",
-                    "published": true, "id":452
-
-                },
-                {
-                    "title": "vidrio",
-                    "description": "ojala nuncax2",
-                    "published": true, "id":464
-
-                },
-                {
-                    "title": "jugo",
-                    "description": "ojala nuncax4 ",
-                    "published": true, "id":478
-                },
-                  {
-                    "title": "vidrio",
-                    "description": "ojala nuncax2",
-                    "published": true, "id":479
-                },
-                {
-                  "title": "vidrio",
-                  "description": "ojala nuncax2",
-                  "published": true, "id":480
-
-                },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": true, "id":490
-                },
-                {
-                    "title": "jugo",
-                    "description": "ojala nuncax4 ",
-                    "published": true, "id":495
-
-                },
-                {
-                    "title": "vidrio",
-                    "description": "ojala nuncax2",
-                    "published": true, "id":496
-
-                },
-                {
-                    "title": "jugo",
-                    "description": "ojala nuncax4 ",
-                    "published": true, "id":498
-                },
-                  {
-                    "title": "vidrio",
-                    "description": "ojala nuncax2",
-                    "published": true, "id":500
-                },
-                {
-                  "title": "vidrio",
-                  "description": "ojala nuncax2",
-                  "published": true, "id":501
-
-                  },
-                  {
-                    "title": "Chela",
-                    "description": "ojala nunca",
-                    "published": true, "id":502
-                },
-                {
-                    "title": "jugo",
-                    "description": "ojala nuncax4 ",
-                    "published": true, "id":503
-
-                },
-                {
-                    "title": "vidrio",
-                    "description": "ojala nuncax2",
-                    "published": true, "id":504
-
-                }
-            ]
-          }
+        
+      }
 
       this.getExercises = this.getExercises.bind(this);
       this.getPagination = this.getPagination.bind(this);
@@ -122,10 +40,7 @@ class ExerciseListStudent extends Component {
     }
     getExercises(){
       var _this = this;
-     //GET formal es con id del usuario
-     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser.toString()+'/published')
-     //Get por ahora es con id 1 
-      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/1/published')
+      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/published')
       .then(response => {
             console.log("soy los ejercicios")
             console.log(response.data)
@@ -147,7 +62,7 @@ class ExerciseListStudent extends Component {
   
     isValid(str){
       //Si hay alguno de estos caracteres, retornar falso
-      return !/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
+      return /[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(str);
     }
     filterList(event) {
       let obj = this.state.publishedItems;
@@ -158,9 +73,15 @@ class ExerciseListStudent extends Component {
       });
       
       filteredArray = filteredArray.filter((item) => {  
-        //Si el caracter es valido, se puede buscar  
-        return this.isValid(event.target.value) && item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
-   
+        if(this.isValid(event.target.value)){
+          var cons = '\\'.concat(event.target.value);
+          return  item.title.search(cons) !== -1;
+        }
+        else{
+          return item.title.toLowerCase().search(event.target.value.toLowerCase()) !== -1;
+
+        }
+      
       });
       
       this.getPagination(filteredArray);
@@ -251,7 +172,10 @@ class ExerciseListStudent extends Component {
                       <label>Campo de busqueda</label>
                       <input  placeholder='Buscar ...' 
                               onChange={this.filterList.bind(this)} 
-                              style={{width: 300}}  />
+                              style={{width: 300}}  
+                              onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                              />
                   </Form.Field>
               </div>
               <Divider/>
@@ -271,7 +195,10 @@ class ExerciseListStudent extends Component {
                                   onPageChange={this.handlePageClick}
                                   containerClassName={"pagination"}
                                   subContainerClassName={"pages pagination"}
-                                  activeClassName={"active"} />
+                                  activeClassName={"active"} 
+                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                  />
                </div>
 
              </Form>
