@@ -56,12 +56,14 @@ public class SolutionService {
         Exercise exercise = exerciseRepository.findById(idExercise).get();
         resource.getSolution().setExercise(exercise);
         resource.getSolution().setUser(user);
-        Statistic statistic = statisticRepository.findStatisticByUser(user);
+        Date date = new Date();
+        Statistic statistic = statisticRepository.findStatisticByUserAndDate(user,date);
+
         if(statistic == null){
             System.out.println("no existe estadistica");
             statistic = new Statistic();
             statistic.setSpendTime(resource.getSpendTime());
-            statistic.setDate(new Date());
+            statistic.setDate(date);
             statistic.setSolutions(1);
             statistic.setUser(user);
             statisticRepository.save(statistic);

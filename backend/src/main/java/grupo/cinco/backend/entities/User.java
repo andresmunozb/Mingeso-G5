@@ -41,8 +41,11 @@ public class User {
     @JsonIgnore
     private List<Solution> solutions;
 
-    @OneToOne(cascade =  CascadeType.ALL,mappedBy = "user")
-    private Statistic statistic;
+
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Statistic> statistics;
 
     public int getId() {
         return id;

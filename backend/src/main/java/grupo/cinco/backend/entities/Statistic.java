@@ -2,6 +2,7 @@ package grupo.cinco.backend.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -23,11 +24,12 @@ public class Statistic {
 
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "dd/MM/yyyy' a las 'HH:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date date;
 
-    @OneToOne
-    @JoinColumn(name = "id_user", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    @JsonIgnore
     private User user;
 
     public int getId() {
