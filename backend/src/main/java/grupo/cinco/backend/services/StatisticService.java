@@ -64,7 +64,7 @@ public class StatisticService {
         for(Statistic s: iterable){
             if(!fechas.contains(s.getDate())){
                 fechas.add(s.getDate());
-                System.out.println(s.getDate().toString());
+                //System.out.println(s.getDate().toString());
             }
         }
         for(Date d:fechas){
@@ -77,7 +77,7 @@ public class StatisticService {
         int index = 0;
         for(Statistic s: iterable){
             index = fechas.indexOf(s.getDate());
-            System.out.println("Date: " + s.getDate() + "index: " + index);
+            //System.out.println("Date: " + s.getDate() + "index: " + index);
             Statistic temp = group.get(index);
             temp.setSpendTime(s.getSpendTime() + temp.getSpendTime());
             temp.setSolutions(s.getSolutions() + temp.getSolutions());

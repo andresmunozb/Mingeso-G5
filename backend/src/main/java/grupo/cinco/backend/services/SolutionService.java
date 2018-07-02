@@ -60,7 +60,7 @@ public class SolutionService {
         Statistic statistic = statisticRepository.findStatisticByUserAndDate(user,date);
 
         if(statistic == null){
-            System.out.println("no existe estadistica");
+            //System.out.println("no existe estadistica");
             statistic = new Statistic();
             statistic.setSpendTime(resource.getSpendTime());
             statistic.setDate(date);
@@ -69,7 +69,7 @@ public class SolutionService {
             statisticRepository.save(statistic);
         }
         else{
-            System.out.println("Existe stadistica (hacer update)");
+            //System.out.println("Existe stadistica (hacer update)");
             statistic.setSpendTime(resource.getSpendTime()+statistic.getSpendTime());
             statistic.setSolutions(statistic.getSolutions()+1);
             statisticRepository.save(statistic);
