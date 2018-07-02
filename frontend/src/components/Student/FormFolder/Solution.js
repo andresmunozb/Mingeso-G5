@@ -37,7 +37,8 @@ const background = {
   },
   textAreaStyle2:{
     minHeight: 500,
-    minWidth:520
+    minWidth:520,
+    color:"black"
   },
   titleStyle:{
     textAlign:"center"
@@ -48,8 +49,9 @@ class Solution extends Component {
       super(props); 
       this.keys = 0;
       console.log("estos son mis props de id: ", this.props.idUser )
-      this.state = {
+      this.state = {    
         exercise: props.location.state,
+        initialTime: null,   
         idExercise:null,
         title: null,
         description: null,
@@ -70,9 +72,10 @@ class Solution extends Component {
         modalCongrats:false,
         modalError: false,
         format: null,
-        errorMessage: "",
+        message: "",
         loader: false,
         type:0,
+        disableSendSolution:true,
         languageOptions: [
             
               { key: 'python', value: 'python', text: 'Python' },
@@ -108,6 +111,8 @@ class Solution extends Component {
       this.testingResults = this.testingResults.bind(this)
       //SEND CODE FOR TESTING 
 
+      //SEND SOLUTION
+      this.sendSolution = this.sendSolution.bind(this)
 
       //FIELD UPDATES
       this.updateCode = this.updateCode.bind(this)
@@ -132,6 +137,47 @@ class Solution extends Component {
 
 
     }
+
+  sendSolution(){
+      var timeElapsed = new Date();
+      var milisecondsElapsed = timeElapsed.getTime();
+      var timeSpent = milisecondsElapsed - this.state.initialTime
+      console.log("esto me demore en milisegundos")
+      console.log(timeSpent)
+      timeSpent = Math.round(timeSpent/1000);
+    
+      let subSolution = {                
+            script: this.state.code,
+            language:this.state.languageCode
+      };
+      let completeSolution = {
+            spendTime: timeSpent,
+            solution: subSolution
+      }
+      let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                "Access-Control-Allow-Origin": "@crossorigin",
+            }
+      };
+      
+      Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,completeSolution,axiosConfig)
+          .then((response) => {
+              console.log("RESPONSE RECEIVED: ", response);
+                setTimeout(() => {            
+                  this.setState({modalCongrats:true})
+                }, 500);
+          })
+          .catch((err) => {
+              console.log("AXIOS ERROR: ", err);
+              this.setState({type:1,message: "No se pudo crear la solucion respectiva, porfavor envie a revision de nuevo su codigo"})
+              setTimeout(() => {    
+                    this.handleShowModalError();
+              }, 5);
+          })
+  }
+
+  
   scheduleNextUpdate() {
       this.timer = setTimeout(this.updateRenderedThings, 800)
   }
@@ -159,38 +205,16 @@ class Solution extends Component {
         console.log(this.state.languageCode)
 
         console.log(this.state.code)
-        if(successCases/this.state.testCases.length === 1 ){
-              setTimeout(() => {            
-                this.setState({modalCongrats:true})
-              }, 500);
-                
-              /*let solution = {
-                language:this.state.languageCode,
-                script: this.state.code
-              };
-              let axiosConfig = {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    "Access-Control-Allow-Origin": "@crossorigin",
-                }
-              };*/
-              /*Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,solution,axiosConfig)
-              .then((response) => {
-                  console.log("RESPONSE RECEIVED: ", response);
-                  
-              })
-              .catch((err) => {
-                  console.log("AXIOS ERROR: ", err);
-              })*/
-        }
-        else{
-            
-            this.setState({successCases})
-            setTimeout(() => {
-            
+        var performance = successCases/this.state.testCases.length
+        
+        this.setState({successCases})
+        setTimeout(() => {
               this.setState({showPerformance:true})
-              }, 1000);
-        }
+              if( performance === 1){
+                  this.setState({disableSendSolution:false, type:2, message: "!Ha pasado todos los casos de prueba!, puede enviar su solución ahora"})
+                  this.handleShowModalError();
+                }
+        }, 500);
     }
   }
 
@@ -249,14 +273,16 @@ class Solution extends Component {
 
             this.handleLoader();
             if(response.data.stderr !== ""){
+              this.refs.result.props.style.color = "red"
               this.setState({reply: response.data.stderr})
             }
             else{
+              this.refs.result.props.style.color = "blue"
               this.setState({reply: response.data.stdout})
             }
         })
         .catch((err) => {
-          this.setState({type:1,errorMessage: "No se pudo ejecutar el codigo, intente nuevamente"})
+          this.setState({type:1,message: "No se pudo ejecutar el codigo, intente nuevamente"})
           setTimeout(() => {    
                 this.handleLoader();
                 this.handleShowModalError();
@@ -264,7 +290,7 @@ class Solution extends Component {
         })
     }
     else{
-      this.setState({type:1,errorMessage: "Debe elegir un lenguaje de programacion para poder ejecutar su codigo"})
+      this.setState({type:1,message: "Debe elegir un lenguaje de programacion para poder ejecutar su codigo"})
       setTimeout(() => {    
             this.handleLoader();
             this.handleShowModalError();
@@ -318,11 +344,13 @@ class Solution extends Component {
         console.log(response.data.stdout)
         if(response.data.stdout === this.state.testCases[index].output.concat("\n") ||
            response.data.stdout === this.state.testCases[index].output){
+             //ACA ESTA EL INPUT 
+             //{this.state.testCases[index].input}
               divs.push( <div   
                                 style= {{textAlign: 'center'}}>
     
                               <div style={{padding:10}}></div>
-                              <p style={{color:"white"}}>Input:   <Icon name='check' color='blue' size='small' /></p>
+                              <p style={{color:"white"}}>Input:  <Icon name='check' color='blue' size='small' />  </p>
                               <p style={{color:"white"}}>Output:  <Icon name='check' color='blue' size='small' /></p>
                             
                           </div>);
@@ -344,7 +372,7 @@ class Solution extends Component {
         }
     })
     .catch((err) => {
-      this.setState({type:1,errorMessage: "No se pudieron probar los casos de prueba, intente nuevamente"})
+      this.setState({type:1,message: "No se pudieron probar los casos de prueba, intente nuevamente"})
       setTimeout(() => {    
             this.handleLoader();
             this.handleShowModalError();
@@ -383,14 +411,14 @@ class Solution extends Component {
       //No se esta usando el nombre de funcion que esta puesto en el enunciado
       console.log(codeReady)
       if(codeReady === "bad format"){
-          this.setState({type: 0,errorMessage: "No esta utilizando el formato propuesto, puede consularlo en el icono:  "})
+          this.setState({type: 0,message: "No esta utilizando el formato propuesto, puede consularlo en el icono:  "})
           setTimeout(() => {    
                 this.handleLoader();
                 this.handleShowModalError();
           }, 1);
       }
       else if(codeReady === "no function name seen"){
-        this.setState({type: 1, errorMessage: "No esta utilizando el nombre de funcion propuesto, porfavor utilicelo"})
+        this.setState({type: 1, message: "No esta utilizando el nombre de funcion propuesto, porfavor utilicelo"})
         setTimeout(() => {    
               this.handleLoader();
               this.handleShowModalError();
@@ -417,13 +445,45 @@ class Solution extends Component {
                   if(response.data.stderr !== ""){
                     this.handleLoader();
                     this.setState({reply: response.data.stderr, type:1,
-                                    errorMessage: "Se ha encontrado errores en su codigo, porfavor resuelvalos antes de enviar su codigo a revision"})
+                                    message: "Se ha encontrado errores en su codigo, porfavor resuelvalos antes de enviar su codigo a revision"})
                     setTimeout(() => {    
                       this.handleShowModalError();
                     }, 1);
                   }
                   else{          
-                        
+
+                      /*ACA SE PONE LO DE LAS BUENAS PRACTICAS*/
+                      /*
+                      Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
+                            .then((response) => {
+                                console.log("RESPONSE RECEIVED: ", response);
+                                if(response.data.stderr !== ""){
+                                  this.handleLoader();
+                                  this.setState({reply: response.data.stderr, type:1,
+                                                  message: "Se ha encontrado errores en su codigo, porfavor resuelvalos antes de enviar su codigo a revision"})
+                                  setTimeout(() => {    
+                                    this.handleShowModalError();
+                                  }, 1);
+                                }
+                                else{          
+
+
+
+
+
+                                      
+                                    this.setState({disableButton:true})
+                                    setTimeout(() => {                                                            
+                                      this.testTestCases();
+                                    }, 1);
+                              }
+                          })
+                          .catch((err) => {
+                              console.log("AXIOS ERROR: ", err);
+                          })
+                                    
+                      */ 
+
                         this.setState({disableButton:true})
                         setTimeout(() => {                                                            
                           this.testTestCases();
@@ -437,7 +497,7 @@ class Solution extends Component {
 
           }
           else{
-            this.setState({type:1,errorMessage: "Debe elegir un lenguaje de programacion para poder enviar su codigo"})
+            this.setState({type:1,message: "Debe elegir un lenguaje de programacion para poder enviar su codigo"})
             setTimeout(() => {    
                   this.handleLoader();
                   this.handleShowModalError();
@@ -452,7 +512,7 @@ class Solution extends Component {
       }
     }
     else{
-      this.setState({type:1,errorMessage: "Editor vacio"})
+      this.setState({type:1,message: "Editor vacio"})
       setTimeout(() => {    
             this.handleLoader();
             this.handleShowModalError();
@@ -471,6 +531,11 @@ class Solution extends Component {
     }
     else{
         var testcases;
+
+        var timer = new Date();
+        var initialTime = timer.getTime();
+        console.log("se supone que este es el initial time")
+        console.log(initialTime)
         Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.exercise.viewAExercise.id+'/testcases')
         .then(response => {
               console.log("soy los testcases")
@@ -483,12 +548,13 @@ class Solution extends Component {
                 functionName: this.state.exercise.viewAExercise.functionName,
                 code: "",
                 testCases: testcases,
-                isSafeToRender: true
+                isSafeToRender: true,
+                initialTime
       
               })
         })
         .catch(function(error) {
-            this.setState({type:1,errorMessage: "No se pudo extraer los casos de prueba para este enunciado, intente mas tarde"})
+            this.setState({type:1,message: "No se pudo extraer los casos de prueba para este enunciado, intente mas tarde"})
             setTimeout(() => {    
                   this.handleShowModalError();
             }, 1);
@@ -539,7 +605,7 @@ class Solution extends Component {
   }
 
   updateCode(event){
-    this.setState({ code: event })
+    this.setState({ code: event ,disableSendSolution:true})
   }
   popoverHoverFocus(){
     if(this.state.format !== null ){
@@ -673,31 +739,32 @@ class Solution extends Component {
                               </Col>
 
                           </Row>
-                          <Row className="show-grid" style={{position:"relative", left: "6%"}}>
+                          <Row className="show-grid" style={{position:"relative", left: "5%"}}>
+                          
                             <Col  xs={12} sm={12} md={6} lg={5}>
-                            <label>Editor:</label>
-                            <AceEditor
-                                  //style = {background.textAreaStyle2}
-                                  mode={this.state.languageEditor}
-                                  theme={'monokai'}
-                                  ref = "editor"
-                                  name="blah2"
-                                  fontSize={17}
-                                  showPrintMargin={true}
-                                  showGutter={true}
-                                  highlightActiveLine={true}
-                                  value={this.state.code}
-                                  onChange={this.updateCode}
-                                  setOptions={{
-                                    enableBasicAutocompletion: false,
-                                    enableLiveAutocompletion: false,
-                                    enableSnippets: false,
-                                    showLineNumbers: true,
-                                    tabSize: 2,
-                                  }}/>
+                                  <label>Editor:</label>
+                                  <AceEditor
+                                        //style = {background.textAreaStyle2}
+                                        mode={this.state.languageEditor}
+                                        theme={'monokai'}
+                                        ref = "editor"
+                                        name="blah2"
+                                        fontSize={17}
+                                        showPrintMargin={true}
+                                        showGutter={true}
+                                        highlightActiveLine={true}
+                                        value={this.state.code}
+                                        onChange={this.updateCode}
+                                        setOptions={{
+                                          enableBasicAutocompletion: false,
+                                          enableLiveAutocompletion: false,
+                                          enableSnippets: false,
+                                          showLineNumbers: true,
+                                          tabSize: 2,
+                                        }}/>
                   
                             </Col>
-                            <Col  xs={5} sm={5} md={4} lg={1}>
+                            <Col  xs={5} sm={5} md={4} lg={1} >
                                 <Row className="show-grid">
                                 <div style={{padding:30}}></div>
                                       <Button   primary={true} 
@@ -713,11 +780,12 @@ class Solution extends Component {
 
                                                 disabled= {this.state.disableButton}>
                                                 
-                                                Ejecutar
+                                                Ejecutar codigo
                                         </Button>
                                 </Row>
+                                
 
-                                <Row className="show-grid">
+                                <Row className="show-grid" >
 
                                 <div style={{padding:30}}></div>
                               
@@ -734,9 +802,29 @@ class Solution extends Component {
 
                                               disabled= {this.state.disableButton}
                                               >
-                                                Enviar
+                                                Probar casos
                                         </Button>
                                 </Row>
+                                <Row className="show-grid">
+
+                                <div style={{padding:30}}></div>
+                              
+                                      <Button primary={true} type='Send'
+                                              onClick={() => {
+                                                this.setState({reply:""})
+                                                setTimeout(() => {
+                                                   this.sendSolution();
+                                                }, 1);
+                                              
+                                              }}
+                                              onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                              disabled= {this.state.disableSendSolution}
+                                              >
+                                                Enviar solución
+                                        </Button>
+                                </Row>
+
 
                             </Col>
                             <Col  xs={12} sm={12} md={6} lg={5}>
@@ -768,25 +856,28 @@ class Solution extends Component {
                                                                   
                                                             </p>
                                                             
-
-                                                                  <div className= "buttonBack">
-                                                                  <div style={{padding:10}}> </div>
-                                                                  <Button style= {{position:'relative', left: '22%'}}
-                                                                            primary={true} 
-                                                                          type='Send'
-                                                                            onClick={() => {
-                                                                              this.setState({disableButton:false,renderedThings: [], 
-                                                                                          itemsRendered: 0, results: null, successCases: 0,
-                                                                                          showPerformance:false})
-                                                                              setTimeout(() => {                                                        
-                                                                                this.handleSideBar()
-                                                                              }, 1);
-                                                                            }}
-                                                                            >
-                                                                            Intentar Nuevamente
-                                                                    </Button>
-
-                                                                  </div>
+                                                                  {this.state.successCases/ this.state.testCases.length !== 1 &&
+                                                                   <div className= "buttonBack">
+                                                                      <div style={{padding:10}}> </div>
+                                                                      <Button style= {{position:'relative', left: '22%'}}
+                                                                                primary={true} 
+                                                                              type='Send'
+                                                                                onClick={() => {
+                                                                                  this.setState({disableButton:false,renderedThings: [], 
+                                                                                              itemsRendered: 0, results: null, successCases: 0,
+                                                                                              showPerformance:false})
+                                                                                  setTimeout(() => {                                                        
+                                                                                    this.handleSideBar()
+                                                                                  }, 1);
+                                                                                }}
+                                                                                >
+                                                                                Intentar Nuevamente
+                                                                        </Button>
+ 
+                                                                   </div>
+                                                                  
+                                                                  }
+                                                                 
 
                                                               
                                                           </div>
@@ -830,18 +921,36 @@ class Solution extends Component {
                               bsSize="small">  
 
                                     <Modal.Header >
-                                      <Modal.Title style= {{textAlign: "center"}}>Error en envio!</Modal.Title>
+                                      <Modal.Title style= {{textAlign: "center"}}>
+                                      {(this.state.type === 0 || this.state.type === 1) &&
+                                      <p> Error en envio!</p>
+                                      }
+                                      {this.state.type === 2 &&
+                                      <p> Felicitaciones!</p>
+                                      }
+                                      
+                                      </Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body >
                                           <p style= {{textAlign:'center'}} >
-                                            {this.state.errorMessage} {this.state.type === 0 && <Icon name='help circle' color='blue' size='big' />}
+                                            {this.state.message} {this.state.type === 0 && <Icon name='help circle' color='blue' size='big' />}
                                           </p>
                                       </Modal.Body>
                                       <Modal.Footer>                                        
                                                 <Button  style={{position:'relative', right: '35%'}}
                                                         color='blue' 
                                                         type='Positive'
-                                                        onClick={this.handleHideModalError}
+                                                        onClick={() => {
+                                                          this.handleHideModalError();
+                                                          if(this.state.type === 2){
+                                                            setTimeout(() => {                                                        
+                                                              this.handleSideBar()
+                                                              this.setState({disableButton:false,renderedThings: [], 
+                                                                itemsRendered: 0, results: null, successCases: 0,
+                                                                showPerformance:false})
+                                                            }, 5);
+                                                          }
+                                                        }}
                                                         >
                                                         OK
                                                 </Button>

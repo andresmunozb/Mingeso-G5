@@ -100,13 +100,23 @@ class ViewExerciseFormTeacher extends Component{
         }
         else{
             outputsArray= [];
+            var boolean;
             if(this.state.exercise.getTestCases[0] !== undefined &&
                 this.state.exercise.getTestCases[0].output !== null){
 
                 outputs = this.state.exercise.getTestCases;
                 for(let i= 0;i<outputs.length;i++){
                     oneOutput = this.state.exercise.getTestCases[i].output
-                    outputsArray.push({nameOutput: oneOutput})
+                    //Ver si es numero
+                    boolean = isNaN(oneOutput);
+                    if(boolean){
+                        //Debe ser un string, hay que agregarle las comillas para identificar que es un string
+                        outputsArray.push({nameOutput: '"'+oneOutput+'"'})
+                    }
+                    else{
+                        //Es un numero por lo que no lleva comillas
+                        outputsArray.push({nameOutput: oneOutput})
+                    }
                     
                 }
             }
