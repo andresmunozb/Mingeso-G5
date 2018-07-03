@@ -162,13 +162,24 @@ class EditExerciseForm extends Component{
         }
         else{
             outputsArray= [];
+            var boolean;
             if(this.state.exercise.getTestCases[0] !== undefined &&
                 this.state.exercise.getTestCases[0].output !== null){
 
                 outputs = this.state.exercise.getTestCases;
                 for(let i= 0;i<outputs.length;i++){
                     oneOutput = this.state.exercise.getTestCases[i].output
-                    outputsArray.push({nameOutput: oneOutput})
+                    //Ver si es numero
+                    boolean = isNaN(oneOutput);
+                    if(boolean){
+                        //Debe ser un string, hay que agregarle las comillas para identificar que es un string
+                        outputsArray.push({nameOutput: '"'+oneOutput+'"'})
+                    }
+                    else{
+                        //Es un numero por lo que no lleva comillas
+                        outputsArray.push({nameOutput: oneOutput})
+                    }
+                    
                     
                 }
             }
@@ -214,8 +225,11 @@ class EditExerciseForm extends Component{
 
         lengthInput = this.state.inputs[0].nameInput.split(",").length;
         lengthOutput =  this.state.outputs[0].nameOutput.split(",").length;
+        console.log("este es el largo del output")
+        console.log(lengthOutput)
         var input;
         var output;
+        var numOutput;
         var opt1 = 0;
         var opt2 = 0;
         var boolean;
@@ -223,23 +237,31 @@ class EditExerciseForm extends Component{
 
             input = this.state.inputs[i].nameInput.split(",");
             console.log("este es el input")
-            console.log(input)
-            if(input[0] === "" || input[input.length - 1 ] === ""){
+            console.log(input[0])
+            console.log("este es su largo")
+            console.log(input.length)
+            //VER SI NO CUMPLE FORMATO: EJ: ,23, ,23  345, 
+            if(input[0] === "" || input[input.length - 1 ] === "" ){
                 opt1 = 4;
                 break;
             }
+            //QUE TODAS LAS ENTRADAS SEAN DEL MISMO TAMAÑO
             else if(lengthInput !== this.state.inputs[i].nameInput.split(",").length ){
                 return 2;
             }
+            //VER SI ES UN STRING, ENTONCES TIENE QUE ESTAR ENTRE COMILLAS ""
             for(let j= 0; j< input.length;j++){
                 //Si no es un numero
                 console.log("Soy un numero?:", input[j])
                 boolean = isNaN(input[j]);
                 if(boolean){
                     //Debe ser un string
-                    //Ver si tiene comillas al principio
-                    console.log()
-                    if(input[j][0] !== '"'){
+                    //Ver si tiene comillas al principio y al final
+                    console.log(input[j][0])
+                    if((input[j].length === 1 && input[j] === '"')){
+                        return 4  
+                    }
+                    else  if (input[j][0] !== '"' || input[j][input[j].length - 1] !== '"'){
                         return 8;
                     }
                     
@@ -249,29 +271,40 @@ class EditExerciseForm extends Component{
 
         }
         for(let i= 0;i<this.state.outputs.length;i++){
-            output = this.state.outputs[i].nameOutput.split(",");
 
-            if(output[0] === "" || output[output.length - 1 ] === ""){
+            
+            output = this.state.outputs[i].nameOutput;
+            numOutput = this.state.outputs[i].nameOutput.split(",");
+            console.log("ESTE ES EL OUTPUT")
+            console.log(output)
+            lengthOutput =  output.length;
+            
+            // NO PUEDEN HABER MAS DE 1 OUTPUT
+            
+            // MAL FORMATO: Ej:  ",3.54" , "3.54," y ",3.54," 
+            if(output[0] === "," || output[ lengthOutput-1 ] === ","){
                 opt2 = 5;
                 break;
             }
-            else if(lengthOutput !== this.state.outputs[i].nameOutput.split(",").length ){
+            else if(numOutput.length !== 1 ){
                 return 3;
             }
-            for(let j= 0; j< output.length;j++){
-                //Si no es un numero
-                console.log("Soy un numero?:", output[j])
-                boolean = isNaN(output[j]);
+            else{
+                console.log("Soy un numero?:", output)
+                boolean = isNaN(output);
                 if(boolean){
                     //Debe ser un string
-                    //Ver si tiene comillas al principio
-                    console.log()
-                    if(output[j][0] === '"'){
+                    //Ver si tiene comillas al principio y al final
+                    console.log(output[0] )
+                    console.log(output[ lengthOutput-1 ])
+                    if((output.length === 1 && output === '"')){
+                        return 5  
+                    }
+                    else if(output[0] !== '"' || output[ lengthOutput-1 ]!== '"'){
                         return 9;
                     }
                     
                 }
-
             }
         }
         if(opt1 !== 0 && opt2 !== 0){
@@ -370,11 +403,9 @@ class EditExerciseForm extends Component{
                     <p>Si es un numero decimal, utilice punto para designar los decimales</p>
                     <p>Ej de entrada: 5,3.9</p>
                     <p>{"\n"}</p>
-                    <p>Si alguna de sus entradas es de tipo string,debe escribirlo entre comillas dobles ("") </p>
-                    <p>Ej de entrada: "palindromo","insertar"</p>
-                    <p>{"\n"}</p>
-                    <p>Si alguna de sus salidas es de tipo string, se debe escribir sin utilizar comillas dobles ("") </p>
-                    <p>Ej de salida: No</p>
+                    <p>Si alguna de sus entradas o salidas es de tipo string,debe escribirlo entre comillas dobles ("") </p>
+                    <p>Ej de entradas: "palindromo","insertar"</p>
+                    <p>Ej de salida: "No"</p>
                 </div> 
               </Popover>
       
@@ -392,7 +423,8 @@ class EditExerciseForm extends Component{
         }
         
         var jsonEditarTestcases;
-          
+        var validOutput;
+        var boolean;
         Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonEditar)
             .then((res) => {
                 console.log("RESPONSE RECEIVED: ", res);                             
@@ -401,9 +433,21 @@ class EditExerciseForm extends Component{
                 console.log(this.state.testCasesIds)
                 if(this.state.testCasesIds === -1){
                     for(let i = 0; i<this.state.inputs.length;i++){
+                        //Ver si es numero
+                        boolean = isNaN(this.state.outputs[i].nameOutput);
+                        if(boolean){
+                            //Debe ser un string, hay que quitarle las comillas para que sea valido
+                            //al compararlo
+                            validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                        }
+                        else{
+                            validOutput = this.state.outputs[i].nameOutput;
+                        }
+                        console.log("este es el outputvalido")
+                        console.log(validOutput)
                         let newTestCase = {
                             input: this.state.inputs[i].nameInput,
-                            output:this.state.outputs[i].nameOutput,
+                            output:validOutput,
                         }
                         Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
                             .then((res) => {
@@ -456,10 +500,22 @@ class EditExerciseForm extends Component{
                 else if(this.state.inputs.length === this.state.testCasesIds.length){
 
                     for(let i= 0; i<this.state.inputs.length;i++){
+                        //Ver si es numero
+                        boolean = isNaN(this.state.outputs[i].nameOutput);
+                        if(boolean){
+                            //Debe ser un string, hay que quitarle las comillas para que sea valido
+                            //al compararlo
+                            validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                        }
+                        else{
+                            validOutput = this.state.outputs[i].nameOutput;
+                        }
+                        console.log("este es el outputvalido")
+                        console.log(validOutput)                        
 
                         jsonEditarTestcases ={
                             input: this.state.inputs[i].nameInput,
-                            output: this.state.outputs[i].nameOutput    
+                            output: validOutput  
                         }
                             
                         Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
@@ -516,12 +572,22 @@ class EditExerciseForm extends Component{
                 //Se agregaron mas casos de pruebas que los que habian 
                 else if(this.state.inputs.length > this.state.testCasesIds.length){
                     for(let i= 0; i<this.state.inputs.length;i++){
-
-                        
+                             //Ver si es numero
+                            boolean = isNaN(this.state.outputs[i].nameOutput);
+                            if(boolean){
+                                //Debe ser un string, hay que quitarle las comillas para que sea valido
+                                //al compararlo
+                                validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                            }
+                            else{
+                                validOutput = this.state.outputs[i].nameOutput;
+                            }
+                            console.log("este es el outputvalido")
+                            console.log(validOutput)
                             if(i<this.state.testCasesIds.length){
                                 jsonEditarTestcases ={
                                     input: this.state.inputs[i].nameInput,
-                                    output: this.state.outputs[i].nameOutput    
+                                    output: validOutput   
                                 }
                                 console.log("va a ingresarsss");
                                 console.log(jsonEditarTestcases)
@@ -546,7 +612,7 @@ class EditExerciseForm extends Component{
                             else{
                                     jsonEditarTestcases ={
                                         input: this.state.inputs[i].nameInput,
-                                        output: this.state.outputs[i].nameOutput    
+                                        output: validOutput    
                                     }
                                     Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
                                     .then((res) => {
@@ -604,14 +670,28 @@ class EditExerciseForm extends Component{
                                 console.log("estos son los testcasesids antiguos")
                                 console.log(this.state.testCasesIds)
 
-                            
+                                
                                 for(let i= 0; i<this.state.testCasesIds.length;i++){
+                                    
                                         //Se ha eliminado uno o mas casos de prueba en comparacion al original
+                                        //Ver si es numero
+                                        
                                     
                                         if(i<this.state.inputs.length){
+                                            boolean = isNaN(this.state.outputs[i].nameOutput);
+                                            if(boolean){
+                                                //Debe ser un string, hay que quitarle las comillas para que sea valido
+                                                //al compararlo
+                                                validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                                            }
+                                            else{
+                                                validOutput = this.state.outputs[i].nameOutput;
+                                            }
+                                            console.log("este es el outputvalido")
+                                            console.log(validOutput)
                                             jsonEditarTestcases ={
                                                 input: this.state.inputs[i].nameInput,
-                                                output: this.state.outputs[i].nameOutput    
+                                                output: validOutput 
                                             }
                                             console.log("va a ingresar");
                                             console.log(jsonEditarTestcases)
@@ -751,9 +831,8 @@ class EditExerciseForm extends Component{
 
                         }
                         else if(checking === 3){
-                            this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes'});
-
-                            
+                            this.setState({errorMessage:'Existe o existen casos de pruebas con mas de una salida, no esta permitido por formato, porfavor eliminar o modificar las salidas correspondientes'});
+                          
                         }
                         else if(checking === 4){
                             this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
@@ -832,8 +911,8 @@ class EditExerciseForm extends Component{
 
                     }
                     else if(checking === 3){
-                        this.setState({errorMessage:'Existe o existen casos de pruebas con diferente numero de salidas, por favor completar o eliminar el/los casos de prueba correspondientes'});
-
+                        this.setState({errorMessage:'Existe o existen casos de pruebas con mas de una salida, no esta permitido por formato, porfavor eliminar o modificar las salidas correspondientes'});
+                      
                     }
                     else if(checking === 4){
                         this.setState({errorMessage:'Existe o existen casos de pruebas con entradas que no cumplen el formato, por favor completar o eliminar el/los casos de prueba correspondientes'});
@@ -858,7 +937,8 @@ class EditExerciseForm extends Component{
 
                     }
                     else if(checking === 7){
-
+                        var boolean;
+                        var validOutput
                         Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregarEdit)
                         .then((res) => {
 
@@ -870,9 +950,21 @@ class EditExerciseForm extends Component{
                                 //Si no habian casos de prueba al inicio, entonces hay que crearlos
                                 if(this.state.testCasesIds === -1){
                                     for(let i = 0; i<this.state.inputs.length;i++){
+                                        //Ver si es numeropublish
+                                        boolean = isNaN(this.state.outputs[i].nameOutput);
+                                        if(boolean){
+                                            //Debe ser un string, hay que quitarle las comillas para que sea valido
+                                            //al compararlo
+                                            validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                                        }
+                                        else{
+                                            validOutput = this.state.outputs[i].nameOutput;
+                                        }
+                                        console.log("este es el outputvalido")
+                                        console.log(validOutput)
                                         let newTestCase = {
                                             input: this.state.inputs[i].nameInput,
-                                            output:this.state.outputs[i].nameOutput,
+                                            output:validOutput,
                                         }
                                         Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
                                             .then((res) => {
@@ -898,12 +990,20 @@ class EditExerciseForm extends Component{
                                 //Se agregaron mas casos de pruebas que los que habian || Se modifica el que estaba
                                 else if(this.state.inputs.length >= this.state.testCasesIds.length){
                                     for(let i= 0; i<this.state.inputs.length;i++){
-        
-                                        
+                                             //Ver si es numero
+                                            boolean = isNaN(this.state.outputs[i].nameOutput);
+                                            if(boolean){
+                                                //Debe ser un string, hay que quitarle las comillas para que sea valido
+                                                //al compararlo
+                                                validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                                            }
+                                            else{
+                                                validOutput = this.state.outputs[i].nameOutput;
+                                            }
                                             if(i<this.state.testCasesIds.length){
                                                     jsonEditarTestcases ={
                                                         input: this.state.inputs[i].nameInput,
-                                                        output: this.state.outputs[i].nameOutput    
+                                                        output: validOutput   
                                                     }
                                                     console.log("va a ingresar");
                                                     console.log(jsonEditarTestcases)
@@ -929,7 +1029,7 @@ class EditExerciseForm extends Component{
                                             else{
                                                     jsonEditarTestcases ={
                                                         input: this.state.inputs[i].nameInput,
-                                                        output: this.state.outputs[i].nameOutput    
+                                                        output: validOutput   
                                                     }
                                                     Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
                                                         .then((res) => {
@@ -959,11 +1059,22 @@ class EditExerciseForm extends Component{
                                     
                                     for(let i= 0; i<this.state.testCasesIds.length;i++){
                                             //Se ha eliminado uno o mas casos de prueba en comparacion al original
-                                            
+                                             
                                             if(i<this.state.inputs.length){
-                                                jsonEditarTestcases ={
+                                                boolean = isNaN(this.state.outputs[i].nameOutput);
+                                                if(boolean){
+                                                    //Debe ser un string, hay que quitarle las comillas para que sea valido
+                                                    //al compararlo
+                                                    validOutput = this.state.outputs[i].nameOutput.slice(1, -1);
+                                                }
+                                                else{
+                                                    validOutput = this.state.outputs[i].nameOutput;
+                                                }
+                                                console.log("este es el outputvalido")
+                                                console.log(validOutput)
+                                                    jsonEditarTestcases ={
                                                     input: this.state.inputs[i].nameInput,
-                                                    output: this.state.outputs[i].nameOutput    
+                                                    output:validOutput  
                                                 }
                                                     
                                                 Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
