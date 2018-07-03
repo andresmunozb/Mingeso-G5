@@ -5,8 +5,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "test_cases")
 public class TestCase {
+
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int id;
 
     @Column(name = "input")

@@ -30,6 +30,20 @@ public class ClassService {
         return clase.getUsers();
     }
 
+    @RequestMapping(value = "/{id}/have",method = RequestMethod.GET)
+    @ResponseBody
+    public boolean classHaveStudents(@PathVariable("id") Integer id)
+    {
+        //Falso si no tiene usuarios (alumnos)
+        //Verdadero si tiene usuarios (alumnos)
+        Class clase = classRepository.findById(id).get();
+        if (clase.getUsers().equals(null))
+        {
+            return false;
+        }
+        return true;
+    }
+
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

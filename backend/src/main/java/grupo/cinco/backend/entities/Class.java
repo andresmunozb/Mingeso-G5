@@ -10,7 +10,8 @@ import java.util.List;
 public class Class  {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int idClass;
 
     @Column(name = "name")

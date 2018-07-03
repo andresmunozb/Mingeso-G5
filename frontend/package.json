@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
     "firebase": "^5.0.4",
+    "fusioncharts": "^3.12.2",
     "material-ui": "^0.20.1",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
@@ -16,11 +17,13 @@
     "react-bootstrap-table-next": "^0.1.13",
     "react-bootstrap-table2-paginator": "^0.1.4",
     "react-dom": "^16.3.2",
+    "react-fusioncharts": "^1.0.5",
     "react-paginate": "^5.2.3",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
     "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.80.0"
+    "semantic-ui-react": "^0.80.0",
+    "styled-components": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

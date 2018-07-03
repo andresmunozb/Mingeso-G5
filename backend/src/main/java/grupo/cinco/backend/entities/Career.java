@@ -10,13 +10,14 @@ import java.util.List;
 public class Career {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int idCareer;
 
     @Column(name = "name")
     private String nameCareer;
 
-    @OneToMany(mappedBy = "career",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "career")
     @JsonIgnore
     private List<User> users;
 

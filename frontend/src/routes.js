@@ -26,7 +26,7 @@ export default
       },
       {
         title: 'Usuarios',
-        path: '/edit_exercise',
+        path: '/user_panel',
         exact: true,
         component:"EditExerciseForm",
         rol:"admin",
