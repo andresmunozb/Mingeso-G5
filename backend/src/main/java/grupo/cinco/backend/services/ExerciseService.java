@@ -1,6 +1,7 @@
 package grupo.cinco.backend.services;
 
 import grupo.cinco.backend.entities.Exercise;
+import grupo.cinco.backend.entities.TestCase;
 import grupo.cinco.backend.entities.User;
 import grupo.cinco.backend.repositories.ExerciseRepository;
 import grupo.cinco.backend.repositories.UserRepository;
@@ -30,13 +31,21 @@ public class ExerciseService {
         return exerciseRepository.findAll();
     }
 
+    @RequestMapping(value = "/{title}", method = RequestMethod.GET)
+    @ResponseBody
+    public Exercise getExercise(@PathVariable("title") String title)
+    {
+        return exerciseRepository.findExercisesByTitleEquals(title);
+    }
+
     @RequestMapping(value = "/create/{id_user}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Exercise create(@PathVariable("id_user") Integer idUser,@RequestBody Exercise resource) {
+    public int create(@PathVariable("id_user") Integer idUser,@RequestBody Exercise resource) {
         User user = userRepository.findById(idUser).get();
         resource.setUser(user);
-        return exerciseRepository.save(resource);
+        Exercise exercise = exerciseRepository.save(resource);
+        return exercise.getId();
     }
 
     @RequestMapping(value = "/{id}/edit", method = RequestMethod.PUT)
@@ -48,6 +57,13 @@ public class ExerciseService {
         exercise.setDescription(resource.getDescription());
         exercise.setPublished(resource.isPublished());
         exerciseRepository.save(exercise);
+    }
+
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Exercise> getAllPublished()
+    {
+        return exerciseRepository.findExercisesByPublished(true);
     }
 
     @RequestMapping(value = "/{id_user}/published", method = RequestMethod.GET)
@@ -74,6 +90,13 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
+    @RequestMapping(value = "/{id}/testcases", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<TestCase> getTestCases(@PathVariable("id") Integer id)
+    {
+        Exercise exercise = exerciseRepository.findById(id).get();
+        return exercise.getTestCases();
+    }
     @DeleteMapping(value = "{id}/delete")
     @ResponseBody
     public void delete(@PathVariable Integer id)

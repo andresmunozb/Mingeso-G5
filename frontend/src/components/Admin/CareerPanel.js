@@ -224,7 +224,7 @@ class CareerPanel extends Component {
               </FormGroup>
               <FormGroup>
               <Col smOffset={0} sm={12}>
-                  <FormControl type="text" placeholder="Buscar" value={this.state.search} onChange={this.updateSearch} />
+                  <FormControl type="text" placeholder="Buscar" value={this.state.search} onChange={this.updateSearch} onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}} />
                 </Col>
               </FormGroup>
             </Form>
@@ -257,6 +257,7 @@ class CareerPanel extends Component {
                             placeholder="Nombre de la carrera" 
                             value={this.state.nameNewCareer}
                             onChange={this.updateNameNewCareer} 
+                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                             />
                     </Col>
                     </FormGroup>
@@ -285,6 +286,7 @@ class CareerPanel extends Component {
                             placeholder="Nombre de la carrera" 
                             value={this.state.nameEdit}
                             onChange={this.updateNameEdit}
+                            onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                             />
                     </Col>
                     </FormGroup>

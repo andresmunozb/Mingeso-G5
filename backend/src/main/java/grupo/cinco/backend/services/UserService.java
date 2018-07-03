@@ -42,16 +42,67 @@ public class UserService {
         return user.getExercises();
     }
 
-    @RequestMapping(value = "/create/{id_class}/{id_career}", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public User create(@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
+    public User create(@RequestBody User resource)
+    {
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/create/{id_role}/{id_class}/{id_career}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User createWithRCC(@PathVariable("id_role") Integer idRole,@PathVariable("id_class") Integer idClass, @PathVariable("id_career") Integer idCareer,@RequestBody User resource)
     {
         Class clase = classRepository.findById(idClass).get();
         Career career = careerRepository.findById(idCareer).get();
+        Role role = roleRepository.findById(idRole).get();
         resource.setClase(clase);
         resource.setCareer(career);
+        resource.setRole(role);
         return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/create/{id_role}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public User createWithR(@PathVariable("id_role") Integer idRole,@RequestBody User resource)
+    {
+        Role role = roleRepository.findById(idRole).get();
+        resource.setRole(role);
+        return userRepository.save(resource);
+    }
+
+    @RequestMapping(value = "/{id_user}/update/{id_role}/{id_class}/{id_career}", method = RequestMethod.PUT)
+    @ResponseBody
+    public User update(@PathVariable("id_user") Integer idUser,
+                       @PathVariable("id_role") Integer idRole,
+                       @PathVariable("id_class") Integer idClass,
+                       @PathVariable("id_career") Integer idCareer,
+                       @RequestBody User resource)
+    {
+        User user = userRepository.findById(idUser).get();
+        Career career;
+        Class clase;
+        Role role = roleRepository.findById(idRole).get();
+        if(idClass==-1){
+            clase = null;
+        }
+        else{
+            clase = classRepository.findById(idClass).get();
+        }
+        if(idCareer == -1){
+            career = null;
+        }
+        else{
+            career = careerRepository.findById(idCareer).get();
+        }
+        user.setRole(role);
+        user.setClase(clase);
+        user.setCareer(career);
+        user.setEmail(resource.getEmail());
+        return userRepository.save(user);
     }
 
     @RequestMapping(value = "/class/{id_class}", method = RequestMethod.PUT)
@@ -88,6 +139,23 @@ public class UserService {
     {
         User user = userRepository.findUserByEmailEquals(mail);
         return user.getRole();
+    }
+
+    @RequestMapping(value = "{mail}/id", method = RequestMethod.GET)
+    @ResponseBody
+    public int getIdUser(@PathVariable("mail") String mail)
+    {
+        User user = userRepository.findUserByEmailEquals(mail);
+        return user.getId();
+    }
+
+
+    @DeleteMapping(value = "{id}/delete")
+    @ResponseBody
+    public void delete(@PathVariable("id") Integer id)
+    {
+        User user = userRepository.findById(id).get();
+        userRepository.delete(user);
     }
 
 }

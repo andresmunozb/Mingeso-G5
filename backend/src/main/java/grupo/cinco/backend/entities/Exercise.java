@@ -10,7 +10,8 @@ import java.util.List;
 public class Exercise {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int id;
 
     @ManyToOne
@@ -29,7 +30,7 @@ public class Exercise {
     @Column(name = "function_name")
     private String functionName;
 
-    @OneToMany(mappedBy = "exercise")
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<TestCase> testCases;
 

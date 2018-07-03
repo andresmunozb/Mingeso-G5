@@ -39,11 +39,11 @@ CREATE TABLE `users` (
   
 	`email` varchar(50) DEFAULT NULL, 
   
-	FOREIGN KEY (`id_rol`) REFERENCES `roles`(`id`),
+	CONSTRAINT FOREIGN KEY (`id_rol`) REFERENCES `roles`(`id`) ON DELETE NO ACTION,
   
-	FOREIGN KEY (`id_class`) REFERENCES `classes`(`id`),
+	CONSTRAINT FOREIGN KEY (`id_class`) REFERENCES `classes`(`id`) ON DELETE NO ACTION,
   
-	FOREIGN KEY (`id_career`) REFERENCES `careers`(`id`)
+	CONSTRAINT FOREIGN KEY (`id_career`) REFERENCES `careers`(`id`) ON DELETE NO ACTION
 
 );
 
@@ -62,7 +62,7 @@ CREATE TABLE `exercises` (
 
 	`function_name` varchar(50) DEFAULT NULL,
   
-	FOREIGN KEY (`id_user`) REFERENCES `users`(`id`)
+	CONSTRAINT FOREIGN KEY (`id_user`) REFERENCES `users`(`id`) ON DELETE NO ACTION
 );
 
 DROP TABLE IF EXISTS `solutions`;
