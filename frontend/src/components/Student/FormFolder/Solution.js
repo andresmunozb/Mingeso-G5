@@ -49,6 +49,8 @@ class Solution extends Component {
       super(props); 
       this.keys = 0;
       console.log("estos son mis props de id: ", this.props.idUser )
+
+      console.log("Esto es lo que tengo en estado ", this.props.location.state )
       this.state = {    
         exercise: props.location.state,
         initialTime: null,   

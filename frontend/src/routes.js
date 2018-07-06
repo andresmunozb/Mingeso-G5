@@ -9,6 +9,14 @@ export default
         enable:true,
       },
       {
+        title: 'Estadisticas',
+        path: '/statistics',
+        exact: true,
+        component:"StatisticsForm",
+        rol:"admin",
+        enable:true,
+      },
+      {
         title: 'Cursos',
         path: '/class_panel',
         exact: true,
@@ -65,10 +73,10 @@ export default
         enable:true,
       },
       {
-        title: 'Enunciados',
-        path: '/exercises_teacher',
+        title: 'Estadisticas',
+        path: '/statistics',
         exact: true,
-        component:"ExerciseListTeacher",
+        component:"StatisticsForm",
         rol:"teacher",
         enable:true,
       },

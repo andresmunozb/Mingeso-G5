@@ -26,6 +26,7 @@ class App extends Component {
   getRol(email){
     var rol;
     var id;
+
     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
         .then( res => {          
             rol = res.data.nameRol;
@@ -49,7 +50,6 @@ class App extends Component {
         .catch((err) => {
           this.setState({rol:'noRegister'})
         })
-        
   }
 
   routesFilter(rol){

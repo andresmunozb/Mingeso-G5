@@ -18,12 +18,20 @@ import ExerciseListStudent from '../Student/ExerciseListFolder/ExerciseListStude
 
 //Teacher
 import HomeTeacher from '../Teacher/HomeTeacher'
+
 import CreateExerciseForm from '../Teacher/FormFolder/CreateExerciseForm'
 import AddTestCasesForm from '../Teacher/FormFolder/AddTestCasesForm'
 import EditExerciseForm from '../Teacher/FormFolder/EditExerciseForm'
 import ViewExerciseFormTeacher from '../Teacher/FormFolder/ViewExerciseFormTeacher'
 import ExerciseListPublishedTeacher from '../Teacher/ExerciseListFolder/ExerciseListPublishedTeacher'
 import ExerciseItemUnpublishedTeacher from '../Teacher/ExerciseListFolder/ExerciseListUnpublishedTeacher'
+
+
+//Admin y Teacher
+import StatisticsForm from '../Teacher/FormFolder/StatisticsForm'
+
+
+
 
 
 //Home (no logeado)
@@ -55,6 +63,7 @@ class Body extends Component{
             {this.props.rol === 'teacher' && 
               <Switch>
                     <Route path='/home_teacher' exact={true} render={props => (<HomeTeacher {...props} />)}></Route>
+                    <Route path='/statistics' exact={true} render={props => (<StatisticsForm {...props} />)}></Route>
                     <Route path='/create_exercise' exact={true} render={props => (<CreateExerciseForm idUser= {this.props.id} {...props} />)}></Route>
                     <Route path='/create_exercise_testcases' exact={true} render={props => (<AddTestCasesForm  {...props} />)}></Route>
                     <Route path='/view_exercise_teacher' exact={true} render={props => (<ViewExerciseFormTeacher {...props} />)}></Route>
@@ -71,6 +80,8 @@ class Body extends Component{
             {this.props.rol === 'admin' && 
               <Switch>
                     <Route path='/home_admin' exact={true} render={props => (<HomeAdmin {...props} />)}></Route>
+                    <Route path='/statistics' exact={true} render={props => (<StatisticsForm {...props} />)}></Route>
+
                     <Route path='/class_panel' exact={true} render={props => (<ClassPanel {...props} />)}></Route>
                     <Route path='/career_panel' exact={true} render={props => (<CareerPanel {...props} />)}></Route>
                     <Route path='/user_panel' exact={true} render={props => (<UserPanel {...props} />)}></Route>
