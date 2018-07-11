@@ -1,0 +1,2 @@
+Docker version 18.03.0-ce, build 0520e24
+docker-compose version 1.21.0, build 5920eb0

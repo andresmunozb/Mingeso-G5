@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+   mantisbt:
+      image: vimagick/mantisbt:latest
+      ports:
+         - "8989:80"
+      links:
+         - mysql-mantis
+      restart: always
+
+   mysql-mantis:
+      image: mysql:latest
+      environment:
+      - MYSQL_ROOT_PASSWORD=mg52018
+      - MYSQL_DATABASE=bugtracker
+      - MYSQL_USER=mantisbt
+      - MYSQL_PASSWORD=mantisbt
+   restart: always
+
+        mysql:
+                image: mysql:5.7
+                environment:
+        - MYSQL_ROOT_PASSWORD=mg52018
+      ports:
+         - "3306:3306"
+
