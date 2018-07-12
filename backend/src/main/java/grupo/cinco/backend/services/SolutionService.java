@@ -119,7 +119,7 @@ public class SolutionService {
     @ResponseBody
     public Map<String,String> analyzeCode(@RequestBody Solution resource)
     {
-        Analyzer analyzer = new Analyzer();
+        Analyzer analyzer = Analyzer.getInstance();
         return analyzer.totalAnalyze(resource.getScript(),resource.getLanguage());
     }
 }

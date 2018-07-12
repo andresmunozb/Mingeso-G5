@@ -18,4 +18,8 @@ public class StrategyJava implements Strategy {
         String input = "{\"files\": [{\"name\" : \"Main.java\", \"content\": \"" + code +"\"}]}";
         return ApiCode.executeCode(url,input);
     }
+    @Override
+    public boolean isNil() {
+        return false;
+    }
 }

@@ -4,7 +4,7 @@ public class Factory {
 
     public Strategy getStrategy(String language){
         if(language == null){
-            return null;
+            return new StrategyNull();
         }
         if(language.equals("c")){
             return new StrategyC();
@@ -16,6 +16,6 @@ public class Factory {
             return new StrategyJava();
         }
 
-        return null;
+        return new StrategyNull();
     }
 }
