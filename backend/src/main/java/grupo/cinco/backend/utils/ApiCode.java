@@ -18,7 +18,7 @@ public class ApiCode {
     private ApiCode() {
         throw new IllegalStateException("Utility class");
     }
-
+    private static ApiData apiData = new ApiData("application/json","Token d5a563f4-d2b4-4a1e-b974-25d880169f1e");
     public static String executeCode(URL url, String input)
     {
         //JSONParser parser = new JSONParser();
@@ -28,8 +28,8 @@ public class ApiCode {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("authorization", "Token d5a563f4-d2b4-4a1e-b974-25d880169f1e");
+            connection.setRequestProperty("Content-Type", apiData.getContentTypeData());
+            connection.setRequestProperty("authorization", apiData.getApiTokenData());
 
 
             OutputStream outputStream = connection.getOutputStream();
