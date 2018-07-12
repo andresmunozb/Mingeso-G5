@@ -11,10 +11,12 @@ public class Analyzer {
     public boolean verifyIndentation(String code)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
+        Iterator codeListIterator = codeList.iterator();
         int nlines = codeList.size();
         int counterTabs = 0;
-        for(String line:codeList)
+        while(codeListIterator.hasNext())
         {
+            String line = (String) codeListIterator.next();
             if (line.contains("    "))
             {
                 counterTabs+=1;
@@ -35,13 +37,15 @@ public class Analyzer {
     public boolean detectOrganization(String code, String language)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
+        Iterator codeListIterator = codeList.iterator();
         boolean answer = false;
         int flagEntry = 0;
         int flagProcess = 0;
         if(language.equals("python"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.equals("#ENTRADA"))
                 {
                     flagEntry = 1;
@@ -61,8 +65,9 @@ public class Analyzer {
 
         else if(language.equals("c") || language.equals("java"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.equals("//ENTRADA"))
                 {
                     flagEntry = 1;
@@ -86,13 +91,15 @@ public class Analyzer {
     public List<String> representativeVariables(String code, String language)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
+        Iterator codeListIterator = codeList.iterator();
         boolean answer = false;
         String variable = null;
         ArrayList<String> invalid = new ArrayList<>();
         if(language.equals("python"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.contains("="))
                 {
                     variable = substringBefore(deleteWhitespace(line),"=");
@@ -105,8 +112,9 @@ public class Analyzer {
         }
         else
         {
-            for(String line:codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if (line.contains("int ") && line.endsWith(";"))
                 {
                     variable = substringBefore(deleteWhitespace(line.replace("int","").replace(";","")),"=");
@@ -161,11 +169,13 @@ public class Analyzer {
         else if (language.equals("c"))
         {
             List<String> codeList = Arrays.asList(code.split("\n"));
+            Iterator codeListIterator = codeList.iterator();
             totalEntries = countMatches(code,"//entrada");
             totalDescription = countMatches(code,"//descripcion");
             totalOutputs = countMatches(code,"//salida");
-            for(String line:codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.contains("int ") || line.contains("float ") || line.contains("double") || line.contains("char "))
                 {
                     //La función al definirla puede terminar en parentesis o en llave
