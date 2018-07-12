@@ -3,7 +3,6 @@ package grupo.cinco.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import grupo.cinco.backend.utils.DTO2;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -82,7 +81,7 @@ public class Statistic implements Comparable<Statistic> {
         return this.getDate().compareTo(o.getDate());
     }
 
-    public static Date sumarDia(Date fecha, int dias){
+    public static Date addDay(Date fecha, int dias){
         if (dias==0) return fecha;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha);
@@ -92,45 +91,12 @@ public class Statistic implements Comparable<Statistic> {
     public static List<Date> getListBetween(Date desde,Date hasta) {
         List<Date> result = new ArrayList<Date>();
         Date buffer = desde;
-        System.out.println("hola");
         while(buffer.compareTo(hasta)!= 0){
             result.add(buffer);
-            System.out.println("nueva fecha");
-            buffer = sumarDia(buffer,1);
+            buffer = addDay(buffer,1);
         }
         return result;
     }
-
-    public static Iterable<Statistic> groupByDate(Iterable<Statistic> iterable){
-        List<Date> fechas = new ArrayList<Date>();
-        List<Statistic> group = new ArrayList<Statistic>();
-        for(Statistic s: iterable){
-            if(!fechas.contains(s.getDate())){
-                fechas.add(s.getDate());
-                //System.out.println(s.getDate().toString());
-            }
-        }
-        for(Date d:fechas){
-            Statistic statistic = new Statistic();
-            statistic.setSolutions(0);
-            statistic.setSpendTime(0);
-            statistic.setDate(d);
-            group.add(statistic);
-        }
-        int index = 0;
-        for(Statistic s: iterable){
-            index = fechas.indexOf(s.getDate());
-            //System.out.println("Date: " + s.getDate() + "index: " + index);
-            Statistic temp = group.get(index);
-            temp.setSpendTime(s.getSpendTime() + temp.getSpendTime());
-            temp.setSolutions(s.getSolutions() + temp.getSolutions());
-            group.set(index,temp);
-
-        }
-        Collections.sort(group);
-        return group;
-    }
-
 
     public static Date toDate(String fecha){
 
@@ -149,13 +115,12 @@ public class Statistic implements Comparable<Statistic> {
 
     }
 
-    public static Iterable<Statistic> groupByDateB(Iterable<Statistic> iterable,Date desde,Date hasta){
+    public static Iterable<Statistic> groupByDate(Iterable<Statistic> iterable, Date desde, Date hasta){
         List<Date> fechas = getListBetween(desde,hasta);
         List<Statistic> group = new ArrayList<Statistic>();
         for(Statistic s: iterable){
             if(!fechas.contains(s.getDate())){
                 fechas.add(s.getDate());
-                //System.out.println(s.getDate().toString());
             }
         }
         for(Date d:fechas){
@@ -168,7 +133,6 @@ public class Statistic implements Comparable<Statistic> {
         int index = 0;
         for(Statistic s: iterable){
             index = fechas.indexOf(s.getDate());
-            //System.out.println("Date: " + s.getDate() + "index: " + index);
             Statistic temp = group.get(index);
             temp.setSpendTime(s.getSpendTime() + temp.getSpendTime());
             temp.setSolutions(s.getSolutions() + temp.getSolutions());

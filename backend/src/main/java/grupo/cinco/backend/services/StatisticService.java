@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @CrossOrigin
@@ -37,40 +36,45 @@ public class StatisticService {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Iterable<Statistic> classs(@PathVariable("id") Integer id,@RequestBody DTO2 resource) {
-        System.out.println("id" + id);
         Date desde = Statistic.toDate(resource.getDesde());
         Date hasta = Statistic.toDate(resource.getHasta());
         Class clase = classRepository.findById(id).get();
         Iterable<Statistic> statistics = statisticRepository.findStatisticsByDateBetweenAndUser_Clase(desde,hasta,clase);
-        statistics = Statistic.groupByDateB(statistics,desde,hasta);
+        statistics = Statistic.groupByDate(statistics,desde,hasta);
         return statistics;
     }
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Iterable<Statistic> user(@PathVariable("id") Integer id,@RequestBody DTO2 resource) {
-        System.out.println("id" + id);
         Date desde = Statistic.toDate(resource.getDesde());
         Date hasta = Statistic.toDate(resource.getHasta());
         User user = userRepository.findById(id).get();
         Iterable<Statistic> statistics = statisticRepository.findStatisticsByDateBetweenAndUser(desde,hasta,user);
-        statistics = Statistic.groupByDateB(statistics,desde,hasta);
+        statistics = Statistic.groupByDate(statistics,desde,hasta);
         return statistics;
     }
     @RequestMapping(value = "/career/{id}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Iterable<Statistic> career(@PathVariable("id") Integer id,@RequestBody DTO2 resource) {
-        System.out.println("id" + id);
         Date desde = Statistic.toDate(resource.getDesde());
         Date hasta = Statistic.toDate(resource.getHasta());
         Career career = careerRepository.findById(id).get();
         Iterable<Statistic> statistics = statisticRepository.findStatisticsByDateBetweenAndUser_Career( desde,hasta,career);
-        statistics = Statistic.groupByDateB(statistics,desde,hasta);
+        statistics = Statistic.groupByDate(statistics,desde,hasta);
         return statistics;
     }
 
-
-
+    @RequestMapping(value = "/coordination", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public Iterable<Statistic> coordination(@PathVariable("id") Integer id,@RequestBody DTO2 resource) {
+        Date desde = Statistic.toDate(resource.getDesde());
+        Date hasta = Statistic.toDate(resource.getHasta());
+        Iterable<Statistic> statistics = statisticRepository.findStatisticsByDateBetween( desde,hasta);
+        statistics = Statistic.groupByDate(statistics,desde,hasta);
+        return statistics;
+    }
 
 }
