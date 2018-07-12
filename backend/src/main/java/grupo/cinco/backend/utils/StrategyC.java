@@ -19,4 +19,8 @@ public class StrategyC implements Strategy{
         System.out.println(input);
         return ApiCode.executeCode(url,input);
     }
+    @Override
+    public boolean isNil() {
+        return false;
+    }
 }

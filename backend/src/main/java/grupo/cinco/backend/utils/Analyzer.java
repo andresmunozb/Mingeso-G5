@@ -7,6 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class Analyzer {
+    private static Analyzer object = new Analyzer();
+    private Analyzer(){}
+    public static Analyzer getInstance(){
+        return object;
+    }
 
     public boolean verifyIndentation(String code)
     {
