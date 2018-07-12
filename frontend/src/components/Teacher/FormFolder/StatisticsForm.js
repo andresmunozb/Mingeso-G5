@@ -27,7 +27,8 @@ class StadisticsForm extends Component{
         this.state = {
             userOptions : [ { key: 'Career', text: 'Carrera', value: 'Career' },
                             { key: 'Class', text: 'Curso', value: 'Class' },
-                            { key: 'Student', text: 'Estudiante', value: 'Student' }],
+                            { key: 'Student', text: 'Estudiante', value: 'Student' },
+                            { key: 'Coordination', text: 'Coordinacion', value: 'Coordination' }],
             userOption: null,
             specificOptions : null,    
             specificChoices: [],
@@ -44,6 +45,7 @@ class StadisticsForm extends Component{
             singleChartBool: false,
             multiChartBool:false,
             loader:false,
+            comboBoxDisable:false,
             replacementOptions: null,
             
             buttonDisabler:  true,
@@ -241,13 +243,25 @@ class StadisticsForm extends Component{
         this.handleDisableFilterButton = this.handleDisableFilterButton.bind(this);
         this.handleNotDisableFilterButton = this.handleNotDisableFilterButton.bind(this);
 
+        //COMBOBOX DISABLER
+        this.handleDisablerCombobox = this.handleDisablerCombobox.bind(this)
+        this.handleNotDisablerCombobox = this.handleNotDisablerCombobox.bind(this)
+
         //MODAL
 
         this.handleShowErrorMessage = this.handleShowErrorMessage.bind(this);
         this.handleHideErrorMessage = this.handleHideErrorMessage.bind(this);
         //MODAL
+
+        this.multipleStadistics = this.multipleStadistics.bind(this);
     }
 
+    handleDisablerCombobox() {
+        this.setState({ comboBoxDisable: true });
+    }
+    handleNotDisablerCombobox() {
+        this.setState({ comboBoxDisable: false });
+    }
 
     handleLoader(){
         this.setState({loader: !this.state.loader});
@@ -473,6 +487,192 @@ class StadisticsForm extends Component{
     componentWillMount () {
     }
 
+    multipleStadistics(type,index,statistics,filterDates,axiosConfig){
+        var res;
+        var _this = this;
+        if(type === "career"){
+
+            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[index].key,filterDates,axiosConfig)
+            .then(response => {
+                console.log("RESPONSE RECEIVED: ", response);
+                res = response.data
+                statistics.push({seriesname:this.state.specificChoices[index].optionName , data:res})
+                if( index === this.state.specificChoices.length - 1){
+
+                    console.log("aqui estan las stadisticas")
+                    console.log(statistics)
+                    var linesData = this.formatForPlots("line", statistics)
+
+                    var barsData = this.formatForPlots("bar", statistics)
+                                    
+                    //Se tiene un arreglo con 2 elementos
+                    // category: fechas y dataset: datos con sus nombre asociado a ellos
+                    console.log("aca van los datos")
+                    console.log(linesData)
+                    console.log(barsData)
+                    console.log("aqui deberia estar el category")
+
+                    console.log(linesData[0].category)
+                        console.log(barsData[0].category)
+
+                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
+                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
+                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
+
+
+                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
+                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
+                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
+                                    
+
+                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
+                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
+                    setTimeout(() => {
+                            _this.handleLoader()
+                            _this.setState({renderGraphics:true, multiChartBool:true})
+                        }, 100);
+                                
+
+                    }
+
+                    })
+                    .catch((err) => {
+                        console.log("AXIOS ERROR: ", err);
+                        this.handleLoader();
+                        this.setState({errorMessage:"No se ha podido recuperar las estadisticas de las carreras, porfavor intente nuevamente"});
+                        setTimeout(() => {
+                            this.handleShowErrorMessage();
+                            return;
+                        }, 5);
+                    })
+
+        }
+        else if(type === "class"){
+
+
+            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[index].key,filterDates,axiosConfig)
+            .then(response => {
+                console.log("RESPONSE RECEIVED: ", response);
+                res = response.data
+                statistics.push({seriesname:this.state.specificChoices[index].optionName , data:res})
+                if( index === this.state.specificChoices.length - 1){
+
+                    console.log("aqui estan las stadisticas")
+                    console.log(statistics)
+                    var linesData = this.formatForPlots("line", statistics)
+
+                    var barsData = this.formatForPlots("bar", statistics)
+                    
+                    //Se tiene un arreglo con 2 elementos
+                    // category: fechas y dataset: datos con sus nombre asociado a ellos
+                    console.log("aca van los datos")
+                    console.log(linesData)
+                    console.log(barsData)
+                    console.log("aqui deberia estar el category")
+
+                    console.log(linesData[0].category)
+                    console.log(barsData[0].category)
+
+                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
+                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
+                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
+
+
+                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
+                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
+                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
+                    
+
+                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
+                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
+                    setTimeout(() => {
+                        _this.handleLoader()
+                        _this.setState({renderGraphics:true, multiChartBool:true})
+                    }, 100);
+                
+
+                }
+
+                
+
+            })
+            .catch((err) => {
+                console.log("AXIOS ERROR: ", err);
+                this.handleLoader();
+                this.setState({errorMessage:"No se ha podido recuperar las estadisticas de los cursos, porfavor intente nuevamente"});
+                setTimeout(() => {
+                    this.handleShowErrorMessage();
+                    return;
+                }, 5);
+            })
+        }
+        else{
+
+            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[index].key,filterDates,axiosConfig)
+            .then(response => {
+
+                console.log("RESPONSE RECEIVED: ", response);
+                res = response.data
+                statistics.push({seriesname:this.state.specificChoices[index].optionName , data:res})
+                if( index === this.state.specificChoices.length - 1){
+
+                    console.log("aqui estan las stadisticas")
+                    console.log(statistics)
+                    var linesData = this.formatForPlots("line", statistics)
+
+                    var barsData = this.formatForPlots("bar", statistics)
+                    
+                    //Se tiene un arreglo con 2 elementos
+                    // category: fechas y dataset: datos con sus nombre asociado a ellos
+                    console.log("aca van los datos")
+                    console.log(linesData)
+                    console.log(barsData)
+                    console.log("aqui deberia estar el category")
+
+                    console.log(linesData[0].category)
+                    console.log(barsData[0].category)
+
+                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
+                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
+                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
+
+
+                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
+                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
+                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
+                    
+
+                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
+                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
+                    setTimeout(() => {
+                        _this.handleLoader()
+                        _this.setState({renderGraphics:true, multiChartBool:true})
+                    }, 100);
+                
+
+                }
+
+
+            })
+            .catch((err) => {
+                console.log("AXIOS ERROR: ", err);
+                this.handleLoader();
+                this.setState({errorMessage:"No se ha podido recuperar las estadisticas de los estudiantes, porfavor intente nuevamente"});
+                setTimeout(() => {
+                    this.handleShowErrorMessage();
+                    return;
+                }, 5);
+            })
+
+        }
+
+
+
+
+
+
+    }
+
     filterResults(){
             //VERIFICAR que se ha dado fecha de inicio Y de salida
         let axiosConfig = {
@@ -480,14 +680,13 @@ class StadisticsForm extends Component{
                 'Content-Type': 'application/json;charset=UTF-8',
                     "Access-Control-Allow-Origin": "@crossorigin",
                 }
-                };
+        };
     
         let filterDates = {
                     desde:this.state.startDate,
                     hasta: this.state.endDate,
-            }
+        }
         var statistics = [];
-        var res;
         var _this = this
         console.log("aqui estan las stadisticas")
         console.log(this.state.statistics)
@@ -536,62 +735,8 @@ class StadisticsForm extends Component{
                 else{
 
                         for(let i = 0; i< this.state.specificChoices.length;i++){
+                            this.multipleStadistics("career",i,statistics,filterDates,axiosConfig);
 
-
-                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
-                            .then(response => {
-                                console.log("RESPONSE RECEIVED: ", response);
-                                res = response.data
-                                statistics.push({seriesname:this.state.specificChoices[i].optionName , data:res})
-                                if( i === this.state.specificChoices.length - 1){
-
-                                    console.log("aqui estan las stadisticas")
-                                    console.log(statistics)
-                                    var linesData = this.formatForPlots("line", statistics)
-
-                                    var barsData = this.formatForPlots("bar", statistics)
-                                    
-                                    //Se tiene un arreglo con 2 elementos
-                                    // category: fechas y dataset: datos con sus nombre asociado a ellos
-                                    console.log("aca van los datos")
-                                    console.log(linesData)
-                                    console.log(barsData)
-                                    console.log("aqui deberia estar el category")
-
-                                    console.log(linesData[0].category)
-                                    console.log(barsData[0].category)
-
-                                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
-                                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
-                                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
-
-
-                                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
-                                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
-                                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
-                                    
-
-                                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
-                                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
-                                    setTimeout(() => {
-                                        _this.handleLoader()
-                                        _this.setState({renderGraphics:true, multiChartBool:true})
-                                    }, 100);
-                                
-
-                                }
-
-                            })
-                            .catch((err) => {
-                                console.log("AXIOS ERROR: ", err);
-                                this.handleLoader();
-                                this.setState({errorMessage:"No se ha podido recuperar las estadisticas de las carreras, porfavor intente nuevamente"});
-                                setTimeout(() => {
-                                    this.handleShowErrorMessage();
-                                    return;
-                                }, 5);
-                            })
-                
                         }
 
                     }
@@ -640,62 +785,7 @@ class StadisticsForm extends Component{
                     else{
                         for(let i = 0; i< this.state.specificChoices.length;i++){
 
-
-                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
-                            .then(response => {
-                                console.log("RESPONSE RECEIVED: ", response);
-                                res = response.data
-                                statistics.push({seriesname:this.state.specificChoices[i].optionName , data:res})
-                                if( i === this.state.specificChoices.length - 1){
-
-                                    console.log("aqui estan las stadisticas")
-                                    console.log(statistics)
-                                    var linesData = this.formatForPlots("line", statistics)
-
-                                    var barsData = this.formatForPlots("bar", statistics)
-                                    
-                                    //Se tiene un arreglo con 2 elementos
-                                    // category: fechas y dataset: datos con sus nombre asociado a ellos
-                                    console.log("aca van los datos")
-                                    console.log(linesData)
-                                    console.log(barsData)
-                                    console.log("aqui deberia estar el category")
-
-                                    console.log(linesData[0].category)
-                                    console.log(barsData[0].category)
-
-                                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
-                                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
-                                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
-
-
-                                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
-                                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
-                                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
-                                    
-
-                                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
-                                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
-                                    setTimeout(() => {
-                                        _this.handleLoader()
-                                        _this.setState({renderGraphics:true, multiChartBool:true})
-                                    }, 100);
-                                
-
-                                }
-
-                                
-
-                            })
-                            .catch((err) => {
-                                console.log("AXIOS ERROR: ", err);
-                                this.handleLoader();
-                                this.setState({errorMessage:"No se ha podido recuperar las estadisticas de los cursos, porfavor intente nuevamente"});
-                                setTimeout(() => {
-                                    this.handleShowErrorMessage();
-                                    return;
-                                }, 5);
-                            })
+                            this.multipleStadistics("class",i,statistics,filterDates,axiosConfig);
                 
                         }
                     
@@ -709,7 +799,7 @@ class StadisticsForm extends Component{
                   
         
             }
-            else{
+            else if(this.state.userOption === "Student"){
                     //value == "Student"
 
                     if(this.state.specificChoices.length === 1){
@@ -751,64 +841,9 @@ class StadisticsForm extends Component{
                     }
                     else{
                         for(let i = 0; i< this.state.specificChoices.length;i++){
+                            this.multipleStadistics("student",i,statistics,filterDates,axiosConfig);
 
 
-                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
-                            .then(response => {
-
-                                console.log("RESPONSE RECEIVED: ", response);
-                                res = response.data
-                                statistics.push({seriesname:this.state.specificChoices[i].optionName , data:res})
-                                if( i === this.state.specificChoices.length - 1){
-
-                                    console.log("aqui estan las stadisticas")
-                                    console.log(statistics)
-                                    var linesData = this.formatForPlots("line", statistics)
-
-                                    var barsData = this.formatForPlots("bar", statistics)
-                                    
-                                    //Se tiene un arreglo con 2 elementos
-                                    // category: fechas y dataset: datos con sus nombre asociado a ellos
-                                    console.log("aca van los datos")
-                                    console.log(linesData)
-                                    console.log(barsData)
-                                    console.log("aqui deberia estar el category")
-
-                                    console.log(linesData[0].category)
-                                    console.log(barsData[0].category)
-
-                                    let chartConfigsMultiLine = _this.state.chartConfigsMultiLine
-                                    chartConfigsMultiLine.dataSource.categories[0].category = linesData[0].category
-                                    chartConfigsMultiLine.dataSource.dataset = linesData[0].dataset
-
-
-                                    let chartConfigsMultiBar = _this.state.chartConfigsMultiBar
-                                    chartConfigsMultiBar.dataSource.categories[0].category = barsData[0].category
-                                    chartConfigsMultiBar.dataSource.dataset = barsData[0].dataset
-                                    
-
-                                    _this.setState({chartConfigsMultiLine, chartConfigsMultiBar})
-                                    console.log(JSON.stringify(chartConfigsMultiLine,null,'\t'))
-                                    setTimeout(() => {
-                                        _this.handleLoader()
-                                        _this.setState({renderGraphics:true, multiChartBool:true})
-                                    }, 100);
-                                
-
-                                }
-
-
-                            })
-                            .catch((err) => {
-                                console.log("AXIOS ERROR: ", err);
-                                this.handleLoader();
-                                this.setState({errorMessage:"No se ha podido recuperar las estadisticas de los estudiantes, porfavor intente nuevamente"});
-                                setTimeout(() => {
-                                    this.handleShowErrorMessage();
-                                    return;
-                                }, 5);
-                            })
-                
                         }
                 }
 
@@ -816,6 +851,49 @@ class StadisticsForm extends Component{
                 
                   
         
+            }
+            else{
+                //this.state.userOption === "Coordination"
+
+                
+                 Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/coordination',filterDates,axiosConfig)
+                        .then(response => {
+                            console.log("RESPONSE RECEIVED: ", response);
+                            statistics.push(response.data)
+                            
+                            var lineData = this.formatForPlots("line", statistics)
+
+                            var barData = this.formatForPlots("bar",statistics)
+
+                            let chartConfigsSingleLine = _this.state.chartConfigsSingleLine
+                            chartConfigsSingleLine.dataSource.data = lineData
+
+
+                            let chartConfigsSingleBar = _this.state.chartConfigsSingleBar
+                            chartConfigsSingleBar.dataSource.data = barData
+
+
+                            _this.setState({chartConfigsSingleLine, chartConfigsSingleBar})
+                            setTimeout(() => {
+                                _this.handleLoader()
+                                _this.setState({renderGraphics:true, singleChartBool:true})
+                            }, 100);
+                            
+                        })
+                        .catch((err) => {
+                            console.log("AXIOS ERROR: ", err);
+                            this.handleLoader();
+                            this.setState({errorMessage:"No se ha podido recuperar las estadisticas de la coordinacion, porfavor intente nuevamente"});
+                            setTimeout(() => {
+                                this.handleShowErrorMessage();
+                                return;
+                            }, 5);
+                        })
+
+                
+
+               
+
             }
     }
     checkFields(){
@@ -827,8 +905,8 @@ class StadisticsForm extends Component{
         //VERIFICAR que se ha seleccionado carrera/curso/estudiante
         if(this.state.specificOptions !== null){
             //VERIFICAR que por lo menos se ha seleccionado UNA o MAS carreras/cursos/estudiantes
-
-                if( this.state.specificChoices.length >= 1){
+            //O que se consulte por coordinacion
+                if( this.state.specificChoices.length >= 1 || this.state.userOption === "Coordination"){
 
 
                     if(this.state.startDate !== null && this.state.endDate !== null){
@@ -904,6 +982,7 @@ class StadisticsForm extends Component{
 
     cancelPlots = (e, { value}) => {
         this.handleLoader();
+        this.handleNotDisablerCombobox();
         this.setState({renderGraphics:false,specificChoices:[],specificOptions:[],
                         endDate:null,startDate:null,  buttonDisabler: true,
                         minDate: new Date("July 21, 1983 00:0:00"),
@@ -991,7 +1070,7 @@ class StadisticsForm extends Component{
                     })
 
         }
-        else{
+        else if(value === "Student"){
                 //value == "Student"
                 Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/students/')
                     .then(response => {
@@ -1024,6 +1103,15 @@ class StadisticsForm extends Component{
                         }, 5);
                     })
 
+        }
+        else{
+            //value === "Coordination"
+            this.handleLoader();
+            this.handleDisablerCombobox();
+            this.setState({specificOptions:[], userOption:"Coordination", valueDropdown:[]})
+            setTimeout(() => {
+                this.checkFields();
+            }, 15);
         }
     }
     specificSelection = (e, { value}) => {
@@ -1101,6 +1189,7 @@ class StadisticsForm extends Component{
                                         multiple
                                         text='Seleccione ...'
                                         onChange ={this.specificSelection}
+                                        disabled={this.state.comboBoxDisable}
 
                                         onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                                         noResultsMessage= {"No hay resultados"}
@@ -1171,7 +1260,7 @@ class StadisticsForm extends Component{
                                     </Col>
                                 </Row>
                                 {this.state.renderGraphics &&
-                                    <div style ={{position:"relative", left:"25%"}}>
+                                    <div style ={{position:"relative", left:"23%"}}>
 
                                         <Row >
                                             {this.state.singleChartBool &&

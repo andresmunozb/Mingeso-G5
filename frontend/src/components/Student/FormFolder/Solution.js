@@ -173,7 +173,7 @@ class Solution extends Component {
           })
           .catch((err) => {
               console.log("AXIOS ERROR: ", err);
-              this.handleLoader
+              this.handleLoader();
               this.setState({type:1,message: "No se pudo crear la solucion respectiva, porfavor envie a revision de nuevo su codigo"})
               setTimeout(() => {    
                     this.handleShowModalError();
@@ -457,41 +457,110 @@ class Solution extends Component {
                   else{          
 
                       /*ACA SE PONE LO DE LAS BUENAS PRACTICAS*/
-                      /*
-                      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
-                            .then((response) => {
-                                console.log("RESPONSE RECEIVED: ", response);
-                                if(response.data.stderr !== ""){
-                                  this.handleLoader();
-                                  this.setState({reply: response.data.stderr, type:1,
-                                                  message: "Se ha encontrado errores en su codigo, porfavor resuelvalos antes de enviar su codigo a revision"})
-                                  setTimeout(() => {    
-                                    this.handleShowModalError();
-                                  }, 1);
-                                }
-                                else{          
+                      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/analyze',codeToExecute,axiosConfig)
+                            .then((res) => {
+                                console.log("RESPONSE RECEIVED: ", res);
+                                console.log(res.data.verifyIndentation)
+                                console.log(res.data.invalidVariables === "")
+                                console.log(res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA")
+                                console.log(res.data.verifyIndentation === "Cumples con el porcentaje de indentación")
+                                console.log(res.data.functionComments === "La definición de tus funciones están bien comentadas")
 
-
-
-
-
+                                if(res.data.invalidVariables === "" &&
+                                     res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA" &&
+                                     res.data.verifyIndentation === "Cumples con el porcentaje de indentación" &&
+                                     res.data.functionComments === "La definición de tus funciones están bien comentadas" ){
                                       
-                                    this.setState({disableButton:true})
-                                    setTimeout(() => {                                                            
-                                      this.testTestCases();
+                                    
+                                      this.setState({disableButton:true})
+                                      setTimeout(() => {                                                            
+                                        this.testTestCases();
+                                      }, 1);
+                                }
+                                else{
+                                    
+                                    this.setState({type:3,message: 
+                                                    <div>
+                                                      <p><strong>Funciones comentadas:</strong> {res.data.functionComments}  
+                                                        {res.data.functionComments === "Todas tus funciones deben estar comentadas con su entrada, salida y descripción" &&
+                                                            <p>
+                                                                <br/>
+                                                                <p><strong>Formato:</strong> </p>
+
+                                                                <p><strong>#entrada <br/> #salida <br/> #descripcion</strong><br/> *Inserte funcion</p>
+
+                                                            </p>
+                                                        
+                                                          }
+                                                      
+                                                      
+                                                      
+                                                      </p>
+                                                        {res.data.invalidVariables === "" && 
+                                                          <p><strong>Variables no representativas:</strong> No se encuentran variables no representativas</p>
+                                                        }
+                                                        {res.data.invalidVariables !== "" &&
+                                                            <p><strong>Variables no representativas:</strong> <strong> <font color="red">{res.data.invalidVariables}</font> </strong>  </p>
+                                                        }
+                                                      
+                                                        
+                                                        
+                                                        
+                                                      <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
+                                                          {res.data.verifyIndentation === "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
+                                                        
+                                                            <p> <br/> Tip: Compactar el codigo (numero de lineas utilizadas)</p>
+                                                        
+                                                          }
+                                                      
+                                                      
+                                                      
+                                                      </p>
+
+
+
+
+                                                      <p><strong>Organización:</strong> {res.data.detectOrganization} 
+                                                          {res.data.detectOrganization === "Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA" &&
+                                                            <p>
+                                                              <br/>
+                                                                <p><strong>Formato:</strong> </p>
+
+                                                                <p><strong>#ENTRADA</strong> </p>
+
+                                                                <p><strong>#PROCESAMIENTO</strong> </p>
+                                                                
+                                                                <p><strong>#SALIDA</strong> </p>
+                                                            </p>
+                                                        
+                                                          }
+                                                      
+                                                      </p>
+                                                    </div>
+                                                  })
+
+                                    setTimeout(() => {    
+                                          this.handleLoader();
+                                          this.handleShowModalError();
                                     }, 1);
                               }
+                               
                           })
                           .catch((err) => {
                               console.log("AXIOS ERROR: ", err);
+                              setTimeout(() => {    
+                                this.handleLoader();
+                                this.handleShowModalError();
+                            }, 1);
                           })
                                     
-                      */ 
+                      
 
-                        this.setState({disableButton:true})
+                        /*this.setState({disableButton:true})
                         setTimeout(() => {                                                            
                           this.testTestCases();
                         }, 1);
+                        */
                   }
               })
               .catch((err) => {
@@ -933,13 +1002,21 @@ class Solution extends Component {
                                       {this.state.type === 2 &&
                                       <p> Felicitaciones!</p>
                                       }
+                                      {this.state.type === 3 &&
+                                       <p> Buenas practicas de la programación</p>
+                                      }
                                       
                                       </Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body >
-                                          <p style= {{textAlign:'center'}} >
-                                            {this.state.message} {this.state.type === 0 && <Icon name='help circle' color='blue' size='big' />}
-                                          </p>
+                                          {this.state.type === 3 &&
+                                            this.state.message                                        
+                                          }
+                                          {this.state.type !== 3 &&                                          
+                                            <p style= {{textAlign:'center'}} >
+                                              {this.state.message} {this.state.type === 0 && <Icon name='help circle' color='blue' size='big' />}
+                                            </p>
+                                          }
                                       </Modal.Body>
                                       <Modal.Footer>                                        
                                                 <Button  style={{position:'relative', right: '35%'}}
