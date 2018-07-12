@@ -69,7 +69,7 @@ public class StatisticService {
     @RequestMapping(value = "/coordination", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Iterable<Statistic> coordination(@PathVariable("id") Integer id,@RequestBody DTO2 resource) {
+    public Iterable<Statistic> coordination(@RequestBody DTO2 resource) {
         Date desde = Statistic.toDate(resource.getDesde());
         Date hasta = Statistic.toDate(resource.getHasta());
         Iterable<Statistic> statistics = statisticRepository.findStatisticsByDateBetween( desde,hasta);
