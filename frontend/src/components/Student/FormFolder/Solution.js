@@ -163,15 +163,17 @@ class Solution extends Component {
             }
       };
       
-      Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,completeSolution,axiosConfig)
+      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,completeSolution,axiosConfig)
           .then((response) => {
               console.log("RESPONSE RECEIVED: ", response);
+              this.handleLoader()
                 setTimeout(() => {            
                   this.setState({modalCongrats:true})
-                }, 500);
+                }, 50);
           })
           .catch((err) => {
               console.log("AXIOS ERROR: ", err);
+              this.handleLoader
               this.setState({type:1,message: "No se pudo crear la solucion respectiva, porfavor envie a revision de nuevo su codigo"})
               setTimeout(() => {    
                     this.handleShowModalError();
@@ -269,7 +271,7 @@ class Solution extends Component {
           }
         };
 
-        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
+        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
         .then((response) => {
             console.log("RESPONSE RECEIVED: ", response);
 
@@ -337,7 +339,7 @@ class Solution extends Component {
       }
     };
 
-    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToTest,axiosConfig)
+    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToTest,axiosConfig)
     .then((response) => {
         console.log("RESPONSE RECEIVED: ", response);
         console.log("este deberia ser el resultado")
@@ -441,7 +443,7 @@ class Solution extends Component {
                 }
               };
 
-              Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
+              Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
               .then((response) => {
                   console.log("RESPONSE RECEIVED: ", response);
                   if(response.data.stderr !== ""){
@@ -456,7 +458,7 @@ class Solution extends Component {
 
                       /*ACA SE PONE LO DE LAS BUENAS PRACTICAS*/
                       /*
-                      Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
+                      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/execute',codeToExecute,axiosConfig)
                             .then((response) => {
                                 console.log("RESPONSE RECEIVED: ", response);
                                 if(response.data.stderr !== ""){
@@ -538,7 +540,7 @@ class Solution extends Component {
         var initialTime = timer.getTime();
         console.log("se supone que este es el initial time")
         console.log(initialTime)
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.exercise.viewAExercise.id+'/testcases')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.exercise.viewAExercise.id+'/testcases')
         .then(response => {
               console.log("soy los testcases")
               testcases = response.data
@@ -814,6 +816,7 @@ class Solution extends Component {
                                       <Button primary={true} type='Send'
                                               onClick={() => {
                                                 this.setState({reply:""})
+                                                this.handleLoader()
                                                 setTimeout(() => {
                                                    this.sendSolution();
                                                 }, 1);

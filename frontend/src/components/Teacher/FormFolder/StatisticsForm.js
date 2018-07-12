@@ -496,7 +496,7 @@ class StadisticsForm extends Component{
                 if(this.state.specificChoices.length === 1){
 
 
-                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
+                    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
                         .then(response => {
 
                                 console.log("RESPONSE RECEIVED: ", response);
@@ -538,7 +538,7 @@ class StadisticsForm extends Component{
                         for(let i = 0; i< this.state.specificChoices.length;i++){
 
 
-                            Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
+                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/career/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
                             .then(response => {
                                 console.log("RESPONSE RECEIVED: ", response);
                                 res = response.data
@@ -601,7 +601,7 @@ class StadisticsForm extends Component{
             else if(this.state.userOption === "Class"){
                     if(this.state.specificChoices.length === 1){
 
-                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
+                        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
                         .then(response => {
                             console.log("RESPONSE RECEIVED: ", response);
                             statistics.push(response.data)
@@ -641,7 +641,7 @@ class StadisticsForm extends Component{
                         for(let i = 0; i< this.state.specificChoices.length;i++){
 
 
-                            Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
+                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/class/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
                             .then(response => {
                                 console.log("RESPONSE RECEIVED: ", response);
                                 res = response.data
@@ -714,7 +714,7 @@ class StadisticsForm extends Component{
 
                     if(this.state.specificChoices.length === 1){
 
-                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
+                        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[0].key,filterDates,axiosConfig)
                         .then(response => {
                             console.log("RESPONSE RECEIVED: ", response);
                             statistics.push(response.data)
@@ -753,7 +753,7 @@ class StadisticsForm extends Component{
                         for(let i = 0; i< this.state.specificChoices.length;i++){
 
 
-                            Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
+                            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/statistics/user/'+this.state.specificChoices[i].key,filterDates,axiosConfig)
                             .then(response => {
 
                                 console.log("RESPONSE RECEIVED: ", response);
@@ -926,7 +926,7 @@ class StadisticsForm extends Component{
         console.log("estas son las antiguas (?)")
         console.log(this.state.userOption)
         if(value === "Career"){
-                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
+                Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/')
                     .then(response => {
                         console.log("RESPONSE RECEIVED: ", response);
                         res = response.data
@@ -958,7 +958,7 @@ class StadisticsForm extends Component{
 
         }
         else if(value === "Class"){
-                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
+                Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/')
                     .then(response => {
                         console.log("RESPONSE RECEIVED: ", response);
                         res = response.data
@@ -993,7 +993,7 @@ class StadisticsForm extends Component{
         }
         else{
                 //value == "Student"
-                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/students/')
+                Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/students/')
                     .then(response => {
                         console.log("RESPONSE RECEIVED: ", response);
                         res = response.data

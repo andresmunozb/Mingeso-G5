@@ -48,7 +48,6 @@ class ExerciseItemPublishedTeacher extends Component {
                   
                   
                     <Card.Meta>
-                      Prof 1
                     </Card.Meta>
                   </Card.Content>
                 </Card>

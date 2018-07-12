@@ -404,18 +404,18 @@ class CreateExerciseForm extends Component{
                         published: false,
                         functionName:this.state.functionName
                       }
-                      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.title)
+                      Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.title)
                             .then(response => {
 
                                 console.log("RESPONSE RECEIVED: ", response);
                                 //No existe enunciado con ese titulo, es seguro crearlo
                                 if(response.data === ""){
-                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/create/'+this.props.idUser,newExercise,axiosConfig)
+                                    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/create/'+this.props.idUser,newExercise,axiosConfig)
                                     .then((res) => {
                                         console.log("paso por aqui")
                                         console.log(this.state.title)
                                         console.log("RESPONSE RECEIVED: ", res);
-                                        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.title)
+                                        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.title)
                                             .then(response => {
                                                 console.log(response.data)
                                                 this.setState({

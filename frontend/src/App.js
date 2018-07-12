@@ -26,11 +26,10 @@ class App extends Component {
   getRol(email){
     var rol;
     var id;
-
-    Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
+    Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/role')
         .then( res => {          
             rol = res.data.nameRol;
-            Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/id')
+            Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/'+email+'/id')
             .then( res => {
                 console.log("este es mi rol: ",rol)
                 id = res.data
@@ -50,6 +49,7 @@ class App extends Component {
         .catch((err) => {
           this.setState({rol:'noRegister'})
         })
+        
   }
 
   routesFilter(rol){
