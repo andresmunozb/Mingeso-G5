@@ -1,13 +1,11 @@
 package grupo.cinco.backend.services;
 
+import grupo.cinco.backend.entities.Class;
 import grupo.cinco.backend.entities.Exercise;
 import grupo.cinco.backend.entities.Solution;
 import grupo.cinco.backend.entities.Statistic;
 import grupo.cinco.backend.entities.User;
-import grupo.cinco.backend.repositories.ExerciseRepository;
-import grupo.cinco.backend.repositories.SolutionRepository;
-import grupo.cinco.backend.repositories.StatisticRepository;
-import grupo.cinco.backend.repositories.UserRepository;
+import grupo.cinco.backend.repositories.*;
 import grupo.cinco.backend.utils.Analyzer;
 import grupo.cinco.backend.utils.Context;
 import grupo.cinco.backend.utils.DTO;
@@ -42,10 +40,21 @@ public class SolutionService {
     @Autowired
     private StatisticRepository statisticRepository;
 
+    @Autowired
+    private ClassRepository classRepository;
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Solution> getAllProducts() {
         return solutionRepository.findAll();
+    }
+
+    @RequestMapping(value = "/{id_exercise}/{id_clase}", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Solution> getAllSolutionsByExercise(@PathVariable("id_exercise") Integer idExercise, @PathVariable("id_clase") Integer idClass)
+    {
+        Class clase = classRepository.findById(idClass).get();
+        return solutionRepository.findAllByExercise_IdAndUserClase(idExercise,clase);
     }
 
     @RequestMapping(value = "/create/{id_user}/{id_exercise}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -28,9 +28,9 @@ public class Analyzer {
             }
         }
 
-        //Si del código completo, solo el 30% o menos, esta indentando...
+        //Si del código completo, solo el 10% o menos, esta indentando...
         //Se le manda un mensaje de que se preocupe de la indentación.
-        if(counterTabs <= 0.3*nlines)
+        if(counterTabs <= 0.1*nlines)
         {
             return false;
         }
