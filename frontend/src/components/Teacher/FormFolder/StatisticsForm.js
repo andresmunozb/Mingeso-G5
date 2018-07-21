@@ -37,7 +37,7 @@ class StadisticsForm extends Component{
             minDate: new Date("July 21, 1983 00:0:00"),
 
             maxDate: new Date("July 21, 2083 00:0:00"),
-
+            
             errorMessageRender:false,
             errorMessage: "",
             startDateString:null,
@@ -49,7 +49,8 @@ class StadisticsForm extends Component{
             replacementOptions: null,
             
             buttonDisabler:  true,
-            
+            loadingDropDown: false,
+            loadingText: "Seleccione...",
             chartConfigsSingleLine : {
                 type: 'line',
                 renderAt: 'chart-container',
@@ -254,6 +255,12 @@ class StadisticsForm extends Component{
         //MODAL
 
         this.multipleStadistics = this.multipleStadistics.bind(this);
+
+
+        this.loadDropDown = this.loadDropDown.bind(this)
+    }
+    loadDropDown(){
+        this.setState({loadingDropDown: !this.state.loadingDropDown})
     }
 
     handleDisablerCombobox() {
@@ -981,10 +988,10 @@ class StadisticsForm extends Component{
       };
 
     cancelPlots = (e, { value}) => {
-        this.handleLoader();
+        this.loadDropDown();
         this.handleNotDisablerCombobox();
         this.setState({renderGraphics:false,specificChoices:[],specificOptions:[],
-                        endDate:null,startDate:null,  buttonDisabler: true,
+                        endDate:null,startDate:null,  buttonDisabler: true, loadingText: "Cargando...",
                         minDate: new Date("July 21, 1983 00:0:00"),
             
                         maxDate: new Date("July 21, 2083 00:0:00")})
@@ -1015,9 +1022,10 @@ class StadisticsForm extends Component{
                                                 value: res[i].nameCareer})
                         }
 
-                        this.handleLoader();
+                       
+                        this.loadDropDown();
                         setTimeout(() => {
-                            this.setState({specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})                            
+                            this.setState({loadingText: "Seleccione...",specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})                            
                         }, 5);
                         setTimeout(() => {
                             this.checkFields();
@@ -1026,8 +1034,9 @@ class StadisticsForm extends Component{
                     })
                     .catch((err) => {
                         console.log("AXIOS ERROR: ", err);
-                        this.handleLoader();
-                        this.setState({errorMessage:"No se pudo obtener las carreras, porfavor intentar mas tarde "});
+                        
+                        this.loadDropDown();
+                        this.setState({loadingText: "Seleccione...",errorMessage:"No se pudo obtener las carreras, porfavor intentar mas tarde "});
                         setTimeout(() => {
                                 this.handleShowErrorMessage();
                                 return;
@@ -1047,9 +1056,10 @@ class StadisticsForm extends Component{
                                                 value: res[i].nameClass})
                         }
 
-                        this.handleLoader();
+                        
+                        this.loadDropDown();
                         setTimeout(() => {
-                            this.setState({specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})
+                            this.setState({loadingText: "Seleccione...",specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})
 
                         }, 5);
 
@@ -1060,8 +1070,9 @@ class StadisticsForm extends Component{
                     })
                     .catch((err) => {
                         console.log("AXIOS ERROR: ", err);
-                        this.handleLoader();
-                        this.setState({errorMessage:"No se pudo obtener las clases, porfavor intentar mas tarde "});
+                        
+                        this.loadDropDown();
+                        this.setState({loadingText: "Seleccione...",errorMessage:"No se pudo obtener las clases, porfavor intentar mas tarde "});
                         setTimeout(() => {
                             this.handleShowErrorMessage();
                                 return;
@@ -1081,9 +1092,10 @@ class StadisticsForm extends Component{
                                                 text: res[i].email,
                                                 value: res[i].email})
                         }
-                        this.handleLoader();
+                        
+                        this.loadDropDown();
                         setTimeout(() => {
-                            this.setState({specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})
+                            this.setState({loadingText: "Seleccione...",specificOptions:actualOptions, userOption:value, valueDropdown:actualOptions})
 
                         }, 5);
 
@@ -1095,8 +1107,9 @@ class StadisticsForm extends Component{
                     .catch((err) => {
                         console.log("AXIOS ERROR: ", err);
                         console.log("AXIOS ERROR: ", err);
-                        this.handleLoader();
-                        this.setState({errorMessage:"No se pudo obtener la lista de estudiantes, porfavor intentar mas tarde "});
+
+                        this.loadDropDown();
+                        this.setState({loadingText: "Seleccione...",errorMessage:"No se pudo obtener la lista de estudiantes, porfavor intentar mas tarde "});
                         setTimeout(() => {
                                 this.handleShowErrorMessage();
                                 return;
@@ -1106,9 +1119,10 @@ class StadisticsForm extends Component{
         }
         else{
             //value === "Coordination"
-            this.handleLoader();
+            
+            this.loadDropDown();
             this.handleDisablerCombobox();
-            this.setState({specificOptions:[], userOption:"Coordination", valueDropdown:[]})
+            this.setState({loadingText: "Seleccione...",specificOptions:[], userOption:"Coordination", valueDropdown:[]})
             setTimeout(() => {
                 this.checkFields();
             }, 15);
@@ -1171,7 +1185,6 @@ class StadisticsForm extends Component{
                                         options={this.state.userOptions}
                                         selection
                                         onChange ={this.cancelPlots}
-                                             
                                         onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
 
                                     />
@@ -1187,10 +1200,10 @@ class StadisticsForm extends Component{
                                         search
                                         selection
                                         multiple
-                                        text='Seleccione ...'
+                                        text={this.state.loadingText}
                                         onChange ={this.specificSelection}
                                         disabled={this.state.comboBoxDisable}
-
+                                        loading = {this.state.loadingDropDown}
                                         onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
                                         noResultsMessage= {"No hay resultados"}
                                     />

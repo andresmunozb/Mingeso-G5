@@ -4,7 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Drawer,AppBar} from 'material-ui'
 import ThemeDefault from '../ThemeList';
 import Paper from 'material-ui/Paper';
-import {Row,Col,Modal,Popover,OverlayTrigger} from 'react-bootstrap'
+import {Modal,Row,Col,Popover,OverlayTrigger} from 'react-bootstrap'
 import AceEditor from 'react-ace';
 import {Link} from 'react-router-dom';
 
@@ -77,7 +77,7 @@ class Solution extends Component {
         message: "",
         loader: false,
         type:0,
-        disableSendSolution:true,
+        popUpAreYouSure: false,
         languageOptions: [
             
               { key: 'python', value: 'python', text: 'Python' },
@@ -106,7 +106,8 @@ class Solution extends Component {
 
 
       //SEND CODE FOR TESTING 
-      this.sendCodeRevision = this.sendCodeRevision.bind(this)      
+      this.sendCodeRevision = this.sendCodeRevision.bind(this)
+      this.sendCodeGoodPractices = this.sendCodeGoodPractices.bind(this)
       this.testTestCases = this.testTestCases.bind(this)     
       this.replaceInput = this.replaceInput.bind(this)
       this.codesToTest = this.codesToTest.bind(this)      
@@ -135,50 +136,91 @@ class Solution extends Component {
 
       this.handleHideModalError = this.handleHideModalError.bind(this)
       this.handleShowModalError = this.handleShowModalError.bind(this)
+
+
+      this.handleShowAreYouSure = this.handleShowAreYouSure.bind(this);
+      this.handleHideAreYouSure = this.handleHideAreYouSure.bind(this);
+
       //MODALS
 
 
     }
 
+  handleShowAreYouSure() {
+      this.setState({ popUpAreYouSure: true });
+  }
+
+  handleHideAreYouSure() {
+      this.setState({ popUpAreYouSure: false });
+  }
+
+
   sendSolution(){
-      var timeElapsed = new Date();
-      var milisecondsElapsed = timeElapsed.getTime();
-      var timeSpent = milisecondsElapsed - this.state.initialTime
-      console.log("esto me demore en milisegundos")
-      console.log(timeSpent)
-      timeSpent = Math.round(timeSpent/1000);
-    
-      let subSolution = {                
-            script: this.state.code,
-            language:this.state.languageCode
-      };
-      let completeSolution = {
-            spendTime: timeSpent,
-            solution: subSolution
-      }
-      let axiosConfig = {
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "@crossorigin",
-            }
-      };
       
-      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,completeSolution,axiosConfig)
-          .then((response) => {
-              console.log("RESPONSE RECEIVED: ", response);
-              this.handleLoader()
-                setTimeout(() => {            
-                  this.setState({modalCongrats:true})
-                }, 50);
-          })
-          .catch((err) => {
-              console.log("AXIOS ERROR: ", err);
-              this.handleLoader();
-              this.setState({type:1,message: "No se pudo crear la solucion respectiva, porfavor envie a revision de nuevo su codigo"})
-              setTimeout(() => {    
-                    this.handleShowModalError();
-              }, 5);
-          })
+
+      if(this.state.code === "" || this.state.code === null){
+
+        this.handleLoader();
+        this.setState({type:1,message: "No se encuentra codigo en el editor, porfavor envie una solucion no vacia"})
+        setTimeout(() => {    
+              this.handleShowModalError();
+              this.handleHideAreYouSure();
+        }, 5);
+      }
+      else if(this.state.languageEditor === ""){
+
+        this.handleLoader();
+        this.setState({type:1,message: "Se debe seleccionar un lenguaje de programacion antes de enviar una solucion"})
+        setTimeout(() => {    
+              this.handleShowModalError();
+
+              this.handleHideAreYouSure();
+        }, 5);
+
+      }
+      else{
+            var timeElapsed = new Date();
+            var milisecondsElapsed = timeElapsed.getTime();
+            var timeSpent = milisecondsElapsed - this.state.initialTime
+            console.log("esto me demore en milisegundos")
+            console.log(timeSpent)
+            timeSpent = Math.round(timeSpent/1000);
+          
+            let subSolution = {                
+                  script: this.state.code,
+                  language:this.state.languageCode
+            };
+            let completeSolution = {
+                  spendTime: timeSpent,
+                  solution: subSolution
+            }
+            let axiosConfig = {
+                  headers: {
+                      'Content-Type': 'application/json;charset=UTF-8',
+                      "Access-Control-Allow-Origin": "@crossorigin",
+                  }
+            };
+
+            Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/create/'+this.props.idUser+'/'+this.state.idExercise,completeSolution,axiosConfig)
+            .then((response) => {
+                console.log("RESPONSE RECEIVED: ", response);
+                this.handleLoader()
+                  setTimeout(() => {            
+                    this.setState({modalCongrats:true})
+                  }, 50);
+            })
+            .catch((err) => {
+                console.log("AXIOS ERROR: ", err);
+                this.handleLoader();
+                this.setState({type:1,message: "No se pudo crear la solucion respectiva, porfavor envie a revision de nuevo su codigo"})
+                setTimeout(() => {    
+                      this.handleShowModalError();
+                }, 5);
+            })
+
+      }
+      
+     
   }
 
   
@@ -209,15 +251,16 @@ class Solution extends Component {
         console.log(this.state.languageCode)
 
         console.log(this.state.code)
-        var performance = successCases/this.state.testCases.length
-        
         this.setState({successCases})
         setTimeout(() => {
               this.setState({showPerformance:true})
-              if( performance === 1){
-                  this.setState({disableSendSolution:false, type:2, message: "!Ha pasado todos los casos de prueba!, puede enviar su solución ahora"})
-                  this.handleShowModalError();
-                }
+
+
+              setTimeout(() => {
+
+                this.sendCodeGoodPractices()
+                
+              }, 10);
         }, 500);
     }
   }
@@ -231,6 +274,7 @@ class Solution extends Component {
     this.handleSideBar();
     setTimeout(() => {      
       this.scheduleNextUpdate()
+      this.setState({disableButton: true})
     }, 2);
   }
 
@@ -406,8 +450,119 @@ class Solution extends Component {
         }
   }
 
+  sendCodeGoodPractices(){
+
+    let codeToExecute = {
+      language:this.state.languageCode,
+      script: this.state.code
+    };
+    let axiosConfig = {
+      headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          "Access-Control-Allow-Origin": "@crossorigin",
+      }
+    };
+    /*ACA SE PONE LO DE LAS BUENAS PRACTICAS*/
+    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/analyze',codeToExecute,axiosConfig)
+          .then((res) => {
+            console.log("RESPONSE RECEIVED: ", res);
+            console.log(res.data.verifyIndentation)
+            console.log(res.data.invalidVariables === "")
+            console.log(res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA")
+            console.log(res.data.verifyIndentation === "Cumples con el porcentaje de indentación")
+            console.log(res.data.functionComments === "La definición de tus funciones están bien comentadas")
+            
+            this.setState({type:3,message: 
+                     <div>
+                           <p><strong>Funciones comentadas:</strong> {res.data.functionComments}  
+                                {res.data.functionComments === "Todas tus funciones deben estar comentadas con su entrada, salida y descripción" &&
+                                                            <p>
+                                                                <br/>
+                                                                <p><strong>Formato:</strong> </p>
+
+                                                                <p><strong>#entrada <br/> #salida <br/> #descripcion</strong><br/> *Inserte funcion</p>
+
+                                                            </p>
+                                                        
+                                 }
+                                                      
+                                                      
+                                                      
+                            </p>
+                            {res.data.invalidVariables === "" && 
+                                       <p><strong>Variables no representativas:</strong> No se encuentran variables no representativas</p>
+                            }
+                            {res.data.invalidVariables !== "" &&
+                                        <p><strong>Variables no representativas:</strong> <strong> <font color="red">{res.data.invalidVariables}</font> </strong>  </p>
+                            }
+                                                      
+                            {res.data.verifyIndentation === "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
+                               <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
+
+                                        <br/> Tip: Compactar el codigo (reducir el numero de lineas utilizadas)
+
+                                </p>
+                                                        
+                            }
+                            {res.data.verifyIndentation !== "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
+                                    <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
+                                    </p>
+
+                            }
+                                        
+
+                            <p><strong>Organización:</strong> {res.data.detectOrganization} 
+                                {res.data.detectOrganization === "Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA" &&
+                                      <p>
+                                              <br/>
+                                              <p><strong>Formato:</strong> </p>
+
+                                              <p><strong>#ENTRADA</strong> </p>
+
+                                              <p><strong>#PROCESAMIENTO</strong> </p>
+                                                                
+                                              <p><strong>#SALIDA</strong> </p>
+                                      </p>
+                                                        
+                               }
+                                                      
+                             </p>
+                   </div>
+          })
+
+          setTimeout(() => {    
+                  this.handleShowModalError();
+          }, 1);
+                              
+                               
+         })
+         .catch((err) => {
+           console.log("AXIOS ERROR: ", err);
+           this.setState({type: 1, message: "No se ha podido revisar las buenas practicas de la programacion, intente nuevamente porfavor para la retroalimentacion"})
+
+            setTimeout(() => {    
+                      this.handleLoader();
+                      this.handleShowModalError();
+         }, 1);
+       })
+                                    
+                      
+
+  }
+
   
   sendCodeRevision(){
+    /* onClick={() => {
+                                                                                  this.setState({disableButton:false,renderedThings: [], 
+                                                                                              itemsRendered: 0, results: null, successCases: 0,
+                                                                                              showPerformance:false})
+                                                                                  setTimeout(() => {                                                        
+                                                                                    this.handleSideBar()
+                                                                                  }, 1);
+                                                                                }}*/
+
+
+
     console.log(this.state.code)
     var codeReady;
     if(this.state.code.length !== 0){
@@ -452,119 +607,20 @@ class Solution extends Component {
                                     message: "Se ha encontrado errores en su codigo, porfavor resuelvalos antes de enviar su codigo a revision"})
                     setTimeout(() => {    
                       this.handleShowModalError();
-                    }, 1);
+                    }, 10);
                   }
                   else{          
+                      this.testTestCases();
 
-                      /*ACA SE PONE LO DE LAS BUENAS PRACTICAS*/
-                      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions/analyze',codeToExecute,axiosConfig)
-                            .then((res) => {
-                                console.log("RESPONSE RECEIVED: ", res);
-                                console.log(res.data.verifyIndentation)
-                                console.log(res.data.invalidVariables === "")
-                                console.log(res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA")
-                                console.log(res.data.verifyIndentation === "Cumples con el porcentaje de indentación")
-                                console.log(res.data.functionComments === "La definición de tus funciones están bien comentadas")
-
-                                if(res.data.invalidVariables === "" &&
-                                     res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA" &&
-                                     res.data.verifyIndentation === "Cumples con el porcentaje de indentación" &&
-                                     res.data.functionComments === "La definición de tus funciones están bien comentadas" ){
-                                      
-                                    
-                                      this.setState({disableButton:true})
-                                      setTimeout(() => {                                                            
-                                        this.testTestCases();
-                                      }, 1);
-                                }
-                                else{
-                                    
-                                    this.setState({type:3,message: 
-                                                    <div>
-                                                      <p><strong>Funciones comentadas:</strong> {res.data.functionComments}  
-                                                        {res.data.functionComments === "Todas tus funciones deben estar comentadas con su entrada, salida y descripción" &&
-                                                            <p>
-                                                                <br/>
-                                                                <p><strong>Formato:</strong> </p>
-
-                                                                <p><strong>#entrada <br/> #salida <br/> #descripcion</strong><br/> *Inserte funcion</p>
-
-                                                            </p>
-                                                        
-                                                          }
-                                                      
-                                                      
-                                                      
-                                                      </p>
-                                                        {res.data.invalidVariables === "" && 
-                                                          <p><strong>Variables no representativas:</strong> No se encuentran variables no representativas</p>
-                                                        }
-                                                        {res.data.invalidVariables !== "" &&
-                                                            <p><strong>Variables no representativas:</strong> <strong> <font color="red">{res.data.invalidVariables}</font> </strong>  </p>
-                                                        }
-                                                      
-                                                        
-                                                        
-                                                        
-                                                      <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
-                                                          {res.data.verifyIndentation === "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
-                                                        
-                                                            <p> <br/> Tip: Compactar el codigo (numero de lineas utilizadas)</p>
-                                                        
-                                                          }
-                                                      
-                                                      
-                                                      
-                                                      </p>
-
-
-
-
-                                                      <p><strong>Organización:</strong> {res.data.detectOrganization} 
-                                                          {res.data.detectOrganization === "Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA" &&
-                                                            <p>
-                                                              <br/>
-                                                                <p><strong>Formato:</strong> </p>
-
-                                                                <p><strong>#ENTRADA</strong> </p>
-
-                                                                <p><strong>#PROCESAMIENTO</strong> </p>
-                                                                
-                                                                <p><strong>#SALIDA</strong> </p>
-                                                            </p>
-                                                        
-                                                          }
-                                                      
-                                                      </p>
-                                                    </div>
-                                                  })
-
-                                    setTimeout(() => {    
-                                          this.handleLoader();
-                                          this.handleShowModalError();
-                                    }, 1);
-                              }
-                               
-                          })
-                          .catch((err) => {
-                              console.log("AXIOS ERROR: ", err);
-                              setTimeout(() => {    
-                                this.handleLoader();
-                                this.handleShowModalError();
-                            }, 1);
-                          })
-                                    
-                      
-
-                        /*this.setState({disableButton:true})
-                        setTimeout(() => {                                                            
-                          this.testTestCases();
-                        }, 1);
-                        */
                   }
               })
               .catch((err) => {
                   console.log("AXIOS ERROR: ", err);
+                  this.handleLoader();
+                    this.setState({type:1,message: "No se pudo mandar su codigo a revision, porfavor intente nuevamente"})
+                    setTimeout(() => {    
+                      this.handleShowModalError();
+                    }, 1);
               })
 
 
@@ -585,11 +641,24 @@ class Solution extends Component {
       }
     }
     else{
-      this.setState({type:1,message: "Editor vacio"})
-      setTimeout(() => {    
-            this.handleLoader();
-            this.handleShowModalError();
-      }, 1);
+
+      if(this.state.code.length !== 0 || this.state.code === null){
+
+        this.handleLoader();
+        this.setState({type:1,message: "No se encuentra codigo en el editor para poder probar los casos de prueba"})
+        setTimeout(() => {    
+              this.handleShowModalError();
+        }, 5);
+      }
+      else if(this.state.languageEditor === ""){
+
+        this.handleLoader();
+        this.setState({type:1,message: "Se debe seleccionar un lenguaje de programacion antes de probar los casos de prueba"})
+        setTimeout(() => {    
+              this.handleShowModalError();
+        }, 5);
+
+      }
     }
 
     
@@ -678,7 +747,7 @@ class Solution extends Component {
   }
 
   updateCode(event){
-    this.setState({ code: event ,disableSendSolution:true})
+    this.setState({ code: event })
   }
   popoverHoverFocus(){
     if(this.state.format !== null ){
@@ -699,12 +768,53 @@ class Solution extends Component {
     let { title, description,functionName} = this.state
         return (
           <div>
+             <Modal show={this.state.popUpAreYouSure}
+                            bsSize="small">  
+
+                                  <Modal.Header >
+                                    <Modal.Title>Precaución</Modal.Title>
+                                  </Modal.Header>
+                                  <Modal.Body >
+                                        <p >
+                                          Esta seguro de enviar esta solucion? 
+                                        </p>
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                      <Button  floated= {'left'} 
+                                                  color='red' 
+                                                  type='Negation'
+                                                  onClick= {this.handleHideAreYouSure}
+                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                  >
+                                                  No
+                                        </Button>
+                                          <Button  floated= {'right'} 
+                                                  color='blue' 
+                                                  type='Positive'
+                                                  onClick={() => {
+                                                    this.handleLoader();      
+                                                    setTimeout(() => {                                                                                                       
+                                                         this.sendSolution();
+                                                    }, 5); 
+                                                  }}
+                                                  onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+
+                                                  >
+                                                  Si
+                                          </Button>
+                                    </Modal.Footer>
+
+            </Modal>
+
+
             {this.state.isSafeToRender &&
                   <Segment>
 
                       <Dimmer active={this.state.loader} inverted>
                         <Loader inverted content='Cargando...' />
                       </Dimmer>
+                      
                 
 
 
@@ -885,15 +995,13 @@ class Solution extends Component {
                                       <Button primary={true} type='Send'
                                               onClick={() => {
                                                 this.setState({reply:""})
-                                                this.handleLoader()
-                                                setTimeout(() => {
-                                                   this.sendSolution();
-                                                }, 1);
-                                              
+                                                setTimeout(() => {                                                  
+                                                    this.handleShowAreYouSure()
+                                                }, 5);
                                               }}
                                               onKeyPress={e => {if (e.key === 'Enter') e.preventDefault();}}
+                                              disabled= {this.state.disableButton}
 
-                                              disabled= {this.state.disableSendSolution}
                                               >
                                                 Enviar solución
                                         </Button>
@@ -929,28 +1037,6 @@ class Solution extends Component {
                                                                   Resultado: {this.state.successCases}/ {this.state.testCases.length} pruebas exitosas
                                                                   
                                                             </p>
-                                                            
-                                                                  {this.state.successCases/ this.state.testCases.length !== 1 &&
-                                                                   <div className= "buttonBack">
-                                                                      <div style={{padding:10}}> </div>
-                                                                      <Button style= {{position:'relative', left: '22%'}}
-                                                                                primary={true} 
-                                                                              type='Send'
-                                                                                onClick={() => {
-                                                                                  this.setState({disableButton:false,renderedThings: [], 
-                                                                                              itemsRendered: 0, results: null, successCases: 0,
-                                                                                              showPerformance:false})
-                                                                                  setTimeout(() => {                                                        
-                                                                                    this.handleSideBar()
-                                                                                  }, 1);
-                                                                                }}
-                                                                                >
-                                                                                Intentar Nuevamente
-                                                                        </Button>
- 
-                                                                   </div>
-                                                                  
-                                                                  }
                                                                  
 
                                                               
@@ -1024,7 +1110,7 @@ class Solution extends Component {
                                                         type='Positive'
                                                         onClick={() => {
                                                           this.handleHideModalError();
-                                                          if(this.state.type === 2){
+                                                          if(this.state.type === 2 || this.state.type === 3){
                                                             setTimeout(() => {                                                        
                                                               this.handleSideBar()
                                                               this.setState({disableButton:false,renderedThings: [], 
