@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import java.util.Date;
@@ -130,5 +131,12 @@ public class SolutionService {
     {
         Analyzer analyzer = Analyzer.getInstance();
         return analyzer.totalAnalyze(resource.getScript(),resource.getLanguage());
+    }
+
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    @ResponseBody
+    public long countSolutions()
+    {
+        return solutionRepository.count();
     }
 }

@@ -77,4 +77,19 @@ public class StatisticService {
         return statistics;
     }
 
+    @RequestMapping(value = "/countTime", method = RequestMethod.GET)
+    @ResponseBody
+    public long countTime()
+    {
+        long totalTime = 0;
+        Iterable<Statistic> statistics = statisticRepository.findAll();
+        Iterator statisticsIterator = statistics.iterator();
+        while(statisticsIterator.hasNext())
+        {
+            Statistic stat = (Statistic) statisticsIterator.next();
+            totalTime += stat.getSpendTime();
+        }
+        return totalTime;
+    }
+
 }
