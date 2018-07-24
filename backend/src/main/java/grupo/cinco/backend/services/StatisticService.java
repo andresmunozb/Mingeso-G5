@@ -89,7 +89,7 @@ public class StatisticService {
             Statistic stat = (Statistic) statisticsIterator.next();
             totalTime += stat.getSpendTime();
         }
-        return totalTime;
+        return totalTime/3600;
     }
 
 }
