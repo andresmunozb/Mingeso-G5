@@ -470,6 +470,8 @@ class Solution extends Component {
             console.log(res.data.invalidVariables === "")
             console.log(res.data.detectOrganization === "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA")
             console.log(res.data.verifyIndentation === "Cumples con el porcentaje de indentación")
+            console.log(res.data.verifyIndentation)
+
             console.log(res.data.functionComments === "La definición de tus funciones están bien comentadas")
             
             this.setState({type:3,message: 
@@ -496,16 +498,16 @@ class Solution extends Component {
                                         <p><strong>Variables no representativas:</strong> <strong> <font color="red">{res.data.invalidVariables}</font> </strong>  </p>
                             }
                                                       
-                            {res.data.verifyIndentation === "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
-                               <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
+                            {res.data.verifyIndentation !== "Cumples con el porcentaje de indentación" &&
+                               <p><strong>Identación:</strong> {res.data.verifyIndentation}
 
                                         <br/> Tip: Compactar el codigo (reducir el numero de lineas utilizadas)
 
                                 </p>
                                                         
                             }
-                            {res.data.verifyIndentation !== "Debes preocuparte de indentar tu código, tienes menos del 30%" &&
-                                    <p><strong>Identación:</strong> {res.data.verifyIndentation} de tu codigo identado
+                            {res.data.verifyIndentation === "Cumples con el porcentaje de indentación" &&
+                                    <p><strong>Identación:</strong> {res.data.verifyIndentation} 
                                     </p>
 
                             }
@@ -552,20 +554,30 @@ class Solution extends Component {
 
   
   sendCodeRevision(){
-    /* onClick={() => {
-                                                                                  this.setState({disableButton:false,renderedThings: [], 
-                                                                                              itemsRendered: 0, results: null, successCases: 0,
-                                                                                              showPerformance:false})
-                                                                                  setTimeout(() => {                                                        
-                                                                                    this.handleSideBar()
-                                                                                  }, 1);
-                                                                                }}*/
-
-
-
     console.log(this.state.code)
     var codeReady;
-    if(this.state.code.length !== 0){
+    console.log("estas son las variables")
+    console.log(this.state.code)
+    console.log(this.state.languageEditor)
+    if(this.state.code.length === 0 || this.state.code === null){
+
+      this.handleLoader();
+      this.setState({type:1,message: "No se encuentra codigo en el editor para poder probar los casos de prueba"})
+      setTimeout(() => {    
+            this.handleShowModalError();
+      }, 5);
+    }
+    else if(this.state.languageEditor === ""){
+
+      this.handleLoader();
+      this.setState({type:1,message: "Se debe seleccionar un lenguaje de programacion antes de probar los casos de prueba"})
+      setTimeout(() => {    
+            this.handleShowModalError();
+      }, 5);
+
+    }
+
+    else{
       codeReady = this.replaceInput( this.state.testCases[0].input)
       //No se esta usando el nombre de funcion que esta puesto en el enunciado
       console.log(codeReady)
@@ -586,7 +598,6 @@ class Solution extends Component {
       }
 
       else{
-           if(this.state.languageCode.length !== 0){
               let codeToExecute = {
                 language:this.state.languageCode,
                 script: codeReady
@@ -622,42 +633,6 @@ class Solution extends Component {
                       this.handleShowModalError();
                     }, 1);
               })
-
-
-          }
-          else{
-            this.setState({type:1,message: "Debe elegir un lenguaje de programacion para poder enviar su codigo"})
-            setTimeout(() => {    
-                  this.handleLoader();
-                  this.handleShowModalError();
-            }, 1);
-          
-          }
-
-          
-
-
-
-      }
-    }
-    else{
-
-      if(this.state.code.length !== 0 || this.state.code === null){
-
-        this.handleLoader();
-        this.setState({type:1,message: "No se encuentra codigo en el editor para poder probar los casos de prueba"})
-        setTimeout(() => {    
-              this.handleShowModalError();
-        }, 5);
-      }
-      else if(this.state.languageEditor === ""){
-
-        this.handleLoader();
-        this.setState({type:1,message: "Se debe seleccionar un lenguaje de programacion antes de probar los casos de prueba"})
-        setTimeout(() => {    
-              this.handleShowModalError();
-        }, 5);
-
       }
     }
 
