@@ -30,7 +30,7 @@ public class Analyzer {
 
         //Si del código completo, solo el 10% o menos, esta indentando...
         //Se le manda un mensaje de que se preocupe de la indentación.
-        if(counterTabs <= 0.1*nlines)
+        if(counterTabs <= 0.05*nlines)
         {
             return false;
         }
@@ -51,17 +51,17 @@ public class Analyzer {
             while(codeListIterator.hasNext())
             {
                 String line = (String) codeListIterator.next();
-                if(line.equals("#ENTRADA"))
+                if(line.contains("#ENTRADA"))
                 {
                     flagEntry = 1;
                 }
 
-                else if (flagEntry == 1 && line.equals("#PROCESAMIENTO"))
+                else if (flagEntry == 1 && line.contains("#PROCESAMIENTO"))
                 {
                     flagProcess = 1;
                 }
 
-                else if (flagProcess == 1 && line.equals("#SALIDA"))
+                else if (flagProcess == 1 && line.contains("#SALIDA"))
                 {
                     answer = true;
                 }
@@ -78,12 +78,12 @@ public class Analyzer {
                     flagEntry = 1;
                 }
 
-                else if (flagEntry == 1 && line.equals("//PROCESAMIENTO"))
+                else if (flagEntry == 1 && line.contains("//PROCESAMIENTO"))
                 {
                     flagProcess = 1;
                 }
 
-                else if (flagProcess == 1 && line.equals("//SALIDA"))
+                else if (flagProcess == 1 && line.contains("//SALIDA"))
                 {
                     answer = true;
                 }
@@ -222,13 +222,13 @@ public class Analyzer {
         {
             result.put("verifyIndentation","Cumples con el porcentaje de indentación");
         }
-        else result.put("verifyIndentation","Debes preocuparte de indentar tu código, tienes menos del 30%");
+        else result.put("verifyIndentation","Debes preocuparte de indentar tu código");
 
         if (detectOrganization(code,language)==true)
         {
             result.put("detectOrganization", "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA");
         }
-        else result.put("detectOrganization","Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA");
+        else result.put("detectOrganization","Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA)");
 
         if (functionsComments(code,language)==true)
         {
