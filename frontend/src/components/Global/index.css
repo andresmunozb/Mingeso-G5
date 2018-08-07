@@ -1,0 +1,24 @@
+
+.App-logo {
+  max-width: 100%;
+  height: auto;
+  background-color: black;
+}
+.flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  height: 100%;
+}
+
+.position-ref {
+  position: relative;
+}
+.posr {
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  color: black;
+}

@@ -84,8 +84,8 @@ class CareerPanel extends Component {
     }
     updateCareer(){
       let jsonEdit = {nameCareer:this.state.nameEdit}
-    
-      Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/'+this.state.id+'/edit',jsonEdit)
+      //http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/
+      Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/'+this.state.id+'/edit',jsonEdit)
             .then((res) => {
               console.log("RESPONSE RECEIVED: ", res);
               this.closeModalEdit();
@@ -117,7 +117,7 @@ class CareerPanel extends Component {
     }
 
     getCareers(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/')
         .then( res => {
             const careers = res.data;
             this.setState({careers,search:'',carrersFiltered:careers});
@@ -125,7 +125,7 @@ class CareerPanel extends Component {
     }
 
     deleteCareer(id){
-        const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/'.concat(id).concat('/delete');
+        const url = 'http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/'.concat(id).concat('/delete');
         console.log(url)
         Axios.delete(url)
         .then( res => {
@@ -146,7 +146,7 @@ class CareerPanel extends Component {
           }
         };
       const newCareer = {nameCareer:this.state.nameNewCareer}
-      Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/create',newCareer,axiosConfig)
+      Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/create',newCareer,axiosConfig)
       .then( res => {
           this.getCareers();
          

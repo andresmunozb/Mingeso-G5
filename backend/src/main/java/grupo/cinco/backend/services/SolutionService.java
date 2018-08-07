@@ -1,13 +1,11 @@
 package grupo.cinco.backend.services;
 
+import grupo.cinco.backend.entities.Class;
 import grupo.cinco.backend.entities.Exercise;
 import grupo.cinco.backend.entities.Solution;
 import grupo.cinco.backend.entities.Statistic;
 import grupo.cinco.backend.entities.User;
-import grupo.cinco.backend.repositories.ExerciseRepository;
-import grupo.cinco.backend.repositories.SolutionRepository;
-import grupo.cinco.backend.repositories.StatisticRepository;
-import grupo.cinco.backend.repositories.UserRepository;
+import grupo.cinco.backend.repositories.*;
 import grupo.cinco.backend.utils.Analyzer;
 import grupo.cinco.backend.utils.Context;
 import grupo.cinco.backend.utils.DTO;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 import java.util.Date;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -42,10 +39,21 @@ public class SolutionService {
     @Autowired
     private StatisticRepository statisticRepository;
 
+    @Autowired
+    private ClassRepository classRepository;
+
     @RequestMapping(value = "/",method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Solution> getAllProducts() {
         return solutionRepository.findAll();
+    }
+
+    @RequestMapping(value = "/{id_exercise}/{id_clase}", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<Solution> getAllSolutionsByExercise(@PathVariable("id_exercise") Integer idExercise, @PathVariable("id_clase") Integer idClass)
+    {
+        Class clase = classRepository.findById(idClass).get();
+        return solutionRepository.findAllByExercise_IdAndUserClase(idExercise,clase);
     }
 
     @RequestMapping(value = "/create/{id_user}/{id_exercise}", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +68,6 @@ public class SolutionService {
         Statistic statistic = statisticRepository.findStatisticByUserAndDate(user,date);
 
         if(statistic == null){
-            //System.out.println("no existe estadistica");
             statistic = new Statistic();
             statistic.setSpendTime(resource.getSpendTime());
             statistic.setDate(date);
@@ -69,7 +76,6 @@ public class SolutionService {
             statisticRepository.save(statistic);
         }
         else{
-            //System.out.println("Existe stadistica (hacer update)");
             statistic.setSpendTime(resource.getSpendTime()+statistic.getSpendTime());
             statistic.setSolutions(statistic.getSolutions()+1);
             statisticRepository.save(statistic);
@@ -103,10 +109,8 @@ public class SolutionService {
         JSONParser parser = new JSONParser();
         JSONObject json = null;
         Factory  factory = new Factory();
-        System.out.println("Lenguaje: "+ resource.getLanguage());
         Context context = new Context(factory.getStrategy(resource.getLanguage()));
         String output = context.executeCode(resource.getScript());
-        System.out.println(output);
         try {
             json = (JSONObject) parser.parse(output);
         } catch (ParseException e) {
@@ -119,7 +123,14 @@ public class SolutionService {
     @ResponseBody
     public Map<String,String> analyzeCode(@RequestBody Solution resource)
     {
-        Analyzer analyzer = new Analyzer();
+        Analyzer analyzer = Analyzer.getInstance();
         return analyzer.totalAnalyze(resource.getScript(),resource.getLanguage());
+    }
+
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    @ResponseBody
+    public long countSolutions()
+    {
+        return solutionRepository.count();
     }
 }

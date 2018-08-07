@@ -11,7 +11,8 @@ import java.util.Date;
 
 public interface StatisticRepository extends PagingAndSortingRepository<Statistic, Integer> {
     Statistic findStatisticByUserAndDate(User user,Date date);
-    Iterable<Statistic> findStatisticsByUser(User user);
-    Iterable<Statistic> findStatisticsByUser_Career(Career career);
-    Iterable<Statistic> findStatisticsByUser_Clase(Class clase);
+    Iterable<Statistic> findStatisticsByDateBetween(Date from,Date to);
+    Iterable<Statistic> findStatisticsByDateBetweenAndUser(Date from, Date to,User user);
+    Iterable<Statistic> findStatisticsByDateBetweenAndUser_Career(Date from, Date to,Career career);
+    Iterable<Statistic> findStatisticsByDateBetweenAndUser_Clase(Date from, Date to, Class clase);
 }

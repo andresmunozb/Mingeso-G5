@@ -38,7 +38,7 @@ class ExerciseItemStudent extends Component {
                         </Card.Header>
                     </Link>
                     <Card.Meta>
-                      Prof 1
+                      {this.props.exercise.user.email}
                     </Card.Meta>
                   </Card.Content>
                   <Card.Content extra>
