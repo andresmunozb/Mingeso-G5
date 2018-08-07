@@ -1,0 +1,13 @@
+config:
+  target: "http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users"
+  phases:
+    - duration: 60
+      arrivalRate: 30
+scenarios:
+  - flow:
+      - get:
+          url: "/"
+      - post:
+          url: "/resource"
+          json:
+            hello: "world"

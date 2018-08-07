@@ -771,7 +771,7 @@ class AddTestCasesForm extends Component{
                     output:validOutput,
                 }
 
-                Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.exerciseId.toString()),newTestCase,axiosConfig)
+                Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.exerciseId.toString()),newTestCase,axiosConfig)
                     .then((res) => {
                         console.log("RESPONSE RECEIVED: ", res);
                         //Ultima iteracion

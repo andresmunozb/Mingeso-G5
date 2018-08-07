@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity
 @Table(name = "statistics")
-public class Statistic {
+public class Statistic implements Comparable<Statistic> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -70,5 +72,74 @@ public class Statistic {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int compareTo(Statistic o) {
+        if (this.getDate() == null || o.getDate() == null)
+            return 0;
+        return this.getDate().compareTo(o.getDate());
+    }
+
+    public static Date addDay(Date fecha, int dias){
+        if (dias==0) return fecha;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
+        return calendar.getTime();
+    }
+    public static List<Date> getListBetween(Date desde,Date hasta) {
+        List<Date> result = new ArrayList<>();
+        Date buffer = desde;
+        while(buffer.compareTo(hasta)!= 0){
+            result.add(buffer);
+            buffer = addDay(buffer,1);
+        }
+        return result;
+    }
+
+    public static Date toDate(String fecha){
+
+        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = formatoDelTexto.parse(fecha);
+
+
+        } catch (ParseException ex) {
+
+            ex.printStackTrace();
+
+        }
+        return date;
+
+    }
+
+    public static Iterable<Statistic> groupByDate(Iterable<Statistic> iterable, Date desde, Date hasta){
+        List<Date> fechas = getListBetween(desde,hasta);
+        List<Statistic> group = new ArrayList<>();
+        for(Statistic s: iterable){
+            if(!fechas.contains(s.getDate())){
+                fechas.add(s.getDate());
+            }
+        }
+        for(Date d:fechas){
+            Statistic statistic = new Statistic();
+            statistic.setSolutions(0);
+            statistic.setSpendTime(0);
+            statistic.setDate(d);
+            group.add(statistic);
+        }
+        int index = 0;
+        for(Statistic s: iterable){
+            index = fechas.indexOf(s.getDate());
+            Statistic temp = group.get(index);
+            temp.setSpendTime(s.getSpendTime() + temp.getSpendTime());
+            temp.setSolutions(s.getSolutions() + temp.getSolutions());
+            group.set(index,temp);
+
+        }
+        Collections.sort(group);
+        return group;
     }
 }

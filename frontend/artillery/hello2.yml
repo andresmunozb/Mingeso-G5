@@ -1,0 +1,12 @@
+config:
+  target: "http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/solutions"
+  phases:
+    - duration: 30
+      arrivalRate: 5 
+scenarios:
+  - flow:
+      - post:
+          url: "/execute"
+          json:
+            script: "print(25)"
+            language: "python"

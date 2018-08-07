@@ -1,10 +1,10 @@
 export default 
     [
       {
-        title: 'Home',
-        path: '/home_admin',
+        title: 'Dashboard',
+        path: '/dashboard_admin',
         exact: true,
-        component: "HomeAdmin",
+        component: "DashboardAdmin",
         rol:"admin",
         enable:true,
       },
@@ -33,14 +33,6 @@ export default
         enable:true,
       },
       {
-        title: 'Home',
-        path: '/home_student',
-        exact: true,
-        component:"HomeStudent",
-        rol:"student",
-        enable:true,
-      },
-      {
         title: 'Enunciados',
         path: '/exercises_student',
         exact: true,
@@ -57,21 +49,14 @@ export default
         enable:false,
       },
       {
-        title: 'Home',
-        path: '/home_teacher',
+        title: 'Dashboard',
+        path: '/dashboard_teacher',
         exact: true,
         component:"HomeTeacher",
         rol:"teacher",
         enable:true,
       },
-      {
-        title: 'Enunciados',
-        path: '/exercises_teacher',
-        exact: true,
-        component:"ExerciseListTeacher",
-        rol:"teacher",
-        enable:true,
-      },
+     
       {
         title: 'Crear Enunciado',
         path: '/create_exercise',

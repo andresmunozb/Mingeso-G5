@@ -1,6 +1,5 @@
 package grupo.cinco.backend.utils;
 
-import org.json.simple.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +15,10 @@ public class StrategyC implements Strategy{
             return null;
         }
         String input = "{\"files\": [{\"name\" : \"main.c\", \"content\": \"" + code +"\"}]}";
-        System.out.println(input);
         return ApiCode.executeCode(url,input);
+    }
+    @Override
+    public boolean isNil() {
+        return false;
     }
 }

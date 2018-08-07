@@ -135,7 +135,7 @@ class UserPanel extends Component{
                 alert("Debe rellenar todos los campos")
             }
             else{
-                Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create/'+
+                Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/create/'+
                 this.state.role+'/'+
                 this.state.clase+'/'+
                 this.state.career,
@@ -152,7 +152,7 @@ class UserPanel extends Component{
                 alert("Debe rellenar todos los campos");
             }
             else{
-                Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/create/'+this.state.role,
+                Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/create/'+this.state.role,
                 newUser,axiosConfig)
                 .then( res => {
                     this.getUsers();
@@ -175,7 +175,7 @@ class UserPanel extends Component{
             }
             else{
                 console.log('Estoy aqui')
-                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+
+                Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/'+
                             this.state.id+
                             '/update/'+
                             this.state.role + '/' +
@@ -196,7 +196,7 @@ class UserPanel extends Component{
                 alert("Debe rellenar todos los campos");
             }
             else{
-                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'+
+                Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/'+
                             this.state.id+
                             '/update/'+
                             this.state.role +
@@ -216,14 +216,14 @@ class UserPanel extends Component{
     }
     //Servicios
     getUsers(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/')
         .then( res => {
             const users = res.data;
             this.setState({users,search:'', usersFiltered :users});
         })
     }
     deleteUser(id){
-        const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/users/'.concat(id).concat('/delete');
+        const url = 'http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/users/'.concat(id).concat('/delete');
         console.log(url)
         Axios.delete(url)
         .then( res => {
@@ -242,21 +242,21 @@ class UserPanel extends Component{
 
     
     getRoles(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/roles/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/roles/')
         .then( res => {
             const roles = res.data;
             this.setState({roles});
         })
     }
     getClasses(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/')
         .then( res => {
             const classes = res.data;
             this.setState({classes});
         })
     }
     getCareers(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/careers/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/careers/')
         .then( res => {
             const careers = res.data;
             this.setState({careers});

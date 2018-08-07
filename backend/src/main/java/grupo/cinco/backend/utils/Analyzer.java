@@ -2,32 +2,38 @@ package grupo.cinco.backend.utils;
 
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class Analyzer {
+    private static Analyzer object = new Analyzer();
+    private Analyzer(){}
+    public static Analyzer getInstance(){
+        return object;
+    }
 
     public boolean verifyIndentation(String code)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
+        Iterator codeListIterator = codeList.iterator();
         int nlines = codeList.size();
         int counterTabs = 0;
-        for(String line:codeList)
+        while(codeListIterator.hasNext())
         {
+            String line = (String) codeListIterator.next();
             if (line.contains("    "))
             {
                 counterTabs+=1;
             }
         }
 
-        //Si del código completo, solo el 30% o menos, esta indentando...
+        //Si del código completo, solo el 10% o menos, esta indentando...
         //Se le manda un mensaje de que se preocupe de la indentación.
-        if(counterTabs <= 0.3*nlines)
+        if(counterTabs <= 0.05*nlines)
         {
             return false;
         }
-        else return true;
+        else {return true;}
 
     }
 
@@ -35,24 +41,26 @@ public class Analyzer {
     public boolean detectOrganization(String code, String language)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
+        Iterator codeListIterator = codeList.iterator();
         boolean answer = false;
         int flagEntry = 0;
         int flagProcess = 0;
         if(language.equals("python"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
-                if(line.equals("#ENTRADA"))
+                String line = (String) codeListIterator.next();
+                if(line.contains("#ENTRADA"))
                 {
                     flagEntry = 1;
                 }
 
-                else if (flagEntry == 1 && line.equals("#PROCESAMIENTO"))
+                else if (flagEntry == 1 && line.contains("#PROCESAMIENTO"))
                 {
                     flagProcess = 1;
                 }
 
-                else if (flagProcess == 1 && line.equals("#SALIDA"))
+                else if (flagProcess == 1 && line.contains("#SALIDA"))
                 {
                     answer = true;
                 }
@@ -61,19 +69,20 @@ public class Analyzer {
 
         else if(language.equals("c") || language.equals("java"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.equals("//ENTRADA"))
                 {
                     flagEntry = 1;
                 }
 
-                else if (flagEntry == 1 && line.equals("//PROCESAMIENTO"))
+                else if (flagEntry == 1 && line.contains("//PROCESAMIENTO"))
                 {
                     flagProcess = 1;
                 }
 
-                else if (flagProcess == 1 && line.equals("//SALIDA"))
+                else if (flagProcess == 1 && line.contains("//SALIDA"))
                 {
                     answer = true;
                 }
@@ -86,13 +95,14 @@ public class Analyzer {
     public List<String> representativeVariables(String code, String language)
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
-        boolean answer = false;
+        Iterator codeListIterator = codeList.iterator();
         String variable = null;
         ArrayList<String> invalid = new ArrayList<>();
         if(language.equals("python"))
         {
-            for(String line: codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.contains("="))
                 {
                     variable = substringBefore(deleteWhitespace(line),"=");
@@ -105,8 +115,9 @@ public class Analyzer {
         }
         else
         {
-            for(String line:codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if (line.contains("int ") && line.endsWith(";"))
                 {
                     variable = substringBefore(deleteWhitespace(line.replace("int","").replace(";","")),"=");
@@ -161,11 +172,13 @@ public class Analyzer {
         else if (language.equals("c"))
         {
             List<String> codeList = Arrays.asList(code.split("\n"));
+            Iterator codeListIterator = codeList.iterator();
             totalEntries = countMatches(code,"//entrada");
             totalDescription = countMatches(code,"//descripcion");
             totalOutputs = countMatches(code,"//salida");
-            for(String line:codeList)
+            while(codeListIterator.hasNext())
             {
+                String line = (String) codeListIterator.next();
                 if(line.contains("int ") || line.contains("float ") || line.contains("double") || line.contains("char "))
                 {
                     //La función al definirla puede terminar en parentesis o en llave
@@ -207,13 +220,13 @@ public class Analyzer {
         {
             result.put("verifyIndentation","Cumples con el porcentaje de indentación");
         }
-        else result.put("verifyIndentation","Debes preocuparte de indentar tu código, tienes menos del 30%");
+        else result.put("verifyIndentation","Debes preocuparte de indentar tu código");
 
         if (detectOrganization(code,language)==true)
         {
             result.put("detectOrganization", "Tu codigo está bien organizado, con los comentarios de ENTRADA, PROCESAMIENTO y SALIDA");
         }
-        else result.put("detectOrganization","Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA");
+        else result.put("detectOrganization","Debes comentar la organización de tu codigo (ENTRADA, PROCESAMIENTO y SALIDA)");
 
         if (functionsComments(code,language)==true)
         {

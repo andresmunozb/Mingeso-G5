@@ -1,0 +1,12 @@
+docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
+docker-compose: https://docs.docker.com/compose/install/#install-compose     (entrar en el github para instalar la ultima version)
+java jdk: https://www.digitalocean.com/community/tutorials/como-instalar-java-con-apt-get-en-ubuntu-16-04-es
+
+
+Servidor 1:
+jenkins: https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-16-04
+
+Servidor 2:
+tomcat: https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04 
+	(con ayuda de stackoverflow: https://stackoverflow.com/questions/43858655/gzip-tar-error-when-installing-tomcat-ubuntu)
+

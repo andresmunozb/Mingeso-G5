@@ -41,7 +41,9 @@ public class ClassService {
         {
             return false;
         }
-        return true;
+        else {
+            return true;
+        }
     }
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
