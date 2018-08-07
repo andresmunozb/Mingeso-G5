@@ -425,7 +425,7 @@ class EditExerciseForm extends Component{
         var jsonEditarTestcases;
         var validOutput;
         var boolean;
-        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonEditar)
+        Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonEditar)
             .then((res) => {
                 console.log("RESPONSE RECEIVED: ", res);                             
                 //Si no habian casos de prueba al inicio, entonces hay que crearlos
@@ -449,12 +449,12 @@ class EditExerciseForm extends Component{
                             input: this.state.inputs[i].nameInput,
                             output:validOutput,
                         }
-                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
+                        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
                             .then((res) => {
                                 console.log("RESPONSE RECEIVED: ", res);
                                 if(i === this.state.inputs.length -1){
 
-                                    Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                    Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
                                     .then(response => {
                                         console.log(response.data)
                                         console.log("estos son los id news")
@@ -518,12 +518,12 @@ class EditExerciseForm extends Component{
                             output: validOutput  
                         }
                             
-                        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                        Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                         .then((res) => {
                             console.log("RESPONSE RECEIVED: ", res);
                             if(i === this.state.inputs.length -1){
 
-                                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
                                     .then(response => {
                                         console.log(response.data)
                                         console.log("estos son los id news")
@@ -592,7 +592,7 @@ class EditExerciseForm extends Component{
                                 console.log("va a ingresarsss");
                                 console.log(jsonEditarTestcases)
                                     
-                                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                                     .then((res) => {
                                         console.log("RESPONSE RECEIVED: ", res);
                                         
@@ -614,12 +614,12 @@ class EditExerciseForm extends Component{
                                         input: this.state.inputs[i].nameInput,
                                         output: validOutput    
                                     }
-                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
+                                    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
                                     .then((res) => {
                                             console.log("RESPONSE RECEIVED: ", res);
                                             if(i === this.state.inputs.length -1){
 
-                                                Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                                Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
                                                 .then(response => {
                                                     console.log(response.data)
                                                     console.log("estos son los id news")
@@ -696,7 +696,7 @@ class EditExerciseForm extends Component{
                                             console.log("va a ingresar");
                                             console.log(jsonEditarTestcases)
                                                 
-                                            Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                            Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                                                 .then((res) => {
                                                     console.log("RESPONSE RECEIVED: ", res);
                                         
@@ -712,12 +712,12 @@ class EditExerciseForm extends Component{
                                         }
                                         else{
                                                 
-                                            Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
+                                            Axios.delete('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
                                                 .then((res) => {
                                                     console.log("RESPONSE RECEIVED: ", res);
                                                     if(i === this.state.testCasesIds.length -1){
 
-                                                        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
+                                                        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/testcases')
                                                         .then(response => {
                                                             console.log(response.data)
                                                             console.log("estos son los id news")
@@ -769,7 +769,7 @@ class EditExerciseForm extends Component{
                 else if(this.state.inputs.length === 0){
                     for(let i= 0; i<this.state.testCasesIds.length;i++){
                         
-                            Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
+                            Axios.delete('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
                                 .then((res) => {
                                     console.log("RESPONSE RECEIVED: ", res);
                                     if(i === this.state.testCasesIds.length -1){
@@ -939,10 +939,10 @@ class EditExerciseForm extends Component{
                     else if(checking === 7){
                         var boolean;
                         var validOutput
-                        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregarEdit)
+                        Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/edit', jsonAgregarEdit)
                         .then((res) => {
 
-                            Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/publish',jsonAgregarPublish)
+                            Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.state.id+'/publish',jsonAgregarPublish)
                             .then((res) => {
                                 console.log("RESPONSE RECEIVED: ", res); 
                  
@@ -966,7 +966,7 @@ class EditExerciseForm extends Component{
                                             input: this.state.inputs[i].nameInput,
                                             output:validOutput,
                                         }
-                                        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
+                                        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),newTestCase)
                                             .then((res) => {
                                                 console.log("RESPONSE RECEIVED: ", res);
                                                 if(i === this.state.inputs.length -1){                          
@@ -1008,7 +1008,7 @@ class EditExerciseForm extends Component{
                                                     console.log("va a ingresar");
                                                     console.log(jsonEditarTestcases)
                                                         
-                                                    Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                                    Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                                                         .then((res) => {
                                                                 console.log("RESPONSE RECEIVED: ", res);
                                                                 if(this.state.inputs.length === this.state.testCasesIds.length){
@@ -1031,7 +1031,7 @@ class EditExerciseForm extends Component{
                                                         input: this.state.inputs[i].nameInput,
                                                         output: validOutput   
                                                     }
-                                                    Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
+                                                    Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/create/'.concat(this.state.id.toString()),jsonEditarTestcases)
                                                         .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
                                                             if(i === this.state.inputs.length -1){
@@ -1077,7 +1077,7 @@ class EditExerciseForm extends Component{
                                                     output:validOutput  
                                                 }
                                                     
-                                                Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
+                                                Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/edit',jsonEditarTestcases)
                                                     .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
                                             
@@ -1093,7 +1093,7 @@ class EditExerciseForm extends Component{
                                             }
                                             else{
                                                     
-                                                Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
+                                                Axios.delete('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/testcases/'+this.state.testCasesIds[i]+'/delete')
                                                     .then((res) => {
                                                             console.log("RESPONSE RECEIVED: ", res);
 

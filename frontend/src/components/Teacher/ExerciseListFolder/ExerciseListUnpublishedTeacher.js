@@ -45,9 +45,9 @@ class ExerciseListUnpublishedTeacher extends Component {
     getExercises(){
       var _this = this;
       //GET formal es con id del usuario
-     //Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/unpublished')
+     //Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.id.toString()+'/unpublished')
      //Get por ahora es con id 1 
-     Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser+'/unpublished')
+     Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+this.props.idUser+'/unpublished')
       .then(response => {
           console.log("soy los ejercicios")
            console.log(response.data)
@@ -101,7 +101,7 @@ class ExerciseListUnpublishedTeacher extends Component {
     }
     editExercise(exercise){
       var testcases;
-      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
+      Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
       .then(response => {
             console.log("soy los testcases")
             testcases = response.data
@@ -113,7 +113,7 @@ class ExerciseListUnpublishedTeacher extends Component {
     }
     viewExercise(exercise){
       var testcases;
-      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
+      Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/testcases')
       .then(response => {
             console.log("soy los testcases")
             testcases = response.data
@@ -135,7 +135,7 @@ class ExerciseListUnpublishedTeacher extends Component {
             "Access-Control-Allow-Origin": "@crossorigin",
         }
       };   
-      Axios.delete('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/delete',axiosConfig)
+      Axios.delete('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/'+exercise.id+'/delete',axiosConfig)
         .then((res) => {
             //Localmente quitarle al json de los exercises el exercise borrado 
             setTimeout(() => {

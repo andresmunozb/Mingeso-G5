@@ -2,14 +2,10 @@ nav ul {
     list-style: none;
     display: flex;
     background-color: black;
-    margin-bottom: 20px;
-  }
-
-nav ul li {
-    padding: 20px;
   }
 
 nav ul li a {
     color: white;
     text-decoration: none;
+
   }

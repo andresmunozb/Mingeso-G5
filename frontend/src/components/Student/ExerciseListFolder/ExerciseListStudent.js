@@ -40,7 +40,7 @@ class ExerciseListStudent extends Component {
     }
     getExercises(){
       var _this = this;
-      Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/exercises/published')
+      Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/exercises/published')
       .then(response => {
             console.log("soy los ejercicios")
             console.log(response.data)

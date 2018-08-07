@@ -65,14 +65,14 @@ class ClassPanel extends Component {
 
     //Servicios
     getClasses(){
-        Axios.get('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/')
+        Axios.get('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/')
         .then( res => {
             const classes = res.data;
             this.setState({classes,search:'',classesFiltered:classes});
         })
     }
     deleteClass(id){
-        const url = 'http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/'.concat(id).concat('/delete');
+        const url = 'http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/'.concat(id).concat('/delete');
         console.log(url)
         Axios.delete(url)
         .then( res => {
@@ -94,7 +94,7 @@ class ClassPanel extends Component {
             }
           };
         const newClass = {nameClass:this.state.nameNewClass}
-        Axios.post('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/create',newClass,axiosConfig)
+        Axios.post('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/create',newClass,axiosConfig)
         .then( res => {
             this.getClasses();
         })
@@ -104,7 +104,7 @@ class ClassPanel extends Component {
     updateClass(){
         let jsonEdit = {nameClass:this.state.nameEdit}
       
-        Axios.put('http://165.227.189.25:8080/backend-0.0.1-SNAPSHOT/classes/'+this.state.id+'/edit',jsonEdit)
+        Axios.put('http://206.189.220.236:8080/backend-0.0.1-SNAPSHOT/classes/'+this.state.id+'/edit',jsonEdit)
               .then((res) => {
                 console.log("RESPONSE RECEIVED: ", res);
                 this.closeModalEdit();
