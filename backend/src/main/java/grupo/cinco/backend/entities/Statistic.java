@@ -89,7 +89,7 @@ public class Statistic implements Comparable<Statistic> {
         return calendar.getTime();
     }
     public static List<Date> getListBetween(Date desde,Date hasta) {
-        List<Date> result = new ArrayList<Date>();
+        List<Date> result = new ArrayList<>();
         Date buffer = desde;
         while(buffer.compareTo(hasta)!= 0){
             result.add(buffer);
@@ -117,7 +117,7 @@ public class Statistic implements Comparable<Statistic> {
 
     public static Iterable<Statistic> groupByDate(Iterable<Statistic> iterable, Date desde, Date hasta){
         List<Date> fechas = getListBetween(desde,hasta);
-        List<Statistic> group = new ArrayList<Statistic>();
+        List<Statistic> group = new ArrayList<>();
         for(Statistic s: iterable){
             if(!fechas.contains(s.getDate())){
                 fechas.add(s.getDate());

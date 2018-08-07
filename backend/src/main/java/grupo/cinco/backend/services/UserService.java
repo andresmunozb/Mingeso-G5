@@ -38,8 +38,7 @@ public class UserService {
     @ResponseBody
     public Iterable<User> students() {
         Role role = roleRepository.findRoleByNameRol("student");
-        Iterable<User> users = userRepository.findUsersByRole(role);
-        return users;
+        return userRepository.findUsersByRole(role);
     }
 
     @RequestMapping(value = "/{id}/exercises",method = RequestMethod.GET)

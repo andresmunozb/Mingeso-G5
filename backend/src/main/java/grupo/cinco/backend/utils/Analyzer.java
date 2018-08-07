@@ -2,7 +2,6 @@ package grupo.cinco.backend.utils;
 
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -34,7 +33,7 @@ public class Analyzer {
         {
             return false;
         }
-        else return true;
+        else {return true;}
 
     }
 
@@ -97,7 +96,6 @@ public class Analyzer {
     {
         List<String> codeList = Arrays.asList(code.split("\n"));
         Iterator codeListIterator = codeList.iterator();
-        boolean answer = false;
         String variable = null;
         ArrayList<String> invalid = new ArrayList<>();
         if(language.equals("python"))

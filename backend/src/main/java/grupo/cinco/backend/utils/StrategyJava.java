@@ -1,6 +1,5 @@
 package grupo.cinco.backend.utils;
 
-import org.json.simple.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;

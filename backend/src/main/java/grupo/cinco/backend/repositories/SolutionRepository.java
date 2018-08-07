@@ -6,5 +6,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface SolutionRepository extends PagingAndSortingRepository<Solution, Integer> {
 
-    Iterable<Solution> findAllByExercise_IdAndUserClase(Integer id_exercise, Class clase);
+    Iterable<Solution> findAllByExercise_IdAndUserClase(Integer idExercise, Class clase);
 }

@@ -1,6 +1,5 @@
 package grupo.cinco.backend.utils;
 
-import java.util.Date;
 
 public class DTO2 {
     String desde;

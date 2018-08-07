@@ -18,11 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import java.util.Date;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -70,7 +68,6 @@ public class SolutionService {
         Statistic statistic = statisticRepository.findStatisticByUserAndDate(user,date);
 
         if(statistic == null){
-            //System.out.println("no existe estadistica");
             statistic = new Statistic();
             statistic.setSpendTime(resource.getSpendTime());
             statistic.setDate(date);
@@ -79,7 +76,6 @@ public class SolutionService {
             statisticRepository.save(statistic);
         }
         else{
-            //System.out.println("Existe stadistica (hacer update)");
             statistic.setSpendTime(resource.getSpendTime()+statistic.getSpendTime());
             statistic.setSolutions(statistic.getSolutions()+1);
             statisticRepository.save(statistic);
@@ -113,10 +109,8 @@ public class SolutionService {
         JSONParser parser = new JSONParser();
         JSONObject json = null;
         Factory  factory = new Factory();
-        System.out.println("Lenguaje: "+ resource.getLanguage());
         Context context = new Context(factory.getStrategy(resource.getLanguage()));
         String output = context.executeCode(resource.getScript());
-        System.out.println(output);
         try {
             json = (JSONObject) parser.parse(output);
         } catch (ParseException e) {
